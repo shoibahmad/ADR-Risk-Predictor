@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADR Risk Predictor - Clinical Decision Support</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <h1>ADR Risk Predictor</h1>
+                </div>
+                <p class="subtitle">Clinical Decision Support System for Adverse Drug Reaction Risk Assessment</p>
+            </div>
+            
+            <!-- Patient Info Bar -->
+            <div id="patient-info-bar" class="patient-info-bar" style="display: none;">
+                <div class="patient-info-content">
+                    <div class="patient-details">
+                        <i class="fas fa-user"></i>
+                        <span id="display-patient-name">Patient Name</span>
+                        <span id="display-patient-id" class="patient-id"></span>
+                    </div>
+                    <div class="clinician-details">
+                        <i class="fas fa-user-md"></i>
+                        <span id="display-clinician-name">Clinician Name</span>
+                    </div>
+                    <div class="assessment-time">
+                        <i class="fas fa-clock"></i>
+                        <span id="display-assessment-time">Assessment Time</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2><i class="fas fa-user-md"></i> Patient Assessment</h2>
+                    <p>Enter patient information to assess ADR risk</p>
+                    <div class="sample-data-section">
+                        <button type="button" id="load-sample-data" class="btn btn-sample">
+                            <i class="fas fa-flask"></i>
+                            Load Sample Patient Data
+                        </button>
+                        <select id="sample-data-selector" class="sample-selector">
+                            <option value="">Choose sample patient...</option>
+                            <option value="high-risk">High Risk Patient</option>
+                            <option value="medium-risk">Medium Risk Patient</option>
+                            <option value="low-risk">Low Risk Patient</option>
+                            <option value="elderly">Elderly Patient</option>
+                            <option value="young-adult">Young Adult</option>
+                        </select>
+                    </div>
+                </div>
+
+                <form id="adr-form" class="patient-form">
+                    <!-- Demographics Section -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Demographics</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="age">Age (years)</label>
+                                <input type="number" id="age" name="age" min="18" max="120" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sex">Sex</label>
+                                <select id="sex" name="sex" required>
+                                    <option value="">Select...</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ethnicity">Ethnicity</label>
+                                <select id="ethnicity" name="ethnicity" required>
+                                    <option value="">Select...</option>
+                                    <option value="White">White</option>
+                                    <option value="Asian">Asian</option>
+                                    <option value="Black">Black</option>
+                                    <option value="Hispanic">Hispanic</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="bmi">BMI (kg/m²)</label>
+                                <input type="number" id="bmi" name="bmi" step="0.1" min="15" max="50" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Laboratory Values Section -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-flask"></i> Laboratory Values</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="creatinine">Creatinine (mg/dL)</label>
+                                <input type="number" id="creatinine" name="creatinine" step="0.01" min="0.5" max="10" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="egfr">eGFR (mL/min/1.73m²)</label>
+                                <input type="number" id="egfr" name="egfr" step="0.1" min="5" max="150" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ast_alt">AST/ALT (U/L)</label>
+                                <input type="number" id="ast_alt" name="ast_alt" min="5" max="1000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="bilirubin">Bilirubin (mg/dL)</label>
+                                <input type="number" id="bilirubin" name="bilirubin" step="0.01" min="0.1" max="10" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="albumin">Albumin (g/dL)</label>
+                                <input type="number" id="albumin" name="albumin" step="0.01" min="1" max="6" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comorbidities Section -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-notes-medical"></i> Comorbidities</h3>
+                        <div class="checkbox-grid">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="diabetes" name="diabetes" value="1">
+                                <label for="diabetes">Diabetes</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="liver_disease" name="liver_disease" value="1">
+                                <label for="liver_disease">Liver Disease</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="ckd" name="ckd" value="1">
+                                <label for="ckd">Chronic Kidney Disease</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="cardiac_disease" name="cardiac_disease" value="1">
+                                <label for="cardiac_disease">Cardiac Disease</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medication Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-pills"></i> Medication Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="index_drug_dose">Index Drug Dose (mg)</label>
+                                <select id="index_drug_dose" name="index_drug_dose" required>
+                                    <option value="">Select...</option>
+                                    <option value="50">50 mg</option>
+                                    <option value="100">100 mg</option>
+                                    <option value="150">150 mg</option>
+                                    <option value="200">200 mg</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="concomitant_drugs_count">Concomitant Drugs Count</label>
+                                <input type="number" id="concomitant_drugs_count" name="concomitant_drugs_count" min="0" max="20" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="indication">Indication</label>
+                                <select id="indication" name="indication" required>
+                                    <option value="">Select...</option>
+                                    <option value="Pain">Pain</option>
+                                    <option value="Cancer">Cancer</option>
+                                    <option value="Autoimmune">Autoimmune</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pharmacogenomics -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-dna"></i> Pharmacogenomics</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="cyp2c9">CYP2C9 Status</label>
+                                <select id="cyp2c9" name="cyp2c9" required>
+                                    <option value="">Select...</option>
+                                    <option value="Wild">Wild Type</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Poor">Poor Metabolizer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cyp2d6">CYP2D6 Status</label>
+                                <select id="cyp2d6" name="cyp2d6" required>
+                                    <option value="">Select...</option>
+                                    <option value="UM">Ultra-rapid Metabolizer</option>
+                                    <option value="EM">Extensive Metabolizer</option>
+                                    <option value="IM">Intermediate Metabolizer</option>
+                                    <option value="PM">Poor Metabolizer</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Clinical Data -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-chart-line"></i> Additional Clinical Data</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="bp_systolic">Systolic BP (mmHg)</label>
+                                <input type="number" id="bp_systolic" name="bp_systolic" min="80" max="250" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="bp_diastolic">Diastolic BP (mmHg)</label>
+                                <input type="number" id="bp_diastolic" name="bp_diastolic" min="40" max="150" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="heart_rate">Heart Rate (bpm)</label>
+                                <input type="number" id="heart_rate" name="heart_rate" min="40" max="200" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="time_since_start_days">Days Since Drug Start</label>
+                                <input type="number" id="time_since_start_days" name="time_since_start_days" min="1" max="365" required>
+                            </div>
+                        </div>
+                        
+                        <div class="checkbox-grid">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="cyp_inhibitors_flag" name="cyp_inhibitors_flag" value="1">
+                                <label for="cyp_inhibitors_flag">CYP Inhibitors Present</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="qt_prolonging_flag" name="qt_prolonging_flag" value="1">
+                                <label for="qt_prolonging_flag">QT Prolonging Drugs</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="hla_risk_allele_flag" name="hla_risk_allele_flag" value="1">
+                                <label for="hla_risk_allele_flag">HLA Risk Allele</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="inpatient_flag" name="inpatient_flag" value="1">
+                                <label for="inpatient_flag">Inpatient</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="prior_adr_history" name="prior_adr_history" value="1">
+                                <label for="prior_adr_history">Prior ADR History</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calculator"></i>
+                            Assess ADR Risk
+                        </button>
+                        <button type="button" id="clear-form" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i>
+                            Clear Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results-container" class="results-container" style="display: none;">
+                <div class="results-header">
+                    <h2><i class="fas fa-chart-bar"></i> Risk Assessment Results</h2>
+                </div>
+                
+                <div id="results-content" class="results-content">
+                    <!-- Results will be populated here -->
+                </div>
+
+                <div class="report-section">
+                    <button id="generate-report" class="btn btn-report">
+                        <i class="fas fa-file-medical"></i>
+                        Generate Clinical Report
+                    </button>
+                </div>
+
+                <div id="report-container" class="report-container" style="display: none;">
+                    <div class="report-header">
+                        <h3><i class="fas fa-file-medical-alt"></i> AI-Generated Clinical Report</h3>
+                        <div class="report-meta">
+                            <span class="ai-badge">
+                                <i class="fas fa-robot"></i>
+                                Generated by Google Gemini AI
+                            </span>
+                        </div>
+                    </div>
+                    <div id="report-content" class="report-content">
+                        <!-- Report will be populated here -->
+                    </div>
+                    <div class="report-actions">
+                        <button id="print-report" class="btn btn-secondary">
+                            <i class="fas fa-print"></i>
+                            Print Report
+                        </button>
+                        <button id="download-report" class="btn btn-secondary">
+                            <i class="fas fa-download"></i>
+                            Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p>Processing assessment...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
