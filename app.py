@@ -21,14 +21,32 @@ genai.configure(api_key=GEMINI_API_KEY)
 model_gemini = genai.GenerativeModel('gemini-2.5-flash')
 
 # Load the trained model and preprocessor
-try:
-    model = joblib.load('adr_model.pkl')
-    preprocessor = joblib.load('adr_preprocessor.pkl')
-    logger.info("Model and preprocessor loaded successfully")
-except Exception as e:
-    logger.error(f"Error loading model: {e}")
-    model = None
-    preprocessor = None
+def load_or_create_model():
+    try:
+        model = joblib.load('adr_model.pkl')
+        preprocessor = joblib.load('adr_preprocessor.pkl')
+        logger.info("Model and preprocessor loaded successfully")
+        return model, preprocessor
+    except Exception as e:
+        logger.warning(f"Model files not found: {e}")
+        logger.info("Generating synthetic data and training model...")
+        
+        # Generate data and train model
+        try:
+            import subprocess
+            subprocess.run(['python', 'data_generator.py'], check=True)
+            subprocess.run(['python', 'model_trainer.py'], check=True)
+            
+            # Try loading again
+            model = joblib.load('adr_model.pkl')
+            preprocessor = joblib.load('adr_preprocessor.pkl')
+            logger.info("Model created and loaded successfully")
+            return model, preprocessor
+        except Exception as train_error:
+            logger.error(f"Error creating model: {train_error}")
+            return None, None
+
+model, preprocessor = load_or_create_model()
 
 @app.route('/')
 def index():
@@ -379,4 +397,7 @@ def generate_fallback_report(patient_data, prediction_result, patient_name, clin
     return report
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') == 'development'
+    app.run(debug=debug, host='0.0.0.0', port=port)
