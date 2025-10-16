@@ -18,7 +18,7 @@ CORS(app)
 # Configure Gemini API
 GEMINI_API_KEY = "AIzaSyDxALLzLCIsdADHTCLOGeJuL0rWwCtnm1w"
 genai.configure(api_key=GEMINI_API_KEY)
-model_gemini = genai.GenerativeModel('gemini-pro')
+model_gemini = genai.GenerativeModel('gemini-2.5-flash')
 
 # Load the trained model and preprocessor
 try:
@@ -72,11 +72,17 @@ def predict_adr():
         no_adr_prob = probabilities.get('No ADR', 0)
         risk_level = 'Low' if no_adr_prob > 0.7 else 'Medium' if no_adr_prob > 0.4 else 'High'
         
+        # Get all ADR types (excluding 'No ADR') with their probabilities
+        adr_types_only = {k: v for k, v in probabilities.items() if k != 'No ADR'}
+        sorted_adr_types = dict(sorted(adr_types_only.items(), key=lambda x: x[1], reverse=True))
+        
         result = {
             'predicted_adr_type': prediction,
             'risk_level': risk_level,
             'no_adr_probability': round(no_adr_prob * 100, 2),
             'top_adr_risks': {k: round(v * 100, 2) for k, v in list(sorted_probabilities.items())[:5]},
+            'all_adr_types': {k: round(v * 100, 2) for k, v in sorted_adr_types.items()},
+            'top_specific_adr_risks': {k: round(v * 100, 2) for k, v in list(sorted_adr_types.items())[:3]},
             'timestamp': datetime.now().isoformat()
         }
         
@@ -135,6 +141,12 @@ def generate_report():
         - Predicted ADR Type: {prediction_result.get('predicted_adr_type', 'N/A')}
         - Risk Level: {prediction_result.get('risk_level', 'N/A')}
         - No ADR Probability: {prediction_result.get('no_adr_probability', 'N/A')}%
+        
+        TOP SPECIFIC ADR TYPE RISKS:
+        {chr(10).join([f"- {adr_type}: {prob}%" for adr_type, prob in prediction_result.get('top_specific_adr_risks', {}).items()])}
+        
+        ALL ADR TYPE PROBABILITIES:
+        {chr(10).join([f"- {adr_type}: {prob}%" for adr_type, prob in prediction_result.get('all_adr_types', {}).items()])}
 
         Please provide a comprehensive clinical report with the following sections:
 
@@ -160,12 +172,28 @@ def generate_report():
         """
         
         # Generate report using Gemini
-        response = model_gemini.generate_content(prompt)
-        report = response.text
+        logger.info("Attempting to generate report with Gemini AI...")
+        try:
+            response = model_gemini.generate_content(prompt)
+            report = response.text
+            logger.info(f"Gemini response received, length: {len(report) if report else 0}")
+            
+            if not report or len(report.strip()) < 50:
+                raise Exception("Generated report is too short or empty")
+            
+            ai_generated = True
+                
+        except Exception as gemini_error:
+            logger.error(f"Gemini API error: {gemini_error}")
+            logger.info("Falling back to structured report...")
+            # Fallback to a structured report without AI
+            report = generate_fallback_report(patient_data, prediction_result, patient_name, clinician_name)
+            ai_generated = False
         
         return jsonify({
             'report': report,
-            'generated_at': datetime.now().isoformat()
+            'generated_at': datetime.now().isoformat(),
+            'ai_generated': ai_generated
         })
         
     except Exception as e:
@@ -216,6 +244,50 @@ def get_sample_data(sample_type):
     else:
         return jsonify({'error': 'Sample type not found'}), 404
 
+@app.route('/test_gemini')
+def test_gemini():
+    """Test Gemini API connectivity"""
+    try:
+        test_prompt = "Generate a simple test response: Hello, this is a test."
+        response = model_gemini.generate_content(test_prompt)
+        return jsonify({
+            'status': 'success',
+            'gemini_working': True,
+            'test_response': response.text[:100] + "..." if len(response.text) > 100 else response.text
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'gemini_working': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/test_report')
+def test_report():
+    """Test report generation with sample data"""
+    sample_patient_data = {
+        'age': 65, 'sex': 'M', 'ethnicity': 'White', 'bmi': 28.5,
+        'creatinine': 1.2, 'egfr': 75, 'ast_alt': 35, 'indication': 'Pain'
+    }
+    
+    sample_prediction = {
+        'predicted_adr_type': 'No ADR',
+        'risk_level': 'Low',
+        'no_adr_probability': 75.5
+    }
+    
+    try:
+        report = generate_fallback_report(sample_patient_data, sample_prediction, "Test Patient", "Dr. Test")
+        return jsonify({
+            'status': 'success',
+            'report': report[:200] + "..." if len(report) > 200 else report
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'error': str(e)
+        }), 500
+
 @app.route('/health')
 def health_check():
     return jsonify({
@@ -223,6 +295,88 @@ def health_check():
         'model_loaded': model is not None,
         'timestamp': datetime.now().isoformat()
     })
+
+def generate_adr_type_analysis(prediction_result):
+    """Generate detailed ADR type analysis"""
+    top_adr_risks = prediction_result.get('top_specific_adr_risks', {})
+    all_adr_types = prediction_result.get('all_adr_types', {})
+    
+    if not top_adr_risks:
+        return "- No specific ADR type risks identified"
+    
+    analysis = "**Top ADR Type Risks:**\n"
+    for adr_type, probability in top_adr_risks.items():
+        risk_category = "High" if probability > 15 else "Moderate" if probability > 5 else "Low"
+        analysis += f"- **{adr_type}:** {probability}% ({risk_category} Risk)\n"
+    
+    if len(all_adr_types) > 3:
+        analysis += f"\n**Additional ADR Types Monitored:** {len(all_adr_types) - 3} other potential ADR types with lower probabilities"
+    
+    return analysis
+
+def generate_fallback_report(patient_data, prediction_result, patient_name, clinician_name):
+    """Generate a fallback report when Gemini API is not available"""
+    
+    risk_level = prediction_result.get('risk_level', 'Unknown')
+    predicted_adr = prediction_result.get('predicted_adr_type', 'Unknown')
+    no_adr_prob = prediction_result.get('no_adr_probability', 0)
+    
+    # Determine key risk factors
+    risk_factors = []
+    if patient_data.get('age', 0) > 65:
+        risk_factors.append("Advanced age (>65 years)")
+    if patient_data.get('ckd', 0) == 1:
+        risk_factors.append("Chronic kidney disease")
+    if patient_data.get('liver_disease', 0) == 1:
+        risk_factors.append("Liver disease")
+    if patient_data.get('cardiac_disease', 0) == 1:
+        risk_factors.append("Cardiac disease")
+    if patient_data.get('concomitant_drugs_count', 0) > 5:
+        risk_factors.append("Polypharmacy (>5 medications)")
+    if patient_data.get('cyp2d6') == 'PM':
+        risk_factors.append("Poor CYP2D6 metabolizer")
+    if patient_data.get('prior_adr_history', 0) == 1:
+        risk_factors.append("Previous ADR history")
+    
+    report = f"""# ADR Risk Assessment Report
+
+## Patient Information
+- **Patient Name:** {patient_name}
+- **Assessing Clinician:** {clinician_name}
+- **Assessment Date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}
+
+## Risk Assessment Summary
+- **Overall Risk Level:** {risk_level}
+- **Predicted ADR Type:** {predicted_adr}
+- **No ADR Probability:** {no_adr_prob}%
+
+## ADR Type Analysis
+{generate_adr_type_analysis(prediction_result)}
+
+## Key Risk Factors Identified
+{chr(10).join([f"- {factor}" for factor in risk_factors]) if risk_factors else "- No significant risk factors identified"}
+
+## Clinical Recommendations
+- Monitor patient closely for signs of {predicted_adr.lower() if predicted_adr != 'No ADR' else 'any adverse reactions'}
+- Consider dose adjustment based on risk level
+- Regular follow-up appointments recommended
+- Patient education on potential side effects
+
+## Monitoring Suggestions
+- Baseline and periodic laboratory monitoring
+- Vital signs monitoring as clinically indicated
+- Patient-reported outcome assessments
+
+## Additional Considerations
+- This assessment is based on statistical modeling
+- Clinical judgment should always supersede algorithmic recommendations
+- Consider individual patient factors not captured in the model
+
+---
+*Note: This report was generated using a fallback system. For enhanced AI-powered analysis, please ensure Gemini AI service is available.*
+"""
+    
+    return report
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

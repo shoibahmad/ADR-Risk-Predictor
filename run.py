@@ -32,11 +32,24 @@ def main():
     
     # Check if model files exist
     if not check_model_files():
-        sys.exit(1)
+        print("\n🔧 Generating model files...")
+        try:
+            import subprocess
+            result = subprocess.run([sys.executable, 'model_trainer.py'], 
+                                  capture_output=True, text=True, timeout=120)
+            if result.returncode == 0:
+                print("✅ Model files generated successfully!")
+            else:
+                print(f"❌ Failed to generate model files: {result.stderr}")
+                sys.exit(1)
+        except Exception as e:
+            print(f"❌ Error generating model files: {e}")
+            sys.exit(1)
     
     print("🚀 Starting Flask application...")
     print("📱 Access the application at: http://localhost:5000")
     print("🔧 Debug mode: Enabled")
+    print("💡 Use Ctrl+C to stop the server")
     print("=" * 60)
     
     try:
