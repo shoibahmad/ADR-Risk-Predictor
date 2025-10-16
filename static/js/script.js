@@ -158,15 +158,15 @@ async function generateClinicalReport() {
     try {
         console.log('=== Starting clinical report generation ===');
         showLoading();
-        
+
         // Show loading in report section
         showReportLoading();
 
         // Ensure we have the required data
         if (!currentPatientData || !currentPredictionResult) {
-            console.error('Missing data:', { 
-                hasPatientData: !!currentPatientData, 
-                hasPredictionResult: !!currentPredictionResult 
+            console.error('Missing data:', {
+                hasPatientData: !!currentPatientData,
+                hasPredictionResult: !!currentPredictionResult
             });
             throw new Error('Missing patient data or prediction results');
         }
@@ -210,7 +210,7 @@ async function generateClinicalReport() {
     } catch (error) {
         console.error('Error generating report:', error);
         showError(`Failed to generate clinical report: ${error.message}`);
-        
+
         // Show fallback message in report area
         if (reportContent) {
             reportContent.innerHTML = `
@@ -402,7 +402,7 @@ function showSuccess(message) {
 function showReportLoading() {
     const reportContent = document.getElementById('report-content');
     const reportContainer = document.getElementById('report-container');
-    
+
     if (reportContent && reportContainer) {
         reportContainer.style.display = 'block';
         reportContent.innerHTML = `
@@ -412,7 +412,7 @@ function showReportLoading() {
                 <p>AI is analyzing patient data and generating comprehensive clinical recommendations.</p>
             </div>
         `;
-        
+
         // Add loading styles if not already added
         if (!document.querySelector('#report-loading-styles')) {
             const style = document.createElement('style');
@@ -785,15 +785,15 @@ function displayResults(result) {
             <h3><i class="fas fa-medical-kit"></i> Specific ADR Type Risks</h3>
             <div class="adr-types-grid">
                 ${Object.entries(result.top_specific_adr_risks).map(([adrType, probability]) => {
-                    const riskCategory = probability > 15 ? 'high' : probability > 5 ? 'medium' : 'low';
-                    return `
+        const riskCategory = probability > 15 ? 'high' : probability > 5 ? 'medium' : 'low';
+        return `
                         <div class="adr-type-card ${riskCategory}">
                             <div class="adr-type-name">${adrType}</div>
                             <div class="adr-type-probability">${probability}%</div>
                             <div class="adr-type-category">${riskCategory.charAt(0).toUpperCase() + riskCategory.slice(1)} Risk</div>
                         </div>
                     `;
-                }).join('')}
+    }).join('')}
             </div>
             ${Object.keys(result.all_adr_types || {}).length > 3 ? `
                 <div class="additional-adr-info">
@@ -1277,3 +1277,312 @@ function addReportStyles() {
         document.head.appendChild(style);
     }
 }
+// ===
+// == MOBILE RESPONSIVE ENHANCEMENTS =====
+
+// Add mobile-specific optimizations
+function addMobileOptimizations() {
+    // Detect mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    if (isMobile || isTouch) {
+        document.body.classList.add('mobile-device');
+
+        // Add touch-friendly interactions
+        addTouchOptimizations();
+
+        // Optimize form interactions for mobile
+        optimizeFormForMobile();
+
+        // Add mobile-specific event listeners
+        addMobileEventListeners();
+    }
+
+    // Handle orientation changes
+    window.addEventListener('orientationchange', handleOrientationChange);
+    window.addEventListener('resize', debounce(handleResize, 250));
+}
+
+// Add touch-friendly optimizations
+function addTouchOptimizations() {
+    // Add touch feedback to buttons
+    const buttons = document.querySelectorAll('.btn, .risk-item, .adr-type-card');
+    buttons.forEach(button => {
+        button.addEventListener('touchstart', function () {
+            this.style.transform = 'scale(0.98)';
+        });
+
+        button.addEventListener('touchend', function () {
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+
+    // Prevent double-tap zoom on buttons
+    const clickableElements = document.querySelectorAll('.btn, button, .checkbox-group');
+    clickableElements.forEach(element => {
+        element.addEventListener('touchend', function (e) {
+            e.preventDefault();
+            this.click();
+        });
+    });
+}
+
+// Optimize form for mobile
+function optimizeFormForMobile() {
+    // Auto-focus prevention on mobile (prevents keyboard popup)
+    const inputs = document.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function () {
+            // Scroll element into view on mobile
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    this.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 300);
+            }
+        });
+
+        // Add input validation feedback
+        input.addEventListener('blur', function () {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.classList.add('error');
+            } else {
+                this.classList.remove('error');
+            }
+        });
+    });
+
+    // Optimize select dropdowns for mobile
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+        if (window.innerWidth <= 768) {
+            select.setAttribute('size', '1');
+        }
+    });
+}
+
+// Add mobile-specific event listeners
+function addMobileEventListeners() {
+    // Handle swipe gestures for results sections
+    let startX, startY, distX, distY;
+    const threshold = 100;
+
+    const swipeableElements = document.querySelectorAll('.results-container, .report-container');
+    swipeableElements.forEach(element => {
+        element.addEventListener('touchstart', function (e) {
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+        });
+
+        element.addEventListener('touchmove', function (e) {
+            if (!startX || !startY) return;
+
+            const touch = e.touches[0];
+            distX = touch.clientX - startX;
+            distY = touch.clientY - startY;
+        });
+
+        element.addEventListener('touchend', function (e) {
+            if (!startX || !startY) return;
+
+            // Horizontal swipe detection
+            if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > threshold) {
+                if (distX > 0) {
+                    // Swipe right - could trigger previous section
+                    console.log('Swipe right detected');
+                } else {
+                    // Swipe left - could trigger next section
+                    console.log('Swipe left detected');
+                }
+            }
+
+            // Reset values
+            startX = startY = distX = distY = null;
+        });
+    });
+
+    // Add pull-to-refresh functionality (optional)
+    let startY_refresh = 0;
+    document.addEventListener('touchstart', function (e) {
+        startY_refresh = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchmove', function (e) {
+        const currentY = e.touches[0].clientY;
+        const pullDistance = currentY - startY_refresh;
+
+        // If at top of page and pulling down
+        if (window.scrollY === 0 && pullDistance > 100) {
+            // Could add pull-to-refresh indicator here
+            console.log('Pull to refresh detected');
+        }
+    });
+}
+
+// Handle orientation changes
+function handleOrientationChange() {
+    // Delay to allow for orientation change to complete
+    setTimeout(() => {
+        // Recalculate layout if needed
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === 'INPUT') {
+            activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Adjust grid layouts for landscape/portrait
+        adjustLayoutForOrientation();
+    }, 500);
+}
+
+// Handle window resize
+function handleResize() {
+    // Adjust layouts based on new window size
+    adjustLayoutForOrientation();
+
+    // Update any dynamic calculations
+    updateDynamicSizing();
+}
+
+// Adjust layout for current orientation
+function adjustLayoutForOrientation() {
+    const isLandscape = window.innerWidth > window.innerHeight;
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        if (isLandscape) {
+            document.body.classList.add('landscape-mobile');
+            document.body.classList.remove('portrait-mobile');
+        } else {
+            document.body.classList.add('portrait-mobile');
+            document.body.classList.remove('landscape-mobile');
+        }
+    } else {
+        document.body.classList.remove('landscape-mobile', 'portrait-mobile');
+    }
+}
+
+// Update dynamic sizing
+function updateDynamicSizing() {
+    // Update any elements that need dynamic sizing
+    const riskCards = document.querySelectorAll('.risk-card');
+    riskCards.forEach(card => {
+        // Ensure consistent height on mobile
+        if (window.innerWidth <= 768) {
+            card.style.minHeight = 'auto';
+        }
+    });
+}
+
+// Debounce function for performance
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Enhanced error handling for mobile
+function showMobileError(message) {
+    // Use native mobile alerts for critical errors
+    if (window.innerWidth <= 480) {
+        alert(message);
+    } else {
+        showError(message);
+    }
+}
+
+// Enhanced success handling for mobile
+function showMobileSuccess(message) {
+    // Show success with haptic feedback if available
+    if ('vibrate' in navigator) {
+        navigator.vibrate(200);
+    }
+    showSuccess(message);
+}
+
+// Add mobile-specific styles dynamically
+function addMobileStyles() {
+    const style = document.createElement('style');
+    style.id = 'mobile-dynamic-styles';
+    style.textContent = `
+        .mobile-device .form-group input:focus,
+        .mobile-device .form-group select:focus {
+            transform: scale(1.02);
+            transition: transform 0.2s ease;
+        }
+        
+        .mobile-device .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .mobile-device .risk-item:active,
+        .mobile-device .adr-type-card:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+        
+        .mobile-device input.error {
+            border-color: #e53e3e;
+            background-color: #fed7d7;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* Landscape mobile optimizations */
+        .landscape-mobile .form-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .landscape-mobile .checkbox-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .landscape-mobile .risk-summary {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        /* Portrait mobile optimizations */
+        .portrait-mobile .form-actions {
+            position: sticky;
+            bottom: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Initialize mobile optimizations when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    addMobileOptimizations();
+    addMobileStyles();
+});
+
+// Add viewport height fix for mobile browsers
+function fixMobileViewportHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Update viewport height on resize
+window.addEventListener('resize', fixMobileViewportHeight);
+fixMobileViewportHeight();
