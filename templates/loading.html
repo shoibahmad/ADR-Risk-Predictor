@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading - ADR Risk Predictor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .loading-container {
+            text-align: center;
+            color: white;
+            max-width: 500px;
+            padding: 40px;
+        }
+
+        .loading-logo {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        .loading-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+
+        .loading-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+            opacity: 0;
+            animation: spin 1s linear infinite, fadeIn 1s ease 1.5s forwards;
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 2s forwards;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 30px 0;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 1s ease 2.5s forwards;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            border-radius: 3px;
+            width: 0%;
+            animation: fillProgress 3s ease 2.5s forwards;
+        }
+
+        .features-list {
+            text-align: left;
+            margin-top: 30px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 3s forwards;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .feature-item i {
+            color: #48bb78;
+            font-size: 1.2rem;
+            width: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes fillProgress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .loading-container {
+                padding: 20px;
+            }
+            
+            .loading-logo {
+                font-size: 3rem;
+            }
+            
+            .loading-title {
+                font-size: 2rem;
+            }
+            
+            .loading-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="loading-logo">
+            <i class="fas fa-heartbeat"></i>
+        </div>
+        
+        <h1 class="loading-title">ADR Risk Predictor</h1>
+        <p class="loading-subtitle">Advanced Clinical Decision Support System</p>
+        
+        <div class="loading-spinner"></div>
+        
+        <p class="loading-text">Initializing system components...</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        
+        <div class="features-list">
+            <div class="feature-item">
+                <i class="fas fa-check-circle"></i>
+                <span>AI-Powered Risk Assessment</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Real-time Clinical Analysis</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Comprehensive Reporting</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Evidence-Based Recommendations</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirect to patient details after loading
+        setTimeout(() => {
+            window.location.href = '/patient-details';
+        }, 5500);
+        
+        // Add skip button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add skip button
+            const skipButton = document.createElement('button');
+            skipButton.innerHTML = 'Skip Loading';
+            skipButton.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                padding: 10px 20px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(10px);
+            `;
+            
+            skipButton.addEventListener('mouseover', function() {
+                this.style.background = 'rgba(255, 255, 255, 0.3)';
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            skipButton.addEventListener('mouseout', function() {
+                this.style.background = 'rgba(255, 255, 255, 0.2)';
+                this.style.transform = 'translateY(0)';
+            });
+            
+            skipButton.addEventListener('click', function() {
+                window.location.href = '/patient-details';
+            });
+            
+            document.body.appendChild(skipButton);
+        });
+
+        // Update loading text dynamically
+        const loadingTexts = [
+            'Initializing system components...',
+            'Loading AI models...',
+            'Preparing clinical database...',
+            'Configuring risk algorithms...',
+            'Ready to assess patient risk!'
+        ];
+
+        let textIndex = 0;
+        const loadingTextElement = document.querySelector('.loading-text');
+
+        const updateLoadingText = () => {
+            if (textIndex < loadingTexts.length) {
+                loadingTextElement.textContent = loadingTexts[textIndex];
+                textIndex++;
+                setTimeout(updateLoadingText, 1000);
+            }
+        };
+
+        // Start updating text after initial delay
+        setTimeout(updateLoadingText, 2000);
+    </script>
+</body>
+</html>

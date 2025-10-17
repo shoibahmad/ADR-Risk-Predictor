@@ -53,7 +53,7 @@ def main():
     print("=" * 60)
     
     try:
-        app.run(debug=True, host='0.0.0.0', port=5000)
+        app.run(debug=True, host='0.0.0.0', port=8080)
     except KeyboardInterrupt:
         print("\n👋 Application stopped by user.")
     except Exception as e:

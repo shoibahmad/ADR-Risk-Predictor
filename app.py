@@ -50,6 +50,10 @@ model, preprocessor = load_or_create_model()
 
 @app.route('/')
 def index():
+    return render_template('loading.html')
+
+@app.route('/patient-details')
+def patient_details():
     return render_template('welcome.html')
 
 @app.route('/assessment')
@@ -70,7 +74,7 @@ def predict_adr():
         input_df = pd.DataFrame([data])
         
         # Convert categorical columns to object type
-        categorical_cols = ['sex', 'ethnicity', 'cyp2c9', 'cyp2d6', 'indication']
+        categorical_cols = ['sex', 'ethnicity', 'cyp2c9', 'cyp2d6', 'indication', 'medication_name', 'drug_interactions']
         for col in categorical_cols:
             if col in input_df.columns:
                 input_df[col] = input_df[col].astype('object')
@@ -169,24 +173,61 @@ def generate_report():
         Please provide a comprehensive clinical report with the following sections:
 
         ## RISK ASSESSMENT SUMMARY
-        Provide an executive summary of the overall ADR risk profile.
+        Provide an executive summary of the overall ADR risk profile and predicted outcomes.
 
         ## KEY RISK FACTORS IDENTIFIED
-        List and explain the most significant risk factors contributing to ADR potential.
+        List and explain the most significant risk factors contributing to ADR potential, including patient-specific factors.
 
-        ## CLINICAL RECOMMENDATIONS
-        Provide specific, actionable clinical recommendations for this patient.
+        ## MEDICATION RECOMMENDATIONS
+        Based on the risk assessment, provide specific medication suggestions:
+        - Alternative medications with lower ADR risk for this patient profile
+        - Dose adjustments for current medications if needed
+        - Drug combinations to avoid
+        - Safer therapeutic alternatives considering the patient's comorbidities and risk factors
 
-        ## MONITORING SUGGESTIONS
-        Detail recommended monitoring parameters and frequency.
+        ## CLINICAL MANAGEMENT SUGGESTIONS
+        Provide detailed clinical management recommendations:
+        - Immediate actions required based on risk level
+        - Preventive measures to reduce ADR risk
+        - Treatment modifications or optimizations
+        - Specialist referrals if indicated
 
-        ## PATIENT COUNSELING POINTS
-        List key points for patient education and counseling.
+        ## MONITORING PROTOCOL
+        Detail comprehensive monitoring recommendations:
+        - Laboratory parameters to monitor and frequency
+        - Clinical signs and symptoms to watch for
+        - Vital signs monitoring requirements
+        - Timeline for follow-up assessments
 
-        ## ADDITIONAL CONSIDERATIONS
-        Include any other relevant clinical considerations or precautions.
+        ## PATIENT EDUCATION & COUNSELING
+        Provide specific patient counseling points:
+        - Warning signs to report immediately
+        - Medication adherence guidance
+        - Lifestyle modifications to reduce risk
+        - When to seek medical attention
 
-        Format the report professionally for clinical documentation. Use clear headings and bullet points where appropriate.
+        ## PHARMACOGENOMIC CONSIDERATIONS
+        Based on CYP enzyme status, provide:
+        - Implications for current medication metabolism
+        - Dose adjustment recommendations
+        - Alternative medications for poor metabolizers
+        - Future prescribing considerations
+
+        ## EMERGENCY PROTOCOLS
+        If high risk is identified, provide:
+        - Emergency signs and symptoms to monitor
+        - Immediate interventions if ADR occurs
+        - When to discontinue medications
+        - Emergency contact protocols
+
+        ## FOLLOW-UP RECOMMENDATIONS
+        Specify follow-up care:
+        - Recommended follow-up intervals
+        - Parameters to reassess
+        - Criteria for medication continuation or discontinuation
+        - Long-term monitoring strategy
+
+        Format the report professionally for clinical documentation. Use clear headings, bullet points, and highlight critical information. Include specific medication names, doses, and timeframes where appropriate.
         """
         
         # Generate report using Gemini
@@ -221,13 +262,16 @@ def generate_report():
 @app.route('/sample_data/<sample_type>')
 def get_sample_data(sample_type):
     """Get sample patient data for testing"""
+    logger.info(f"Sample data requested for type: {sample_type}")
     sample_patients = {
         'high-risk': {
             'name': 'High Risk Patient',
-            'age': 75, 'sex': 'M', 'ethnicity': 'White', 'bmi': 32.5,
+            'age': 75, 'sex': 'M', 'ethnicity': 'White', 'height': 175, 'weight': 95, 'bmi': 31.0,
             'creatinine': 2.1, 'egfr': 35, 'ast_alt': 95, 'bilirubin': 1.8, 'albumin': 2.8,
-            'diabetes': 1, 'liver_disease': 1, 'ckd': 1, 'cardiac_disease': 1,
-            'index_drug_dose': 200, 'concomitant_drugs_count': 12, 'indication': 'Cancer',
+            'diabetes': 1, 'liver_disease': 1, 'ckd': 1, 'cardiac_disease': 1, 'hypertension': 1,
+            'respiratory_disease': 0, 'neurological_disease': 0, 'autoimmune_disease': 0,
+            'medication_name': 'Warfarin', 'index_drug_dose': 200, 'drug_interactions': 'Major',
+            'concomitant_drugs_count': 12, 'indication': 'Cardiovascular',
             'cyp2c9': 'Poor', 'cyp2d6': 'PM', 'bp_systolic': 165, 'bp_diastolic': 95,
             'heart_rate': 95, 'time_since_start_days': 45, 'cyp_inhibitors_flag': 1,
             'qt_prolonging_flag': 1, 'hla_risk_allele_flag': 1, 'inpatient_flag': 1,
@@ -235,10 +279,12 @@ def get_sample_data(sample_type):
         },
         'medium-risk': {
             'name': 'Medium Risk Patient',
-            'age': 55, 'sex': 'F', 'ethnicity': 'Asian', 'bmi': 27.2,
+            'age': 55, 'sex': 'F', 'ethnicity': 'Asian', 'height': 160, 'weight': 70, 'bmi': 27.3,
             'creatinine': 1.3, 'egfr': 65, 'ast_alt': 45, 'bilirubin': 0.8, 'albumin': 3.5,
-            'diabetes': 1, 'liver_disease': 0, 'ckd': 0, 'cardiac_disease': 1,
-            'index_drug_dose': 150, 'concomitant_drugs_count': 6, 'indication': 'Pain',
+            'diabetes': 1, 'liver_disease': 0, 'ckd': 0, 'cardiac_disease': 1, 'hypertension': 1,
+            'respiratory_disease': 0, 'neurological_disease': 0, 'autoimmune_disease': 0,
+            'medication_name': 'Metformin', 'index_drug_dose': 150, 'drug_interactions': 'Moderate',
+            'concomitant_drugs_count': 6, 'indication': 'Diabetes',
             'cyp2c9': 'Intermediate', 'cyp2d6': 'IM', 'bp_systolic': 140, 'bp_diastolic': 85,
             'heart_rate': 78, 'time_since_start_days': 30, 'cyp_inhibitors_flag': 0,
             'qt_prolonging_flag': 1, 'hla_risk_allele_flag': 0, 'inpatient_flag': 0,
@@ -246,10 +292,12 @@ def get_sample_data(sample_type):
         },
         'low-risk': {
             'name': 'Low Risk Patient',
-            'age': 35, 'sex': 'M', 'ethnicity': 'White', 'bmi': 24.1,
+            'age': 35, 'sex': 'M', 'ethnicity': 'White', 'height': 180, 'weight': 78, 'bmi': 24.1,
             'creatinine': 0.9, 'egfr': 95, 'ast_alt': 25, 'bilirubin': 0.5, 'albumin': 4.2,
-            'diabetes': 0, 'liver_disease': 0, 'ckd': 0, 'cardiac_disease': 0,
-            'index_drug_dose': 100, 'concomitant_drugs_count': 2, 'indication': 'Pain',
+            'diabetes': 0, 'liver_disease': 0, 'ckd': 0, 'cardiac_disease': 0, 'hypertension': 0,
+            'respiratory_disease': 0, 'neurological_disease': 0, 'autoimmune_disease': 0,
+            'medication_name': 'Lisinopril', 'index_drug_dose': 100, 'drug_interactions': 'Minor',
+            'concomitant_drugs_count': 2, 'indication': 'Hypertension',
             'cyp2c9': 'Wild', 'cyp2d6': 'EM', 'bp_systolic': 120, 'bp_diastolic': 75,
             'heart_rate': 68, 'time_since_start_days': 14, 'cyp_inhibitors_flag': 0,
             'qt_prolonging_flag': 0, 'hla_risk_allele_flag': 0, 'inpatient_flag': 0,
@@ -313,6 +361,11 @@ def health_check():
         'model_loaded': model is not None,
         'timestamp': datetime.now().isoformat()
     })
+
+@app.route('/test')
+def test_route():
+    """Simple test route to verify server is working"""
+    return jsonify({'message': 'Server is working!', 'timestamp': datetime.now().isoformat()})
 
 def generate_adr_type_analysis(prediction_result):
     """Generate detailed ADR type analysis"""
@@ -398,6 +451,6 @@ def generate_fallback_report(patient_data, prediction_result, patient_name, clin
 
 if __name__ == '__main__':
     import os
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 8080))
     debug = os.environ.get('FLASK_ENV') == 'development'
     app.run(debug=debug, host='0.0.0.0', port=port)

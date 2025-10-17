@@ -256,4 +256,4 @@ if __name__ == '__main__':
     print("🔥 Report test: http://localhost:5000/generate_report (GET)")
     print("=" * 60)
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=8080)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADR Risk Predictor - Welcome</title>
+    <title>ADR Risk Predictor - Patient Details</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -26,8 +26,8 @@
             <div class="welcome-container">
                 <div class="welcome-header">
                     <i class="fas fa-user-md welcome-icon"></i>
-                    <h2>Welcome to ADR Risk Assessment</h2>
-                    <p>Please enter patient information to begin the clinical assessment</p>
+                    <h2>Patient Information</h2>
+                    <p>Please enter patient details to begin the clinical assessment</p>
                 </div>
 
                 <form id="patient-info-form" class="patient-info-form">
@@ -86,6 +86,10 @@
                             <i class="fas fa-bolt"></i>
                             Quick Start Demo
                         </button>
+                        <a href="/" class="btn btn-secondary btn-large">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Loading
+                        </a>
                     </div>
                 </form>
 
@@ -138,8 +142,15 @@
             sessionStorage.setItem('clinicianName', clinicianName);
             sessionStorage.setItem('assessmentStartTime', new Date().toISOString());
             
-            // Redirect to assessment page
-            window.location.href = '/assessment';
+            // Show loading state
+            const submitBtn = document.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading Assessment...';
+            submitBtn.disabled = true;
+            
+            // Redirect to assessment page after brief delay
+            setTimeout(() => {
+                window.location.href = '/assessment';
+            }, 1500);
         });
         
         // Quick start functionality
@@ -150,8 +161,15 @@
             sessionStorage.setItem('clinicianName', 'Dr. Demo');
             sessionStorage.setItem('assessmentStartTime', new Date().toISOString());
             
-            // Redirect to assessment page
-            window.location.href = '/assessment';
+            // Show loading state
+            const quickStartBtn = document.getElementById('quick-start');
+            quickStartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading Demo...';
+            quickStartBtn.disabled = true;
+            
+            // Redirect to assessment page after brief delay
+            setTimeout(() => {
+                window.location.href = '/assessment';
+            }, 1500);
         });
     </script>
 </body>
