@@ -70,6 +70,56 @@ def predict_adr():
         data = request.json
         logger.info(f"Received prediction request: {data}")
         
+        # Handle empty fields by providing default values
+        default_values = {
+            'age': 50,
+            'sex': 'M',
+            'ethnicity': 'White',
+            'height': 170,
+            'weight': 70,
+            'bmi': 24.2,
+            'creatinine': 1.0,
+            'egfr': 90,
+            'ast_alt': 30,
+            'bilirubin': 0.8,
+            'albumin': 4.0,
+            'diabetes': 0,
+            'liver_disease': 0,
+            'ckd': 0,
+            'cardiac_disease': 0,
+            'hypertension': 0,
+            'respiratory_disease': 0,
+            'neurological_disease': 0,
+            'autoimmune_disease': 0,
+            'medication_name': 'Unknown',
+            'index_drug_dose': 100,
+            'drug_interactions': 'Minor',
+            'concomitant_drugs_count': 2,
+            'cyp2c9': 'Wild',
+            'cyp2d6': 'EM',
+            'bp_systolic': 120,
+            'bp_diastolic': 80,
+            'heart_rate': 70,
+            'time_since_start_days': 30,
+            'cyp_inhibitors_flag': 0,
+            'qt_prolonging_flag': 0,
+            'hla_risk_allele_flag': 0,
+            'inpatient_flag': 0,
+            'prior_adr_history': 0
+        }
+        
+        # Fill empty or missing fields with defaults
+        for key, default_value in default_values.items():
+            if key not in data or data[key] is None or data[key] == '' or data[key] == 'null':
+                data[key] = default_value
+                logger.info(f"Using default value for {key}: {default_value}")
+        
+        # Add default indication for model compatibility (model was trained with this field)
+        # Even though we removed it from the UI, the model still expects it
+        if 'indication' not in data or not data['indication']:
+            data['indication'] = 'Pain'  # Use most common indication from training data
+            logger.info("Added default indication for model compatibility")
+        
         # Create DataFrame from input data
         input_df = pd.DataFrame([data])
         
@@ -149,7 +199,7 @@ def generate_report():
         - Sex: {patient_data.get('sex', 'N/A')}
         - Ethnicity: {patient_data.get('ethnicity', 'N/A')}
         - BMI: {patient_data.get('bmi', 'N/A')}
-        - Indication: {patient_data.get('indication', 'N/A')}
+
 
         CLINICAL PARAMETERS:
         - Creatinine: {patient_data.get('creatinine', 'N/A')} mg/dL
@@ -739,12 +789,10 @@ def get_medication_list(patient_data):
     # Primary medication
     primary_med = patient_data.get('medication_name', 'Unknown')
     dose = patient_data.get('index_drug_dose', 0)
-    indication = patient_data.get('indication', 'Unknown')
     
     medications.append({
         'name': primary_med,
         'dose': f"{dose} mg" if dose else "Dose not specified",
-        'indication': indication,
         'type': 'Primary',
         'risk_level': get_medication_risk_level(primary_med)
     })
@@ -752,13 +800,13 @@ def get_medication_list(patient_data):
     # Concomitant medications (simulated based on common combinations)
     concomitant_count = patient_data.get('concomitant_drugs_count', 0)
     if concomitant_count > 0:
-        common_concomitants = get_common_concomitant_drugs(primary_med, indication, concomitant_count)
+        common_concomitants = get_common_concomitant_drugs(primary_med, concomitant_count)
         medications.extend(common_concomitants)
     
     return medications
 
-def get_common_concomitant_drugs(primary_med, indication, count):
-    """Get common concomitant drugs based on primary medication and indication"""
+def get_common_concomitant_drugs(primary_med, count):
+    """Get common concomitant drugs based on primary medication"""
     concomitant_drugs = {
         'Warfarin': ['Aspirin 81mg', 'Atorvastatin 20mg', 'Metoprolol 50mg', 'Lisinopril 10mg'],
         'Metformin': ['Lisinopril 10mg', 'Atorvastatin 40mg', 'Aspirin 81mg', 'Metoprolol 25mg'],
@@ -766,16 +814,12 @@ def get_common_concomitant_drugs(primary_med, indication, count):
         'Atorvastatin': ['Aspirin 81mg', 'Lisinopril 10mg', 'Metformin 500mg', 'Amlodipine 5mg']
     }
     
-    indication_drugs = {
-        'Cardiovascular': ['Aspirin 81mg', 'Atorvastatin 20mg', 'Metoprolol 50mg', 'Lisinopril 10mg'],
-        'Diabetes': ['Metformin 500mg', 'Lisinopril 10mg', 'Atorvastatin 40mg', 'Aspirin 81mg'],
-        'Hypertension': ['Amlodipine 5mg', 'Hydrochlorothiazide 25mg', 'Metoprolol 25mg', 'Lisinopril 10mg']
-    }
+
     
-    # Get drugs based on primary medication or indication
-    drug_list = concomitant_drugs.get(primary_med, indication_drugs.get(indication, [
+    # Get drugs based on primary medication
+    drug_list = concomitant_drugs.get(primary_med, [
         'Aspirin 81mg', 'Lisinopril 10mg', 'Atorvastatin 20mg', 'Metformin 500mg'
-    ]))
+    ])
     
     medications = []
     for i, drug in enumerate(drug_list[:count]):
@@ -786,7 +830,6 @@ def get_common_concomitant_drugs(primary_med, indication, count):
         medications.append({
             'name': name,
             'dose': dose,
-            'indication': 'Concomitant therapy',
             'type': 'Concomitant',
             'risk_level': get_medication_risk_level(name)
         })

@@ -16,7 +16,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Configure Gemini API
-GEMINI_API_KEY = "AIzaSyB2hJtn7g6pRDytWXbMBBsETMzxTPbv26o"
+GEMINI_API_KEY = "AIzaSyDxALLzLCIsdADHTCLOGeJuL0rWwCtnm1w"
 genai.configure(api_key=GEMINI_API_KEY)
 model_gemini = genai.GenerativeModel('gemini-2.5-flash')
 
@@ -147,21 +147,49 @@ def predict_adr():
         logger.info(f"📊 Received prediction data with {len(data)} fields")
         logger.info(f"📋 Data keys: {list(data.keys())}")
         
-        # Validate required fields
-        required_fields = ['age', 'sex', 'ethnicity', 'height', 'weight', 'bmi', 
-                          'creatinine', 'egfr', 'ast_alt', 'bilirubin', 'albumin',
-                          'medication_name', 'index_drug_dose', 'concomitant_drugs_count', 
-                          'drug_interactions', 'cyp2c9', 'cyp2d6',
-                          'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days']
+        # Handle empty fields by providing default values
+        default_values = {
+            'age': 50,
+            'sex': 'M',
+            'ethnicity': 'White',
+            'height': 170,
+            'weight': 70,
+            'bmi': 24.2,
+            'creatinine': 1.0,
+            'egfr': 90,
+            'ast_alt': 30,
+            'bilirubin': 0.8,
+            'albumin': 4.0,
+            'diabetes': 0,
+            'liver_disease': 0,
+            'ckd': 0,
+            'cardiac_disease': 0,
+            'hypertension': 0,
+            'respiratory_disease': 0,
+            'neurological_disease': 0,
+            'autoimmune_disease': 0,
+            'medication_name': 'Unknown',
+            'index_drug_dose': 100,
+            'drug_interactions': 'Minor',
+            'concomitant_drugs_count': 2,
+            'cyp2c9': 'Wild',
+            'cyp2d6': 'EM',
+            'bp_systolic': 120,
+            'bp_diastolic': 80,
+            'heart_rate': 70,
+            'time_since_start_days': 30,
+            'cyp_inhibitors_flag': 0,
+            'qt_prolonging_flag': 0,
+            'hla_risk_allele_flag': 0,
+            'inpatient_flag': 0,
+            'prior_adr_history': 0
+        }
         
-        missing_fields = []
-        for field in required_fields:
-            if field not in data or data[field] is None or data[field] == '':
-                missing_fields.append(field)
-        
-        if missing_fields:
-            logger.error(f"❌ Missing required fields: {missing_fields}")
-            return jsonify({'error': f'Missing required fields: {", ".join(missing_fields)}'}), 400
+        # Fill empty or missing fields with defaults
+        for key, default_value in default_values.items():
+            if key not in data or data[key] is None or data[key] == '' or data[key] == 'null':
+                data[key] = default_value
+                logger.info(f"Using default value for {key}: {default_value}")
         
         # Validate numeric fields
         numeric_fields = ['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt', 
@@ -180,7 +208,7 @@ def predict_adr():
         
         # Add default indication for model compatibility (model was trained with this field)
         # Even though we removed it from the UI, the model still expects it
-        if 'indication' not in data:
+        if 'indication' not in data or not data['indication']:
             data['indication'] = 'Pain'  # Use most common indication from training data
             logger.info("📝 Added default indication for model compatibility")
         
@@ -189,7 +217,7 @@ def predict_adr():
         logger.info(f"📊 DataFrame columns: {list(input_df.columns)}")
         
         # Convert categorical columns to object type
-        categorical_cols = ['sex', 'ethnicity', 'cyp2c9', 'cyp2d6', 'indication']
+        categorical_cols = ['sex', 'ethnicity', 'cyp2c9', 'cyp2d6', 'indication', 'medication_name', 'drug_interactions']
         for col in categorical_cols:
             if col in input_df.columns:
                 input_df[col] = input_df[col].astype('object')
@@ -742,7 +770,6 @@ def generate_model_based_detailed_analysis(patient_data, prediction_result, pati
     # Medication data
     medication = patient_data.get('medication_name', 'Unknown')
     dose = patient_data.get('index_drug_dose', 'Unknown')
-    indication = patient_data.get('indication', 'Unknown')
     concomitant_count = patient_data.get('concomitant_drugs_count', 0)
     drug_interactions = patient_data.get('drug_interactions', 'Unknown')
     
@@ -800,8 +827,7 @@ def generate_model_based_detailed_analysis(patient_data, prediction_result, pati
 ### Primary Medication Profile
 - **Drug:** {medication}
 - **Dose:** {dose} mg
-- **Indication:** {indication}
-- **Risk Assessment:** {get_medication_risk_assessment(medication, dose, indication)}
+- **Risk Assessment:** {get_medication_risk_assessment(medication, dose)}
 
 ### Pharmacogenomic Profile
 - **CYP2C9:** {cyp2c9} - {get_cyp2c9_interpretation(cyp2c9)}
@@ -1105,7 +1131,7 @@ def get_cardiovascular_assessment(bp_systolic, bp_diastolic, heart_rate):
     except:
         return "Cardiovascular assessment requires valid vital signs"
 
-def get_medication_risk_assessment(medication, dose, indication):
+def get_medication_risk_assessment(medication, dose):
     """Get medication-specific risk assessment"""
     # This would be expanded with a comprehensive drug database
     high_risk_drugs = ['warfarin', 'digoxin', 'lithium', 'phenytoin', 'theophylline']
