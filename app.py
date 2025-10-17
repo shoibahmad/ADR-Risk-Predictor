@@ -98,6 +98,13 @@ def predict_adr():
         adr_types_only = {k: v for k, v in probabilities.items() if k != 'No ADR'}
         sorted_adr_types = dict(sorted(adr_types_only.items(), key=lambda x: x[1], reverse=True))
         
+        # Analyze major contributing factors
+        major_adr_factors = analyze_major_adr_factors(data, sorted_adr_types)
+        
+        # Get medication list and ADR list
+        medication_list = get_medication_list(data)
+        adr_list = get_comprehensive_adr_list(sorted_adr_types)
+        
         result = {
             'predicted_adr_type': prediction,
             'risk_level': risk_level,
@@ -105,6 +112,9 @@ def predict_adr():
             'top_adr_risks': {k: round(v * 100, 2) for k, v in list(sorted_probabilities.items())[:5]},
             'all_adr_types': {k: round(v * 100, 2) for k, v in sorted_adr_types.items()},
             'top_specific_adr_risks': {k: round(v * 100, 2) for k, v in list(sorted_adr_types.items())[:3]},
+            'major_adr_factors': major_adr_factors,
+            'medication_list': medication_list,
+            'adr_list': adr_list,
             'timestamp': datetime.now().isoformat()
         }
         
@@ -362,6 +372,222 @@ def health_check():
         'timestamp': datetime.now().isoformat()
     })
 
+@app.route('/upload_liver_function', methods=['POST'])
+def upload_liver_function():
+    """Handle liver function test file uploads"""
+    try:
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file provided'}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+        
+        # Check file type
+        allowed_extensions = {'pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'txt'}
+        if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in allowed_extensions):
+            return jsonify({'error': 'File type not allowed'}), 400
+        
+        # Save file (in production, use proper file storage)
+        filename = f"liver_function_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}"
+        
+        # For demo purposes, we'll just return success
+        # In production, save to secure storage and process the file
+        
+        return jsonify({
+            'success': True,
+            'filename': filename,
+            'message': 'Liver function test file uploaded successfully',
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error uploading liver function file: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/get_medication_suggestions')
+def get_medication_suggestions():
+    """Get medication suggestions based on indication"""
+    indication = request.args.get('indication', '')
+    
+    medication_suggestions = {
+        'Cardiovascular': ['Warfarin', 'Aspirin', 'Atorvastatin', 'Lisinopril', 'Metoprolol', 'Amlodipine'],
+        'Diabetes': ['Metformin', 'Insulin', 'Glipizide', 'Sitagliptin', 'Empagliflozin'],
+        'Hypertension': ['Lisinopril', 'Amlodipine', 'Hydrochlorothiazide', 'Metoprolol', 'Losartan'],
+        'Pain': ['Ibuprofen', 'Acetaminophen', 'Naproxen', 'Tramadol', 'Morphine'],
+        'Infection': ['Amoxicillin', 'Ciprofloxacin', 'Azithromycin', 'Cephalexin', 'Doxycycline'],
+        'Mental Health': ['Sertraline', 'Fluoxetine', 'Lorazepam', 'Risperidone', 'Lithium']
+    }
+    
+    suggestions = medication_suggestions.get(indication, [])
+    return jsonify({'medications': suggestions})
+
+@app.route('/get_lab_reference')
+def get_lab_reference():
+    """Get laboratory reference ranges and interpretations"""
+    category = request.args.get('category', 'all')
+    
+    if category == 'all':
+        return jsonify(CLINICAL_REFERENCE_DATA['lab_ranges'])
+    elif category in CLINICAL_REFERENCE_DATA['lab_ranges']:
+        return jsonify(CLINICAL_REFERENCE_DATA['lab_ranges'][category])
+    else:
+        return jsonify({'error': 'Category not found'}), 404
+
+@app.route('/interpret_lab_value', methods=['POST'])
+def interpret_lab_value():
+    """Interpret a laboratory value based on clinical reference ranges"""
+    try:
+        data = request.json
+        logger.info(f"Lab interpretation request: {data}")
+        
+        test_name = data.get('test_name')
+        value = data.get('value')
+        sex = data.get('sex', 'M')
+        
+        if not test_name or value is None:
+            logger.warning(f"Missing required parameters: test_name={test_name}, value={value}")
+            return jsonify({'error': 'test_name and value are required'}), 400
+        
+        try:
+            value_float = float(value)
+        except (ValueError, TypeError) as e:
+            logger.error(f"Invalid value format: {value}, error: {e}")
+            return jsonify({'error': f'Invalid value format: {value}'}), 400
+        
+        interpretations = get_lab_interpretation(test_name, value_float, sex)
+        logger.info(f"Lab interpretation result: {len(interpretations)} interpretations found")
+        
+        return jsonify({
+            'test_name': test_name,
+            'value': value,
+            'sex': sex,
+            'interpretations': interpretations,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error interpreting lab value: {e}", exc_info=True)
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/get_drug_adrs')
+def get_drug_adrs():
+    """Get common ADRs for specific drug classes"""
+    drug_class = request.args.get('drug_class', '')
+    
+    if drug_class:
+        adrs = CLINICAL_REFERENCE_DATA['drug_adrs'].get(drug_class, [])
+        return jsonify({'drug_class': drug_class, 'common_adrs': adrs})
+    else:
+        return jsonify(CLINICAL_REFERENCE_DATA['drug_adrs'])
+
+@app.route('/enhanced_lab_analysis', methods=['POST'])
+def enhanced_lab_analysis():
+    """Provide comprehensive laboratory analysis with clinical interpretations"""
+    try:
+        data = request.json
+        patient_data = data.get('patient_data', {})
+        sex = patient_data.get('sex', 'M')
+        
+        lab_analysis = {
+            'renal_function': {},
+            'liver_function': {},
+            'overall_assessment': [],
+            'monitoring_recommendations': []
+        }
+        
+        # Analyze renal function
+        creatinine = patient_data.get('creatinine')
+        egfr = patient_data.get('egfr')
+        
+        if creatinine:
+            creat_interp = get_lab_interpretation('creatinine', creatinine, sex)
+            lab_analysis['renal_function']['creatinine'] = {
+                'value': creatinine,
+                'unit': 'mg/dL',
+                'interpretations': creat_interp
+            }
+        
+        if egfr:
+            egfr_interp = get_lab_interpretation('egfr', egfr, sex)
+            lab_analysis['renal_function']['egfr'] = {
+                'value': egfr,
+                'unit': 'mL/min/1.73m²',
+                'interpretations': egfr_interp
+            }
+        
+        # Analyze liver function
+        ast_alt = patient_data.get('ast_alt')
+        bilirubin = patient_data.get('bilirubin')
+        albumin = patient_data.get('albumin')
+        
+        if ast_alt:
+            ast_interp = get_lab_interpretation('ast', ast_alt, sex)
+            lab_analysis['liver_function']['ast_alt'] = {
+                'value': ast_alt,
+                'unit': 'U/L',
+                'interpretations': ast_interp
+            }
+        
+        if bilirubin:
+            bili_interp = get_lab_interpretation('bilirubin', bilirubin, sex)
+            lab_analysis['liver_function']['bilirubin'] = {
+                'value': bilirubin,
+                'unit': 'mg/dL',
+                'interpretations': bili_interp
+            }
+        
+        if albumin:
+            alb_interp = get_lab_interpretation('albumin', albumin, sex)
+            lab_analysis['liver_function']['albumin'] = {
+                'value': albumin,
+                'unit': 'g/dL',
+                'interpretations': alb_interp
+            }
+        
+        # Overall assessment
+        high_risk_findings = []
+        moderate_risk_findings = []
+        
+        for category in ['renal_function', 'liver_function']:
+            for test, data in lab_analysis[category].items():
+                for interp in data.get('interpretations', []):
+                    if interp['severity'] == 'High':
+                        high_risk_findings.append(f"{test.upper()}: {interp['clinical_significance']}")
+                    elif interp['severity'] == 'Moderate':
+                        moderate_risk_findings.append(f"{test.upper()}: {interp['clinical_significance']}")
+        
+        if high_risk_findings:
+            lab_analysis['overall_assessment'].append({
+                'level': 'High Risk',
+                'findings': high_risk_findings,
+                'recommendation': 'Immediate clinical attention required'
+            })
+        
+        if moderate_risk_findings:
+            lab_analysis['overall_assessment'].append({
+                'level': 'Moderate Risk',
+                'findings': moderate_risk_findings,
+                'recommendation': 'Enhanced monitoring recommended'
+            })
+        
+        # Monitoring recommendations
+        if creatinine and creatinine > 1.5:
+            lab_analysis['monitoring_recommendations'].append('Monitor renal function weekly')
+        if ast_alt and ast_alt > 80:
+            lab_analysis['monitoring_recommendations'].append('Monitor liver function every 3-7 days')
+        if egfr and egfr < 60:
+            lab_analysis['monitoring_recommendations'].append('Adjust drug dosing for renal impairment')
+        
+        return jsonify({
+            'lab_analysis': lab_analysis,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in enhanced lab analysis: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/test')
 def test_route():
     """Simple test route to verify server is working"""
@@ -384,6 +610,425 @@ def generate_adr_type_analysis(prediction_result):
         analysis += f"\n**Additional ADR Types Monitored:** {len(all_adr_types) - 3} other potential ADR types with lower probabilities"
     
     return analysis
+
+def analyze_major_adr_factors(patient_data, adr_types):
+    """Analyze which parameters contribute most to major ADR risk using clinical reference data"""
+    factors = []
+    sex = patient_data.get('sex', 'M')
+    
+    # Age factor
+    age = patient_data.get('age', 0)
+    if age > 65:
+        factors.append({
+            'factor': 'Advanced Age',
+            'value': f"{age} years",
+            'risk_contribution': 'High',
+            'description': 'Elderly patients have increased ADR susceptibility due to altered pharmacokinetics and pharmacodynamics',
+            'clinical_reference': 'Age >65 years is a major risk factor for ADRs'
+        })
+    
+    # Kidney function with clinical interpretation
+    creatinine = patient_data.get('creatinine', 1.0)
+    egfr = patient_data.get('egfr', 100)
+    
+    creat_interp = get_lab_interpretation('creatinine', creatinine, sex)
+    egfr_interp = get_lab_interpretation('egfr', egfr, sex)
+    
+    if creat_interp or egfr_interp:
+        severity = 'High' if egfr < 30 or creatinine > 2.0 else 'Medium'
+        factors.append({
+            'factor': 'Renal Impairment',
+            'value': f"Creatinine: {creatinine} mg/dL, eGFR: {egfr} mL/min/1.73m²",
+            'risk_contribution': severity,
+            'description': 'Impaired renal clearance increases drug accumulation and toxicity risk',
+            'clinical_reference': f"Normal creatinine: {CLINICAL_REFERENCE_DATA['lab_ranges']['renal'][f'creatinine_{sex.lower()}ale']['range']}"
+        })
+    
+    # Liver function with clinical interpretation
+    ast_alt = patient_data.get('ast_alt', 30)
+    bilirubin = patient_data.get('bilirubin', 0.8)
+    albumin = patient_data.get('albumin', 4.0)
+    
+    liver_issues = []
+    if ast_alt > 40:
+        liver_issues.append(f"AST/ALT: {ast_alt} U/L (Normal: 10-40 U/L)")
+    if bilirubin > 1.2:
+        liver_issues.append(f"Bilirubin: {bilirubin} mg/dL (Normal: 0.2-1.2 mg/dL)")
+    if albumin < 3.5:
+        liver_issues.append(f"Albumin: {albumin} g/dL (Normal: 3.5-5.0 g/dL)")
+    
+    if liver_issues:
+        severity = 'High' if ast_alt > 120 or bilirubin > 3.0 or albumin < 2.5 else 'Medium'
+        factors.append({
+            'factor': 'Hepatic Impairment',
+            'value': '; '.join(liver_issues),
+            'risk_contribution': severity,
+            'description': 'Hepatic dysfunction affects drug metabolism and increases ADR risk',
+            'clinical_reference': 'Liver function abnormalities require dose adjustments'
+        })
+    
+    # Polypharmacy
+    drug_count = patient_data.get('concomitant_drugs_count', 0)
+    if drug_count > 5:
+        factors.append({
+            'factor': 'Polypharmacy',
+            'value': f"{drug_count} medications",
+            'risk_contribution': 'High' if drug_count > 10 else 'Medium',
+            'description': 'Multiple medications exponentially increase drug-drug interaction risk',
+            'clinical_reference': '>5 medications significantly increases ADR risk'
+        })
+    
+    # Pharmacogenomics
+    cyp2d6 = patient_data.get('cyp2d6', 'EM')
+    cyp2c9 = patient_data.get('cyp2c9', 'Wild')
+    
+    if cyp2d6 in ['PM', 'Poor'] or cyp2c9 in ['Poor']:
+        factors.append({
+            'factor': 'Poor Metabolizer Status',
+            'value': f"CYP2D6: {cyp2d6}, CYP2C9: {cyp2c9}",
+            'risk_contribution': 'High',
+            'description': 'Reduced drug metabolism capacity leading to drug accumulation and toxicity',
+            'clinical_reference': 'Poor metabolizers require 25-50% dose reduction for affected drugs'
+        })
+    
+    # Drug interactions with specific drug class ADRs
+    interactions = patient_data.get('drug_interactions', 'None')
+    medication_name = patient_data.get('medication_name', '')
+    
+    if interactions in ['Major', 'Severe']:
+        # Get specific ADRs for the medication class
+        drug_specific_adrs = []
+        for drug_class, adrs in CLINICAL_REFERENCE_DATA['drug_adrs'].items():
+            if any(drug.lower() in medication_name.lower() for drug in drug_class.split('/')):
+                drug_specific_adrs.extend(adrs)
+        
+        factors.append({
+            'factor': 'Major Drug Interactions',
+            'value': f"{interactions} interactions with {medication_name}",
+            'risk_contribution': 'High',
+            'description': f'Significant drug-drug interactions increase risk of: {", ".join(drug_specific_adrs[:3]) if drug_specific_adrs else "various ADRs"}',
+            'clinical_reference': 'Major interactions require close monitoring or alternative therapy'
+        })
+    
+    # Comorbidity burden
+    comorbidities = []
+    if patient_data.get('diabetes') == 1:
+        comorbidities.append('Diabetes')
+    if patient_data.get('cardiac_disease') == 1:
+        comorbidities.append('Cardiac disease')
+    if patient_data.get('liver_disease') == 1:
+        comorbidities.append('Liver disease')
+    if patient_data.get('ckd') == 1:
+        comorbidities.append('CKD')
+    
+    if len(comorbidities) >= 3:
+        factors.append({
+            'factor': 'Multiple Comorbidities',
+            'value': f"{len(comorbidities)} conditions: {', '.join(comorbidities)}",
+            'risk_contribution': 'High',
+            'description': 'Multiple comorbidities increase ADR susceptibility and complicate management',
+            'clinical_reference': '≥3 comorbidities significantly increase ADR risk'
+        })
+    
+    return factors
+
+def get_medication_list(patient_data):
+    """Generate comprehensive medication list with details"""
+    medications = []
+    
+    # Primary medication
+    primary_med = patient_data.get('medication_name', 'Unknown')
+    dose = patient_data.get('index_drug_dose', 0)
+    indication = patient_data.get('indication', 'Unknown')
+    
+    medications.append({
+        'name': primary_med,
+        'dose': f"{dose} mg" if dose else "Dose not specified",
+        'indication': indication,
+        'type': 'Primary',
+        'risk_level': get_medication_risk_level(primary_med)
+    })
+    
+    # Concomitant medications (simulated based on common combinations)
+    concomitant_count = patient_data.get('concomitant_drugs_count', 0)
+    if concomitant_count > 0:
+        common_concomitants = get_common_concomitant_drugs(primary_med, indication, concomitant_count)
+        medications.extend(common_concomitants)
+    
+    return medications
+
+def get_common_concomitant_drugs(primary_med, indication, count):
+    """Get common concomitant drugs based on primary medication and indication"""
+    concomitant_drugs = {
+        'Warfarin': ['Aspirin 81mg', 'Atorvastatin 20mg', 'Metoprolol 50mg', 'Lisinopril 10mg'],
+        'Metformin': ['Lisinopril 10mg', 'Atorvastatin 40mg', 'Aspirin 81mg', 'Metoprolol 25mg'],
+        'Lisinopril': ['Hydrochlorothiazide 25mg', 'Amlodipine 5mg', 'Metformin 500mg', 'Atorvastatin 20mg'],
+        'Atorvastatin': ['Aspirin 81mg', 'Lisinopril 10mg', 'Metformin 500mg', 'Amlodipine 5mg']
+    }
+    
+    indication_drugs = {
+        'Cardiovascular': ['Aspirin 81mg', 'Atorvastatin 20mg', 'Metoprolol 50mg', 'Lisinopril 10mg'],
+        'Diabetes': ['Metformin 500mg', 'Lisinopril 10mg', 'Atorvastatin 40mg', 'Aspirin 81mg'],
+        'Hypertension': ['Amlodipine 5mg', 'Hydrochlorothiazide 25mg', 'Metoprolol 25mg', 'Lisinopril 10mg']
+    }
+    
+    # Get drugs based on primary medication or indication
+    drug_list = concomitant_drugs.get(primary_med, indication_drugs.get(indication, [
+        'Aspirin 81mg', 'Lisinopril 10mg', 'Atorvastatin 20mg', 'Metformin 500mg'
+    ]))
+    
+    medications = []
+    for i, drug in enumerate(drug_list[:count]):
+        drug_parts = drug.split(' ')
+        name = drug_parts[0]
+        dose = ' '.join(drug_parts[1:]) if len(drug_parts) > 1 else "Standard dose"
+        
+        medications.append({
+            'name': name,
+            'dose': dose,
+            'indication': 'Concomitant therapy',
+            'type': 'Concomitant',
+            'risk_level': get_medication_risk_level(name)
+        })
+    
+    return medications
+
+def get_medication_risk_level(medication):
+    """Determine risk level for specific medications"""
+    high_risk_meds = ['Warfarin', 'Digoxin', 'Lithium', 'Phenytoin', 'Theophylline']
+    medium_risk_meds = ['Metformin', 'Atorvastatin', 'Lisinopril', 'Metoprolol']
+    
+    if medication in high_risk_meds:
+        return 'High'
+    elif medication in medium_risk_meds:
+        return 'Medium'
+    else:
+        return 'Low'
+
+# Clinical Reference Data
+CLINICAL_REFERENCE_DATA = {
+    'lab_ranges': {
+        'hematology': {
+            'hemoglobin_male': {'range': '13.5-17.5 g/dL', 'notes': 'Low = anemia; high = polycythemia'},
+            'hemoglobin_female': {'range': '12-16 g/dL', 'notes': 'Low = anemia; high = polycythemia'},
+            'hematocrit_male': {'range': '41-53%', 'notes': 'Proportion of RBCs'},
+            'hematocrit_female': {'range': '36-46%', 'notes': 'Proportion of RBCs'},
+            'wbc_count': {'range': '4,000-11,000 /µL', 'notes': '↑ infection, ↓ bone marrow suppression'},
+            'platelet_count': {'range': '150,000-400,000 /µL', 'notes': 'Bleeding risk if low'},
+            'esr_male': {'range': '0-15 mm/hr', 'notes': '↑ inflammation'},
+            'esr_female': {'range': '0-20 mm/hr', 'notes': '↑ inflammation'}
+        },
+        'renal': {
+            'bun': {'range': '7-20 mg/dL', 'notes': '↑ renal impairment'},
+            'creatinine_male': {'range': '0.7-1.3 mg/dL', 'notes': 'Kidney function marker'},
+            'creatinine_female': {'range': '0.6-1.1 mg/dL', 'notes': 'Kidney function marker'},
+            'bun_creatinine_ratio': {'range': '10:1 – 20:1', 'notes': 'Dehydration if elevated'},
+            'uric_acid_male': {'range': '3.5-7.2 mg/dL', 'notes': '↑ gout'},
+            'uric_acid_female': {'range': '2.6-6.0 mg/dL', 'notes': '↑ gout'},
+            'egfr': {'range': '≥90 mL/min/1.73 m²', 'notes': '↓ = CKD'}
+        },
+        'liver': {
+            'total_bilirubin': {'range': '0.2-1.2 mg/dL', 'notes': '↑ jaundice'},
+            'direct_bilirubin': {'range': '0.0-0.3 mg/dL', 'notes': 'Conjugated bilirubin'},
+            'ast': {'range': '10-40 U/L', 'notes': '↑ liver/muscle injury'},
+            'alt': {'range': '7-56 U/L', 'notes': 'Specific for liver'},
+            'alp': {'range': '40-120 U/L', 'notes': '↑ bone/liver disease'},
+            'ggt': {'range': '9-48 U/L', 'notes': '↑ alcohol use'},
+            'albumin': {'range': '3.5-5.0 g/dL', 'notes': '↓ liver disease'},
+            'total_protein': {'range': '6.0-8.3 g/dL', 'notes': 'Nutritional status'},
+            'ag_ratio': {'range': '1.0-2.0', 'notes': 'Albumin/Globulin ratio'}
+        },
+        'cardiac': {
+            'troponin_i': {'range': '<0.04 ng/mL', 'notes': '↑ MI'},
+            'ck_mb': {'range': '0-6% of total CK', 'notes': 'Cardiac marker'},
+            'bnp': {'range': '<100 pg/mL', 'notes': '↑ heart failure'},
+            'myoglobin': {'range': '25-72 ng/mL', 'notes': 'Early marker'}
+        },
+        'coagulation': {
+            'pt': {'range': '11-13.5 sec', 'notes': '↑ in liver disease, warfarin'},
+            'inr_normal': {'range': '0.8-1.2', 'notes': 'Normal range'},
+            'inr_therapeutic': {'range': '2-3', 'notes': 'Therapeutic on warfarin'},
+            'aptt': {'range': '25-35 sec', 'notes': '↑ in heparin use'},
+            'fibrinogen': {'range': '200-400 mg/dL', 'notes': 'Clotting factor'}
+        }
+    },
+    'drug_adrs': {
+        'NSAIDs': ['Ulcer', 'renal damage'],
+        'Opioids': ['Constipation', 'sedation'],
+        'ACE inhibitors': ['Cough', 'angioedema'],
+        'Beta-blockers': ['Bradycardia', 'fatigue'],
+        'Statins': ['Myopathy', '↑LFTs'],
+        'Penicillins': ['Allergy', 'rash'],
+        'Sulfonamides': ['Rash', 'SJS'],
+        'Fluoroquinolones': ['Tendon rupture', 'QT↑'],
+        'Phenytoin': ['Gingival hyperplasia', 'ataxia'],
+        'Carbamazepine': ['Rash', 'hyponatremia'],
+        'Valproate': ['Hepatotoxicity', 'teratogenic'],
+        'Clozapine': ['Agranulocytosis'],
+        'SSRIs': ['Nausea', 'sexual issues'],
+        'Corticosteroids': ['Weight gain', 'hyperglycemia'],
+        'Heparin/Warfarin': ['Bleeding'],
+        'Aminoglycosides': ['Nephro- & ototoxicity'],
+        'Amiodarone': ['Pulmonary fibrosis', 'thyroid disorders'],
+        'Isoniazid': ['Neuropathy', 'hepatitis'],
+        'Ethambutol': ['Optic neuritis'],
+        'Rifampicin': ['Red-orange fluids'],
+        'Tetracyclines': ['Teeth discoloration', 'photosensitivity'],
+        'Methotrexate': ['Bone marrow suppression'],
+        'Allopurinol': ['Rash', 'hypersensitivity']
+    }
+}
+
+def get_lab_interpretation(test_name, value, sex='M'):
+    """Interpret laboratory values based on clinical reference ranges"""
+    interpretations = []
+    logger.info(f"Interpreting lab value: {test_name}={value} for {sex}")
+    
+    # Hematology interpretations
+    if test_name == 'hemoglobin':
+        normal_range = CLINICAL_REFERENCE_DATA['lab_ranges']['hematology'][f'hemoglobin_{sex.lower()}ale']['range']
+        if sex == 'M':
+            if value < 13.5:
+                interpretations.append({'status': 'Low', 'clinical_significance': 'Anemia', 'severity': 'Moderate'})
+            elif value > 17.5:
+                interpretations.append({'status': 'High', 'clinical_significance': 'Polycythemia', 'severity': 'Moderate'})
+        else:
+            if value < 12:
+                interpretations.append({'status': 'Low', 'clinical_significance': 'Anemia', 'severity': 'Moderate'})
+            elif value > 16:
+                interpretations.append({'status': 'High', 'clinical_significance': 'Polycythemia', 'severity': 'Moderate'})
+    
+    # Renal function interpretations
+    elif test_name == 'creatinine':
+        if sex == 'M':
+            if value > 1.3:
+                interpretations.append({'status': 'High', 'clinical_significance': 'Renal impairment', 'severity': 'High' if value > 2.0 else 'Moderate'})
+        else:
+            if value > 1.1:
+                interpretations.append({'status': 'High', 'clinical_significance': 'Renal impairment', 'severity': 'High' if value > 2.0 else 'Moderate'})
+    
+    elif test_name == 'egfr':
+        if value < 60:
+            interpretations.append({'status': 'Low', 'clinical_significance': 'Chronic Kidney Disease', 'severity': 'High' if value < 30 else 'Moderate'})
+        elif value < 90:
+            interpretations.append({'status': 'Low', 'clinical_significance': 'Mild kidney dysfunction', 'severity': 'Low'})
+    
+    # Liver function interpretations
+    elif test_name in ['ast', 'alt', 'ast_alt']:
+        if value > 40:
+            interpretations.append({'status': 'High', 'clinical_significance': 'Liver injury/inflammation', 'severity': 'High' if value > 120 else 'Moderate'})
+    
+    elif test_name == 'bilirubin':
+        if value > 1.2:
+            interpretations.append({'status': 'High', 'clinical_significance': 'Jaundice risk', 'severity': 'Moderate' if value < 3.0 else 'High'})
+    
+    elif test_name == 'albumin':
+        if value < 3.5:
+            interpretations.append({'status': 'Low', 'clinical_significance': 'Liver dysfunction/malnutrition', 'severity': 'Moderate'})
+    
+    logger.info(f"Lab interpretation complete: {test_name}={value} -> {len(interpretations)} interpretations")
+    return interpretations
+
+def get_comprehensive_adr_list(adr_types):
+    """Generate comprehensive ADR list with clinical details and reference data"""
+    adr_details = {
+        'Hepatotoxicity': {
+            'category': 'Hepatic',
+            'severity': 'Severe',
+            'onset': '2-8 weeks',
+            'symptoms': ['Elevated liver enzymes', 'Jaundice', 'Abdominal pain', 'Fatigue'],
+            'monitoring': 'Liver function tests every 2-4 weeks',
+            'lab_markers': ['AST >120 U/L', 'ALT >120 U/L', 'Bilirubin >3.0 mg/dL'],
+            'common_drugs': ['Acetaminophen', 'Statins', 'Isoniazid', 'Valproate']
+        },
+        'Nephrotoxicity': {
+            'category': 'Renal',
+            'severity': 'Severe',
+            'onset': '1-4 weeks',
+            'symptoms': ['Elevated creatinine', 'Decreased urine output', 'Edema'],
+            'monitoring': 'Serum creatinine and eGFR weekly',
+            'lab_markers': ['Creatinine >1.5x baseline', 'eGFR <60 mL/min/1.73m²', 'BUN >40 mg/dL'],
+            'common_drugs': ['NSAIDs', 'Aminoglycosides', 'ACE inhibitors']
+        },
+        'Cardiotoxicity': {
+            'category': 'Cardiac',
+            'severity': 'Severe',
+            'onset': 'Variable',
+            'symptoms': ['Arrhythmias', 'Heart failure', 'QT prolongation'],
+            'monitoring': 'ECG and echocardiogram as indicated',
+            'lab_markers': ['Troponin I >0.04 ng/mL', 'BNP >400 pg/mL', 'QTc >500 ms'],
+            'common_drugs': ['Amiodarone', 'Doxorubicin', 'Fluoroquinolones']
+        },
+        'Gastrointestinal': {
+            'category': 'GI',
+            'severity': 'Moderate',
+            'onset': '1-7 days',
+            'symptoms': ['Nausea', 'Vomiting', 'Diarrhea', 'Abdominal pain'],
+            'monitoring': 'Clinical assessment and electrolytes',
+            'lab_markers': ['Electrolyte imbalance', 'Dehydration markers'],
+            'common_drugs': ['NSAIDs', 'Antibiotics', 'Chemotherapy']
+        },
+        'Neurological': {
+            'category': 'CNS',
+            'severity': 'Moderate to Severe',
+            'onset': '1-14 days',
+            'symptoms': ['Dizziness', 'Confusion', 'Seizures', 'Peripheral neuropathy'],
+            'monitoring': 'Neurological assessment and relevant tests',
+            'lab_markers': ['Altered mental status', 'Abnormal reflexes'],
+            'common_drugs': ['Phenytoin', 'Carbamazepine', 'Isoniazid']
+        },
+        'Hematological': {
+            'category': 'Hematologic',
+            'severity': 'Severe',
+            'onset': '1-6 weeks',
+            'symptoms': ['Anemia', 'Thrombocytopenia', 'Neutropenia'],
+            'monitoring': 'Complete blood count weekly',
+            'lab_markers': ['Hb <10 g/dL', 'Platelets <100,000/µL', 'WBC <4,000/µL'],
+            'common_drugs': ['Methotrexate', 'Clozapine', 'Chemotherapy']
+        },
+        'Dermatological': {
+            'category': 'Skin',
+            'severity': 'Mild to Severe',
+            'onset': '1-21 days',
+            'symptoms': ['Rash', 'Stevens-Johnson syndrome', 'Photosensitivity'],
+            'monitoring': 'Skin examination and patient education',
+            'lab_markers': ['Eosinophilia', 'Elevated liver enzymes in severe cases'],
+            'common_drugs': ['Sulfonamides', 'Penicillins', 'Allopurinol']
+        }
+    }
+    
+    adr_list = []
+    for adr_type, probability in adr_types.items():
+        if adr_type in adr_details:
+            details = adr_details[adr_type]
+            adr_list.append({
+                'name': adr_type,
+                'probability': round(probability * 100, 2),
+                'category': details['category'],
+                'severity': details['severity'],
+                'onset': details['onset'],
+                'symptoms': details['symptoms'],
+                'monitoring': details['monitoring']
+            })
+    
+    # Add common ADRs if not present
+    common_adrs = ['Gastrointestinal', 'Dermatological', 'Neurological']
+    existing_names = [adr['name'] for adr in adr_list]
+    
+    for common_adr in common_adrs:
+        if common_adr not in existing_names and common_adr in adr_details:
+            details = adr_details[common_adr]
+            adr_list.append({
+                'name': common_adr,
+                'probability': 5.0,  # Default low probability
+                'category': details['category'],
+                'severity': details['severity'],
+                'onset': details['onset'],
+                'symptoms': details['symptoms'],
+                'monitoring': details['monitoring']
+            })
+    
+    return sorted(adr_list, key=lambda x: x['probability'], reverse=True)
 
 def generate_fallback_report(patient_data, prediction_result, patient_name, clinician_name):
     """Generate a fallback report when Gemini API is not available"""
@@ -451,6 +1096,6 @@ def generate_fallback_report(patient_data, prediction_result, patient_name, clin
 
 if __name__ == '__main__':
     import os
-    port = int(os.environ.get('PORT', 8080))
+    port = int(os.environ.get('PORT', 5000))
     debug = os.environ.get('FLASK_ENV') == 'development'
     app.run(debug=debug, host='0.0.0.0', port=port)

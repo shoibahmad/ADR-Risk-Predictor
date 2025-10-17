@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -401,8 +402,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Enhanced Mobile Responsive Design */
@@ -559,7 +565,7 @@
                 padding: 0 !important;
             }
 
-            .results-content > div {
+            .results-content>div {
                 padding: 12px !important;
                 border-radius: 12px !important;
             }
@@ -1013,7 +1019,8 @@
             }
 
             /* Ensure no horizontal scrolling */
-            body, html {
+            body,
+            html {
                 overflow-x: hidden;
                 max-width: 100vw;
             }
@@ -1576,6 +1583,7 @@
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -1583,6 +1591,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Header -->
@@ -1618,9 +1627,10 @@
                     Patient Assessment
                 </h1>
                 <p class="form-subtitle">Enter patient information to assess ADR risk</p>
-                
+
                 <div class="sample-controls">
-                    <button type="button" id="info-button" class="btn-sample" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
+                    <button type="button" id="info-button" class="btn-sample"
+                        style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
                         <i class="fas fa-info-circle"></i>
                         Project Information
                     </button>
@@ -1643,7 +1653,8 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="age">Age (years)</label>
-                            <input type="number" id="age" name="age" min="18" max="120" placeholder="Enter age (18-120)" required>
+                            <input type="number" id="age" name="age" min="18" max="120" placeholder="Enter age (18-120)"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="sex">Sex</label>
@@ -1665,15 +1676,18 @@
                         </div>
                         <div class="form-group">
                             <label for="height">Height (cm)</label>
-                            <input type="number" id="height" name="height" min="100" max="250" step="0.1" placeholder="Enter height (100-250 cm)" required>
+                            <input type="number" id="height" name="height" min="100" max="250" step="0.1"
+                                placeholder="Enter height (100-250 cm)" required>
                         </div>
                         <div class="form-group">
                             <label for="weight">Weight (kg)</label>
-                            <input type="number" id="weight" name="weight" min="30" max="300" step="0.1" placeholder="Enter weight (30-300 kg)" required>
+                            <input type="number" id="weight" name="weight" min="30" max="300" step="0.1"
+                                placeholder="Enter weight (30-300 kg)" required>
                         </div>
                         <div class="form-group">
                             <label for="bmi">BMI (kg/m²)</label>
-                            <input type="number" id="bmi" name="bmi" step="0.1" min="15" max="50" placeholder="Auto-calculated" readonly required>
+                            <input type="number" id="bmi" name="bmi" step="0.1" min="15" max="50"
+                                placeholder="Auto-calculated" readonly required>
                             <div class="bmi-display">
                                 <span class="bmi-value" id="bmi-value">--</span>
                                 <span class="bmi-category" id="bmi-category">Enter height & weight</span>
@@ -1690,24 +1704,67 @@
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="creatinine">Creatinine (mg/dL)</label>
-                            <input type="number" id="creatinine" name="creatinine" step="0.01" min="0.5" max="10" placeholder="Normal: 0.6-1.2" required>
+                            <label for="creatinine">
+                                Creatinine (mg/dL)
+                                <button type="button" class="lab-interpret-btn"
+                                    onclick="interpretLabValue('creatinine')">
+                                    <i class="fas fa-microscope"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="creatinine" name="creatinine" step="0.01" min="0.5" max="10"
+                                placeholder="Normal: 0.6-1.2" required>
+                            <div id="creatinine_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                         <div class="form-group">
-                            <label for="egfr">eGFR (mL/min/1.73m²)</label>
-                            <input type="number" id="egfr" name="egfr" step="0.1" min="5" max="150" placeholder="Normal: >90" required>
+                            <label for="egfr">
+                                eGFR (mL/min/1.73m²)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('egfr')">
+                                    <i class="fas fa-microscope"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="egfr" name="egfr" step="0.1" min="5" max="150"
+                                placeholder="Normal: >90" required>
+                            <div id="egfr_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
+                        <div class="form-group liver-function-group">
+                            <label for="ast_alt">
+                                AST/ALT (U/L)
+                                <div class="lab-buttons">
+                                    <button type="button" class="file-attach-btn" onclick="openLiverFunctionModal()">
+                                        <i class="fas fa-paperclip"></i> Files Attached
+                                    </button>
+                                    <button type="button" class="lab-interpret-btn"
+                                        onclick="interpretLabValue('ast_alt')">
+                                        <i class="fas fa-microscope"></i> Interpret
+                                    </button>
+                                </div>
+                            </label>
+                            <input type="number" id="ast_alt" name="ast_alt" min="5" max="1000"
+                                placeholder="Normal: 10-40" required>
+                            <div id="ast_alt_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                         <div class="form-group">
-                            <label for="ast_alt">AST/ALT (U/L)</label>
-                            <input type="number" id="ast_alt" name="ast_alt" min="5" max="1000" placeholder="Normal: 10-40" required>
+                            <label for="bilirubin">
+                                Bilirubin (mg/dL)
+                                <button type="button" class="lab-interpret-btn"
+                                    onclick="interpretLabValue('bilirubin')">
+                                    <i class="fas fa-microscope"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="bilirubin" name="bilirubin" step="0.01" min="0.1" max="10"
+                                placeholder="Normal: 0.2-1.2" required>
+                            <div id="bilirubin_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                         <div class="form-group">
-                            <label for="bilirubin">Bilirubin (mg/dL)</label>
-                            <input type="number" id="bilirubin" name="bilirubin" step="0.01" min="0.1" max="10" placeholder="Normal: 0.2-1.2" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="albumin">Albumin (g/dL)</label>
-                            <input type="number" id="albumin" name="albumin" step="0.01" min="1" max="6" placeholder="Normal: 3.5-5.0" required>
+                            <label for="albumin">
+                                Albumin (g/dL)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('albumin')">
+                                    <i class="fas fa-microscope"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="albumin" name="albumin" step="0.01" min="1" max="6"
+                                placeholder="Normal: 3.5-5.0" required>
+                            <div id="albumin_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                     </div>
                 </div>
@@ -1779,11 +1836,30 @@
                         </div>
                         <div class="form-group">
                             <label for="index_drug_dose">Drug Dose (mg)</label>
-                            <input type="number" id="index_drug_dose" name="index_drug_dose" min="1" max="2000" step="0.1" placeholder="Enter dose (1-2000 mg)" required>
+                            <input type="number" id="index_drug_dose" name="index_drug_dose" min="1" max="2000"
+                                step="0.1" placeholder="Enter dose (1-2000 mg)" required>
                         </div>
                         <div class="form-group">
                             <label for="concomitant_drugs_count">Concomitant Drugs Count</label>
-                            <input type="number" id="concomitant_drugs_count" name="concomitant_drugs_count" min="0" max="20" placeholder="Number of other medications (0-20)" required>
+                            <input type="number" id="concomitant_drugs_count" name="concomitant_drugs_count" min="0"
+                                max="20" placeholder="Number of other medications (0-20)" required>
+                        </div>
+                        <div class="form-group concomitant-drugs-group" style="grid-column: 1 / -1;">
+                            <label>Concomitant Drug Names</label>
+                            <div id="concomitant-drugs-container">
+                                <div class="concomitant-drug-item">
+                                    <input type="text" name="concomitant_drug_1"
+                                        placeholder="Enter drug name (e.g., Aspirin 81mg)"
+                                        class="concomitant-drug-input">
+                                    <button type="button" class="remove-drug-btn" onclick="removeDrugField(this)"
+                                        style="display: none;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" id="add-drug-btn" class="add-drug-btn" onclick="addDrugField()">
+                                <i class="fas fa-plus"></i> Add Another Drug
+                            </button>
                         </div>
                         <div class="form-group">
                             <label for="drug_interactions">Drug-Drug Interactions</label>
@@ -1796,21 +1872,11 @@
                                 <option value="Contraindicated">Contraindicated</option>
                             </select>
                         </div>
+
                         <div class="form-group">
-                            <label for="indication">Indication</label>
-                            <select id="indication" name="indication" required>
-                                <option value="">Select indication...</option>
-                                <option value="Pain">Pain Management</option>
-                                <option value="Cancer">Cancer Treatment</option>
-                                <option value="Cardiovascular">Cardiovascular Disease</option>
-                                <option value="Diabetes">Diabetes</option>
-                                <option value="Hypertension">Hypertension</option>
-                                <option value="Infection">Infection</option>
-                                <option value="Mental Health">Mental Health</option>
-                                <option value="Respiratory">Respiratory Disease</option>
-                                <option value="Gastrointestinal">Gastrointestinal</option>
-                                <option value="Neurological">Neurological</option>
-                            </select>
+                            <label for="time_since_start_days">Days Since Drug Start</label>
+                            <input type="number" id="time_since_start_days" name="time_since_start_days" min="1"
+                                max="365" placeholder="Days (1-365)" required>
                         </div>
                     </div>
                 </div>
@@ -1853,22 +1919,21 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="bp_systolic">Systolic BP (mmHg)</label>
-                            <input type="number" id="bp_systolic" name="bp_systolic" min="80" max="250" placeholder="Normal: 90-140" required>
+                            <input type="number" id="bp_systolic" name="bp_systolic" min="80" max="250"
+                                placeholder="Normal: 90-140" required>
                         </div>
                         <div class="form-group">
                             <label for="bp_diastolic">Diastolic BP (mmHg)</label>
-                            <input type="number" id="bp_diastolic" name="bp_diastolic" min="40" max="150" placeholder="Normal: 60-90" required>
+                            <input type="number" id="bp_diastolic" name="bp_diastolic" min="40" max="150"
+                                placeholder="Normal: 60-90" required>
                         </div>
                         <div class="form-group">
                             <label for="heart_rate">Heart Rate (bpm)</label>
-                            <input type="number" id="heart_rate" name="heart_rate" min="40" max="200" placeholder="Normal: 60-100" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="time_since_start_days">Days Since Drug Start</label>
-                            <input type="number" id="time_since_start_days" name="time_since_start_days" min="1" max="365" placeholder="Days (1-365)" required>
+                            <input type="number" id="heart_rate" name="heart_rate" min="40" max="200"
+                                placeholder="Normal: 60-100" required>
                         </div>
                     </div>
-                    
+
                     <div class="checkbox-grid">
                         <div class="checkbox-group">
                             <input type="checkbox" id="cyp_inhibitors_flag" name="cyp_inhibitors_flag" value="1">
@@ -1915,7 +1980,7 @@
             <div class="results-header">
                 <h2><i class="fas fa-chart-bar"></i> Risk Assessment Results</h2>
             </div>
-            
+
             <div class="results-layout">
                 <!-- Left Column: Statistical Analysis -->
                 <div class="analysis-column">
@@ -1944,6 +2009,26 @@
                             <p>Generating AI clinical report...</p>
                         </div>
                     </div>
+
+                    <!-- AI-Powered Detailed Clinical Analysis -->
+                    <div id="ai-detailed-analysis-container" class="ai-detailed-analysis-container" style="display: none;">
+                        <div class="ai-analysis-header">
+                            <h2><i class="fas fa-brain"></i> Detailed Clinical Analysis using AI</h2>
+                            <div class="ai-analysis-badge">
+                                <i class="fas fa-robot"></i>
+                                <span>Powered by Google Gemini AI</span>
+                            </div>
+                        </div>
+
+                        <div id="ai-detailed-content" class="ai-detailed-content">
+                            <div class="detailed-analysis-placeholder">
+                                <p>Click "Generate Detailed Analysis" to create a comprehensive AI-powered clinical assessment.</p>
+                                <button id="generate-detailed-analysis-btn" class="btn btn-primary" onclick="triggerDetailedAnalysis()">
+                                    <i class="fas fa-brain"></i> Generate Detailed Analysis
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1954,7 +2039,7 @@
                 <button class="modal-close" onclick="closeInfoModal()">
                     <i class="fas fa-times"></i>
                 </button>
-                
+
                 <div class="modal-header">
                     <h2 class="modal-title">
                         <i class="fas fa-heartbeat"></i>
@@ -1965,12 +2050,15 @@
 
                 <div class="modal-section">
                     <h3><i class="fas fa-info-circle"></i> Project Overview</h3>
-                    <p>The ADR Risk Predictor is an advanced machine learning-powered clinical decision support system designed to assess the risk of Adverse Drug Reactions (ADRs) in patients. This tool helps healthcare professionals make informed decisions about medication safety and patient care.</p>
+                    <p>The ADR Risk Predictor is an advanced machine learning-powered clinical decision support system
+                        designed to assess the risk of Adverse Drug Reactions (ADRs) in patients. This tool helps
+                        healthcare professionals make informed decisions about medication safety and patient care.</p>
                 </div>
 
                 <div class="modal-section">
                     <h3><i class="fas fa-cogs"></i> How It Works</h3>
-                    <p>Our system uses a sophisticated machine learning model trained on clinical data to predict ADR risk based on:</p>
+                    <p>Our system uses a sophisticated machine learning model trained on clinical data to predict ADR
+                        risk based on:</p>
                     <ul>
                         <li>Patient demographics and medical history</li>
                         <li>Laboratory values and vital signs</li>
@@ -2020,7 +2108,9 @@
 
                 <div class="modal-section">
                     <h3><i class="fas fa-exclamation-triangle"></i> Important Disclaimer</h3>
-                    <p><strong>This tool is for educational and research purposes only.</strong> It should not be used as a substitute for professional medical judgment. Always consult with qualified healthcare professionals for clinical decision-making.</p>
+                    <p><strong>This tool is for educational and research purposes only.</strong> It should not be used
+                        as a substitute for professional medical judgment. Always consult with qualified healthcare
+                        professionals for clinical decision-making.</p>
                 </div>
 
                 <div class="modal-actions">
@@ -2051,7 +2141,7 @@
             const patientName = sessionStorage.getItem('patientName') || 'Patient';
             const clinicianName = sessionStorage.getItem('clinicianName') || 'Clinician';
             const patientId = sessionStorage.getItem('patientId') || '0';
-            
+
             document.getElementById('patient-name-display').textContent = patientName;
             document.getElementById('clinician-name-display').textContent = clinicianName;
             document.getElementById('timestamp-display').textContent = new Date().toLocaleString();
@@ -2061,17 +2151,17 @@
         function calculateBMI() {
             const height = parseFloat(document.getElementById('height').value);
             const weight = parseFloat(document.getElementById('weight').value);
-            
+
             if (height && weight && height > 0) {
                 const heightInMeters = height / 100;
                 const bmi = weight / (heightInMeters * heightInMeters);
-                
+
                 document.getElementById('bmi').value = bmi.toFixed(1);
                 document.getElementById('bmi-value').textContent = bmi.toFixed(1);
-                
+
                 let category = '';
                 let categoryClass = '';
-                
+
                 if (bmi < 18.5) {
                     category = 'Underweight';
                     categoryClass = 'underweight';
@@ -2085,7 +2175,7 @@
                     category = 'Obese';
                     categoryClass = 'obese';
                 }
-                
+
                 const categoryElement = document.getElementById('bmi-category');
                 categoryElement.textContent = category;
                 categoryElement.className = `bmi-category ${categoryClass}`;
@@ -2102,22 +2192,22 @@
             try {
                 console.log(`Loading sample data for type: ${sampleType}`);
                 showLoading();
-                
+
                 const url = `/sample_data/${sampleType}`;
                 console.log(`Fetching from URL: ${url}`);
-                
+
                 const response = await fetch(url);
                 console.log(`Response status: ${response.status}`);
-                
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error(`Server error: ${errorText}`);
                     throw new Error(`HTTP ${response.status}: ${errorText}`);
                 }
-                
+
                 const sampleData = await response.json();
                 console.log('Sample data received:', sampleData);
-                
+
                 // Populate form fields
                 Object.keys(sampleData).forEach(key => {
                     const field = document.getElementById(key);
@@ -2132,17 +2222,17 @@
                         console.warn(`Field not found: ${key}`);
                     }
                 });
-                
+
                 // Trigger BMI calculation if height and weight are loaded
                 if (sampleData.height && sampleData.weight) {
                     calculateBMI();
                 }
-                
+
                 showNotification(`Sample data loaded: ${sampleData.name}`, 'success');
-                
+
             } catch (error) {
                 console.error('Error loading sample data:', error);
-                
+
                 // Fallback to local sample data if server is not available
                 console.log('Attempting to use fallback sample data...');
                 const fallbackData = getFallbackSampleData(sampleType);
@@ -2158,12 +2248,12 @@
                             }
                         }
                     });
-                    
+
                     // Trigger BMI calculation
                     if (fallbackData.height && fallbackData.weight) {
                         calculateBMI();
                     }
-                    
+
                     showNotification(`Fallback sample data loaded: ${fallbackData.name}`, 'success');
                 } else {
                     showNotification(`Failed to load sample data: ${error.message}`, 'error');
@@ -2206,7 +2296,7 @@
                     heart_rate: 68, time_since_start_days: 14
                 }
             };
-            
+
             return fallbackSamples[sampleType] || null;
         }
 
@@ -2245,9 +2335,9 @@
                 <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
                 ${message}
             `;
-            
+
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 if (notification.parentElement) {
                     notification.remove();
@@ -2268,28 +2358,28 @@
         // Form submission handler
         document.getElementById('adr-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             try {
                 showLoading();
-                
+
                 // Collect form data
                 const formData = new FormData(e.target);
                 const patientData = {};
-                
+
                 // Process form data
                 for (let [key, value] of formData.entries()) {
                     if (value === '') continue;
-                    
+
                     // Handle checkboxes
-                    if (['diabetes', 'liver_disease', 'ckd', 'cardiac_disease', 'hypertension', 
+                    if (['diabetes', 'liver_disease', 'ckd', 'cardiac_disease', 'hypertension',
                         'respiratory_disease', 'neurological_disease', 'autoimmune_disease',
-                        'cyp_inhibitors_flag', 'qt_prolonging_flag', 'hla_risk_allele_flag', 
+                        'cyp_inhibitors_flag', 'qt_prolonging_flag', 'hla_risk_allele_flag',
                         'inpatient_flag', 'prior_adr_history'].includes(key)) {
                         patientData[key] = 1;
                     } else {
                         // Convert numeric fields
-                        if (['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt', 
-                            'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count', 
+                        if (['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt',
+                            'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
                             'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'].includes(key)) {
                             patientData[key] = parseFloat(value);
                         } else {
@@ -2297,26 +2387,26 @@
                         }
                     }
                 }
-                
+
                 // Set default values for unchecked checkboxes
-                const checkboxFields = ['diabetes', 'liver_disease', 'ckd', 'cardiac_disease', 'hypertension', 
+                const checkboxFields = ['diabetes', 'liver_disease', 'ckd', 'cardiac_disease', 'hypertension',
                     'respiratory_disease', 'neurological_disease', 'autoimmune_disease',
-                    'cyp_inhibitors_flag', 'qt_prolonging_flag', 'hla_risk_allele_flag', 
+                    'cyp_inhibitors_flag', 'qt_prolonging_flag', 'hla_risk_allele_flag',
                     'inpatient_flag', 'prior_adr_history'];
-                
+
                 checkboxFields.forEach(field => {
                     if (!(field in patientData)) {
                         patientData[field] = 0;
                     }
                 });
-                
+
                 // Calculate derived fields required by the model
                 patientData.polypharmacy_flag = patientData.concomitant_drugs_count > 5 ? 1 : 0;
                 patientData.cumulative_dose_mg = patientData.index_drug_dose * patientData.time_since_start_days;
                 patientData.dose_density_mg_day = patientData.cumulative_dose_mg / patientData.time_since_start_days;
-                
+
                 console.log('Sending patient data:', patientData);
-                
+
                 // Make prediction request
                 const response = await fetch('/predict', {
                     method: 'POST',
@@ -2325,27 +2415,27 @@
                     },
                     body: JSON.stringify(patientData)
                 });
-                
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
                 }
-                
+
                 const result = await response.json();
                 console.log('Prediction result:', result);
-                
+
                 // Store current data
                 currentPatientData = patientData;
                 currentPredictionResult = result;
-                
+
                 // Display results
                 displayResults(result);
-                
+
                 // Automatically generate AI report
                 generateAIReport();
-                
+
                 showNotification('ADR risk assessment completed successfully!', 'success');
-                
+
             } catch (error) {
                 console.error('Error:', error);
                 showNotification(`Failed to assess ADR risk: ${error.message}`, 'error');
@@ -2357,38 +2447,38 @@
         // Format AI report text for better display
         function formatAIReport(reportText) {
             if (!reportText) return '';
-            
+
             let formatted = reportText;
-            
+
             // Convert markdown-style headers to HTML
             formatted = formatted.replace(/^## (.*$)/gm, '<h2>$1</h2>');
             formatted = formatted.replace(/^### (.*$)/gm, '<h3>$1</h3>');
             formatted = formatted.replace(/^#### (.*$)/gm, '<h4>$1</h4>');
             formatted = formatted.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-            
+
             // Convert **bold** to <strong>
             formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            
+
             // Convert *italic* to <em>
             formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
-            
+
             // Convert bullet points
             formatted = formatted.replace(/^- (.*$)/gm, '<li>$1</li>');
             formatted = formatted.replace(/^• (.*$)/gm, '<li>$1</li>');
-            
+
             // Wrap consecutive list items in <ul>
-            formatted = formatted.replace(/(<li>.*<\/li>)/gs, function(match) {
+            formatted = formatted.replace(/(<li>.*<\/li>)/gs, function (match) {
                 return '<ul>' + match + '</ul>';
             });
-            
+
             // Convert numbered lists
             formatted = formatted.replace(/^\d+\. (.*$)/gm, '<li>$1</li>');
-            
+
             // Highlight risk levels
             formatted = formatted.replace(/\b(HIGH RISK|High Risk|high risk)\b/gi, '<span class="risk-high">HIGH RISK</span>');
             formatted = formatted.replace(/\b(MEDIUM RISK|Medium Risk|medium risk|MODERATE RISK|Moderate Risk|moderate risk)\b/gi, '<span class="risk-medium">MEDIUM RISK</span>');
             formatted = formatted.replace(/\b(LOW RISK|Low Risk|low risk)\b/gi, '<span class="risk-low">LOW RISK</span>');
-            
+
             // Highlight medical terms
             const medicalTerms = [
                 'ADR', 'adverse drug reaction', 'pharmacokinetics', 'pharmacodynamics',
@@ -2396,12 +2486,12 @@
                 'cardiotoxicity', 'QT prolongation', 'drug interaction', 'contraindication',
                 'monitoring', 'dose adjustment', 'therapeutic drug monitoring'
             ];
-            
+
             medicalTerms.forEach(term => {
                 const regex = new RegExp(`\\b(${term})\\b`, 'gi');
                 formatted = formatted.replace(regex, '<span class="medical-term">$1</span>');
             });
-            
+
             // Convert line breaks to paragraphs
             formatted = formatted.split('\n\n').map(paragraph => {
                 if (paragraph.trim() && !paragraph.includes('<h') && !paragraph.includes('<ul>') && !paragraph.includes('<li>')) {
@@ -2409,14 +2499,14 @@
                 }
                 return paragraph;
             }).join('\n');
-            
+
             // Clean up extra line breaks
             formatted = formatted.replace(/\n/g, '');
-            
+
             // Add spacing between sections
             formatted = formatted.replace(/<\/h2>/g, '</h2><div style="margin-bottom: 15px;"></div>');
             formatted = formatted.replace(/<\/h3>/g, '</h3><div style="margin-bottom: 10px;"></div>');
-            
+
             return formatted;
         }
 
@@ -2424,7 +2514,7 @@
         async function generateAIReport() {
             try {
                 const reportContent = document.getElementById('report-content');
-                
+
                 // Show loading state
                 reportContent.innerHTML = `
                     <div class="report-loading">
@@ -2433,7 +2523,7 @@
                         <p style="font-size: 0.9rem; color: #6b7280; margin-top: 10px;">This may take a few moments...</p>
                     </div>
                 `;
-                
+
                 const requestData = {
                     patient_data: currentPatientData,
                     prediction_result: currentPredictionResult,
@@ -2441,7 +2531,7 @@
                     patient_id: sessionStorage.getItem('patientId') || '',
                     clinician_name: sessionStorage.getItem('clinicianName') || 'Clinician'
                 };
-                
+
                 const response = await fetch('/generate_report', {
                     method: 'POST',
                     headers: {
@@ -2449,13 +2539,13 @@
                     },
                     body: JSON.stringify(requestData)
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const reportResult = await response.json();
-                
+
                 // Display the AI-generated report with enhanced formatting
                 const formattedReport = formatAIReport(reportResult.report);
                 reportContent.innerHTML = `
@@ -2472,7 +2562,7 @@
                         </div>
                     </div>
                 `;
-                
+
             } catch (error) {
                 console.error('Error generating AI report:', error);
                 document.getElementById('report-content').innerHTML = `
@@ -2491,23 +2581,23 @@
         // Generate specific ADR type risks display
         function generateSpecificADRTypes(result) {
             const specificADRs = result.all_adr_types || result.top_specific_adr_risks || {};
-            
+
             if (!specificADRs || Object.keys(specificADRs).length === 0) {
                 return '';
             }
-            
+
             // Sort ADR types by probability
             const sortedADRs = Object.entries(specificADRs)
                 .filter(([adr, prob]) => adr !== 'No ADR')
-                .sort(([,a], [,b]) => b - a)
+                .sort(([, a], [, b]) => b - a)
                 .slice(0, 6); // Show top 6 specific ADR types
-            
+
             const getADRRiskLevel = (prob) => {
                 if (prob >= 15) return { level: 'HIGH RISK', color: '#ef4444', bgColor: '#fef2f2', borderColor: '#fecaca' };
                 if (prob >= 5) return { level: 'MEDIUM RISK', color: '#f59e0b', bgColor: '#fffbeb', borderColor: '#fed7aa' };
                 return { level: 'LOW RISK', color: '#10b981', bgColor: '#f0fdf4', borderColor: '#bbf7d0' };
             };
-            
+
             const getADRIcon = (adrType) => {
                 if (adrType.toLowerCase().includes('cardiovascular') || adrType.toLowerCase().includes('tachycardia')) return 'fas fa-heartbeat';
                 if (adrType.toLowerCase().includes('hepato') || adrType.toLowerCase().includes('liver')) return 'fas fa-liver';
@@ -2516,7 +2606,7 @@
                 if (adrType.toLowerCase().includes('rash') || adrType.toLowerCase().includes('skin')) return 'fas fa-hand-paper';
                 return 'fas fa-exclamation-circle';
             };
-            
+
             return `
                 <div style="background: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #a855f7; margin-bottom: 20px;">
                     <h4 style="margin: 0 0 20px 0; color: #581c87; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
@@ -2526,9 +2616,9 @@
                     
                     <div class="specific-adr-types-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 15px;">
                         ${sortedADRs.map(([adrType, probability]) => {
-                            const risk = getADRRiskLevel(probability);
-                            const icon = getADRIcon(adrType);
-                            return `
+                const risk = getADRRiskLevel(probability);
+                const icon = getADRIcon(adrType);
+                return `
                                 <div class="adr-type-card" style="background: ${risk.bgColor}; border: 2px solid ${risk.borderColor}; border-radius: 12px; padding: 16px; position: relative; transition: all 0.3s ease; cursor: pointer;" 
                                      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'" 
                                      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
@@ -2549,7 +2639,7 @@
                                     </div>
                                 </div>
                             `;
-                        }).join('')}
+            }).join('')}
                     </div>
                     
                     ${sortedADRs.length > 6 ? `
@@ -2569,10 +2659,10 @@
             const currentMedication = currentPatientData.medication_name || 'Current medication';
             const riskLevel = result.risk_level;
             const predictedADR = result.predicted_adr_type;
-            
+
             let suggestions = [];
             let alternatives = [];
-            
+
             // Generate suggestions based on risk level and predicted ADR
             if (riskLevel === 'High') {
                 suggestions.push('Consider immediate dose reduction or medication discontinuation');
@@ -2586,7 +2676,7 @@
                 suggestions.push('Continue current therapy with standard monitoring');
                 suggestions.push('Regular follow-up assessments recommended');
             }
-            
+
             // Generate alternative medications based on current medication and risk
             const medicationAlternatives = {
                 'Warfarin': ['Apixaban', 'Rivaroxaban', 'Dabigatran'],
@@ -2596,9 +2686,9 @@
                 'Amlodipine': ['Nifedipine XL', 'Felodipine', 'Clevidipine'],
                 'Metoprolol': ['Carvedilol', 'Bisoprolol', 'Nebivolol']
             };
-            
+
             alternatives = medicationAlternatives[currentMedication] || ['Consult specialist for alternatives'];
-            
+
             return `
                 <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #0ea5e9; margin-bottom: 20px;">
                     <h4 style="margin: 0 0 15px 0; color: #0c4a6e; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
@@ -2627,16 +2717,16 @@
                 </div>
             `;
         }
-        
+
         // Generate clinical suggestions based on risk assessment
         function generateClinicalSuggestions(result) {
             const riskLevel = result.risk_level;
             const predictedADR = result.predicted_adr_type;
-            
+
             let monitoringParams = [];
             let clinicalActions = [];
             let followUpSchedule = '';
-            
+
             // Generate monitoring parameters based on predicted ADR
             if (predictedADR.includes('Cardiovascular') || predictedADR.includes('Tachycardia')) {
                 monitoringParams.push('ECG monitoring', 'Blood pressure checks', 'Heart rate monitoring');
@@ -2651,7 +2741,7 @@
                 monitoringParams.push('Vital signs', 'Clinical symptoms', 'Laboratory parameters');
                 clinicalActions.push('Regular clinical assessment', 'Patient symptom monitoring');
             }
-            
+
             // Set follow-up schedule based on risk level
             if (riskLevel === 'High') {
                 followUpSchedule = 'Weekly for first month, then bi-weekly';
@@ -2660,7 +2750,7 @@
             } else {
                 followUpSchedule = 'Monthly for first 3 months, then quarterly';
             }
-            
+
             return `
                 <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #22c55e; margin-bottom: 20px;">
                     <h4 style="margin: 0 0 15px 0; color: #14532d; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
@@ -2707,23 +2797,23 @@
         function displayResults(result) {
             const resultsContainer = document.getElementById('results-container');
             const resultsContent = document.getElementById('results-content');
-            
+
             if (resultsContainer && resultsContent) {
                 const riskColor = {
                     'Low': '#10b981',
-                    'Medium': '#f59e0b', 
+                    'Medium': '#f59e0b',
                     'High': '#ef4444'
                 }[result.risk_level] || '#6b7280';
-                
+
                 const isMobileView = isMobile();
-                const gridStyle = isMobileView ? 
+                const gridStyle = isMobileView ?
                     'display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;' :
                     'display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;';
-                
+
                 const cardPadding = isMobileView ? '15px' : '20px';
                 const titleSize = isMobileView ? '1rem' : '1.2rem';
                 const valueSize = isMobileView ? '1.5rem' : '2rem';
-                
+
                 resultsContent.innerHTML = `
                     <div style="background: white; padding: ${isMobileView ? '15px' : '25px'}; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
                         <div style="${gridStyle}">
@@ -2824,26 +2914,2398 @@
         }
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initializePatientInfo();
-            
+
             // Test server connection
             testServerConnection();
-            
+
             // Add resize listener for responsive updates
             window.addEventListener('resize', handleResize);
-            
+
             // Add orientation change listener for mobile
-            window.addEventListener('orientationchange', function() {
+            window.addEventListener('orientationchange', function () {
                 setTimeout(handleResize, 100);
             });
-            
+
             // Show loading animation initially
             showLoading();
             setTimeout(() => {
                 hideLoading();
             }, 1500);
         });
+        // Liver Function Modal Functions
+        function openLiverFunctionModal() {
+            document.getElementById('liver-function-modal').style.display = 'flex';
+        }
+
+        function closeLiverFunctionModal() {
+            document.getElementById('liver-function-modal').style.display = 'none';
+        }
+
+        // Concomitant Drug Functions
+        function addDrugField() {
+            const container = document.getElementById('concomitant-drugs-container');
+            const drugCount = container.children.length;
+
+            if (drugCount < 20) {
+                const drugItem = document.createElement('div');
+                drugItem.className = 'concomitant-drug-item';
+                drugItem.innerHTML = `
+                    <input type="text" name="concomitant_drug_${drugCount + 1}" placeholder="Enter drug name (e.g., Aspirin 81mg)" class="concomitant-drug-input" onchange="updateDrugCount()">
+                    <button type="button" class="remove-drug-btn" onclick="removeDrugField(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                container.appendChild(drugItem);
+                updateDrugCount();
+            }
+        }
+
+        function removeDrugField(button) {
+            const container = document.getElementById('concomitant-drugs-container');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+                updateDrugCount();
+            }
+        }
+
+        function updateDrugCount() {
+            const container = document.getElementById('concomitant-drugs-container');
+            const inputs = container.querySelectorAll('.concomitant-drug-input');
+            let count = 0;
+
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    count++;
+                }
+            });
+
+            document.getElementById('concomitant_drugs_count').value = count;
+        }
+
+        // Auto-update drug count when typing
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('concomitant-drugs-container');
+            if (container) {
+                container.addEventListener('input', updateDrugCount);
+            }
+        });
+
+        // File upload function
+        async function uploadLiverFunction() {
+            const fileInput = document.getElementById('liver-function-file');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showNotification('Please select a file to upload', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                showLoading();
+                const response = await fetch('/upload_liver_function', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification('Liver function file uploaded successfully!', 'success');
+                    document.getElementById('uploaded-files-list').innerHTML += `
+                        <div class="uploaded-file">
+                            <i class="fas fa-file"></i>
+                            <span>${result.filename}</span>
+                            <small>${new Date().toLocaleString()}</small>
+                        </div>
+                    `;
+                    closeLiverFunctionModal();
+                } else {
+                    showNotification(result.error || 'Upload failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Upload failed: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Client-side lab interpretation (fallback when server endpoint not available)
+        function getLabInterpretationClientSide(testName, value, sex = 'M') {
+            const interpretations = [];
+
+            // Renal function interpretations
+            if (testName === 'creatinine') {
+                if (sex === 'M') {
+                    if (value > 1.3) {
+                        interpretations.push({
+                            status: 'High',
+                            clinical_significance: 'Renal impairment',
+                            severity: value > 2.0 ? 'High' : 'Moderate'
+                        });
+                    }
+                } else {
+                    if (value > 1.1) {
+                        interpretations.push({
+                            status: 'High',
+                            clinical_significance: 'Renal impairment',
+                            severity: value > 2.0 ? 'High' : 'Moderate'
+                        });
+                    }
+                }
+            }
+
+            else if (testName === 'egfr') {
+                if (value < 60) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Chronic Kidney Disease',
+                        severity: value < 30 ? 'High' : 'Moderate'
+                    });
+                } else if (value < 90) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Mild kidney dysfunction',
+                        severity: 'Low'
+                    });
+                }
+            }
+
+            // Liver function interpretations
+            else if (testName === 'ast_alt') {
+                if (value > 40) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Liver injury/inflammation',
+                        severity: value > 120 ? 'High' : 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'bilirubin') {
+                if (value > 1.2) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Jaundice risk',
+                        severity: value < 3.0 ? 'Moderate' : 'High'
+                    });
+                }
+            }
+
+            else if (testName === 'albumin') {
+                if (value < 3.5) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Liver dysfunction/malnutrition',
+                        severity: 'Moderate'
+                    });
+                }
+            }
+
+            return interpretations;
+        }
+
+        // Lab interpretation function
+        async function interpretLabValue(testName) {
+            console.log('interpretLabValue called with:', testName);
+
+            const inputElement = document.getElementById(testName);
+            const interpretationDiv = document.getElementById(`${testName}_interpretation`);
+            const sexElement = document.getElementById('sex');
+
+            if (!inputElement) {
+                showNotification(`Input element not found for ${testName}`, 'error');
+                return;
+            }
+
+            if (!inputElement.value) {
+                showNotification('Please enter a value first', 'error');
+                return;
+            }
+
+            const value = parseFloat(inputElement.value);
+            const sex = sexElement ? sexElement.value || 'M' : 'M';
+
+            // Try server-side interpretation first, fallback to client-side
+            try {
+                const response = await fetch('/interpret_lab_value', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        test_name: testName,
+                        value: value,
+                        sex: sex
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    displayLabInterpretation(testName, result);
+                    showNotification('Lab value interpreted successfully!', 'success');
+                    return;
+                }
+            } catch (error) {
+                console.log('Server endpoint not available, using client-side interpretation');
+            }
+
+            // Fallback to client-side interpretation
+            const interpretations = getLabInterpretationClientSide(testName, value, sex);
+            const result = {
+                test_name: testName,
+                value: value,
+                sex: sex,
+                interpretations: interpretations,
+                timestamp: new Date().toISOString()
+            };
+
+            displayLabInterpretation(testName, result);
+            showNotification('Lab value interpreted successfully! (Client-side)', 'success');
+        }
+
+        function displayLabInterpretation(testName, result) {
+            const interpretationDiv = document.getElementById(`${testName}_interpretation`);
+
+            if (result.interpretations && result.interpretations.length > 0) {
+                const interpretationsHtml = result.interpretations.map(interp => `
+                    <div class="lab-interp-item ${interp.severity.toLowerCase()}-severity">
+                        <div class="interp-status">${interp.status}</div>
+                        <div class="interp-significance">${interp.clinical_significance}</div>
+                        <div class="interp-severity">Severity: ${interp.severity}</div>
+                    </div>
+                `).join('');
+
+                interpretationDiv.innerHTML = `
+                    <div class="lab-interp-container">
+                        <h6><i class="fas fa-microscope"></i> Clinical Interpretation</h6>
+                        ${interpretationsHtml}
+                    </div>
+                `;
+                interpretationDiv.style.display = 'block';
+            } else {
+                interpretationDiv.innerHTML = `
+                    <div class="lab-interp-container normal">
+                        <h6><i class="fas fa-check-circle"></i> Normal Range</h6>
+                        <div class="interp-normal">Value within normal limits</div>
+                    </div>
+                `;
+                interpretationDiv.style.display = 'block';
+            }
+        }
+
+        // Enhanced results display with new features
+        function displayEnhancedResults(result) {
+            // Display major ADR factors with enhanced clinical information
+            if (result.major_adr_factors && result.major_adr_factors.length > 0) {
+                const factorsHtml = result.major_adr_factors.map(factor => `
+                    <div class="adr-factor-card ${factor.risk_contribution.toLowerCase()}-risk">
+                        <div class="factor-header">
+                            <h5>${factor.factor}</h5>
+                            <span class="risk-badge ${factor.risk_contribution.toLowerCase()}">${factor.risk_contribution} Risk</span>
+                        </div>
+                        <div class="factor-value">${factor.value}</div>
+                        <div class="factor-description">${factor.description}</div>
+                        ${factor.clinical_reference ? `<div class="factor-reference"><i class="fas fa-book-medical"></i> ${factor.clinical_reference}</div>` : ''}
+                    </div>
+                `).join('');
+
+                document.getElementById('major-factors-container').innerHTML = factorsHtml;
+            }
+
+            // Display medication list
+            if (result.medication_list && result.medication_list.length > 0) {
+                const medicationsHtml = result.medication_list.map(med => `
+                    <div class="medication-card ${med.risk_level.toLowerCase()}-risk">
+                        <div class="med-header">
+                            <h5>${med.name}</h5>
+                            <span class="med-type ${med.type.toLowerCase()}">${med.type}</span>
+                        </div>
+                        <div class="med-details">
+                            <div class="med-dose">${med.dose}</div>
+                            <div class="med-indication">${med.indication}</div>
+                            <div class="med-risk">Risk Level: ${med.risk_level}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('medications-container').innerHTML = medicationsHtml;
+            }
+
+            // Display ADR list
+            if (result.adr_list && result.adr_list.length > 0) {
+                const adrHtml = result.adr_list.map(adr => `
+                    <div class="adr-detail-card">
+                        <div class="adr-header">
+                            <h5>${adr.name}</h5>
+                            <span class="adr-probability">${adr.probability}%</span>
+                        </div>
+                        <div class="adr-info">
+                            <div class="adr-category">${adr.category} - ${adr.severity}</div>
+                            <div class="adr-onset">Onset: ${adr.onset}</div>
+                            <div class="adr-symptoms">
+                                <strong>Symptoms:</strong> ${adr.symptoms.join(', ')}
+                            </div>
+                            <div class="adr-monitoring">
+                                <strong>Monitoring:</strong> ${adr.monitoring}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('adr-details-container').innerHTML = adrHtml;
+            }
+        }
+
+        // Client-side comprehensive lab analysis
+        function generateEnhancedLabAnalysisClientSide(patientData) {
+            const sex = patientData.sex || 'M';
+            const labAnalysis = {
+                renal_function: {},
+                liver_function: {},
+                overall_assessment: [],
+                monitoring_recommendations: []
+            };
+
+            // Analyze renal function
+            if (patientData.creatinine) {
+                const creatInterp = getLabInterpretationClientSide('creatinine', patientData.creatinine, sex);
+                labAnalysis.renal_function.creatinine = {
+                    value: patientData.creatinine,
+                    unit: 'mg/dL',
+                    interpretations: creatInterp
+                };
+            }
+
+            if (patientData.egfr) {
+                const egfrInterp = getLabInterpretationClientSide('egfr', patientData.egfr, sex);
+                labAnalysis.renal_function.egfr = {
+                    value: patientData.egfr,
+                    unit: 'mL/min/1.73m²',
+                    interpretations: egfrInterp
+                };
+            }
+
+            // Analyze liver function
+            if (patientData.ast_alt) {
+                const astInterp = getLabInterpretationClientSide('ast_alt', patientData.ast_alt, sex);
+                labAnalysis.liver_function.ast_alt = {
+                    value: patientData.ast_alt,
+                    unit: 'U/L',
+                    interpretations: astInterp
+                };
+            }
+
+            if (patientData.bilirubin) {
+                const biliInterp = getLabInterpretationClientSide('bilirubin', patientData.bilirubin, sex);
+                labAnalysis.liver_function.bilirubin = {
+                    value: patientData.bilirubin,
+                    unit: 'mg/dL',
+                    interpretations: biliInterp
+                };
+            }
+
+            if (patientData.albumin) {
+                const albInterp = getLabInterpretationClientSide('albumin', patientData.albumin, sex);
+                labAnalysis.liver_function.albumin = {
+                    value: patientData.albumin,
+                    unit: 'g/dL',
+                    interpretations: albInterp
+                };
+            }
+
+            // Overall assessment
+            const highRiskFindings = [];
+            const moderateRiskFindings = [];
+
+            for (const category of ['renal_function', 'liver_function']) {
+                for (const [test, data] of Object.entries(labAnalysis[category])) {
+                    for (const interp of data.interpretations || []) {
+                        if (interp.severity === 'High') {
+                            highRiskFindings.push(`${test.toUpperCase()}: ${interp.clinical_significance}`);
+                        } else if (interp.severity === 'Moderate') {
+                            moderateRiskFindings.push(`${test.toUpperCase()}: ${interp.clinical_significance}`);
+                        }
+                    }
+                }
+            }
+
+            if (highRiskFindings.length > 0) {
+                labAnalysis.overall_assessment.push({
+                    level: 'High Risk',
+                    findings: highRiskFindings,
+                    recommendation: 'Immediate clinical attention required'
+                });
+            }
+
+            if (moderateRiskFindings.length > 0) {
+                labAnalysis.overall_assessment.push({
+                    level: 'Moderate Risk',
+                    findings: moderateRiskFindings,
+                    recommendation: 'Enhanced monitoring recommended'
+                });
+            }
+
+            // Monitoring recommendations
+            if (patientData.creatinine && patientData.creatinine > 1.5) {
+                labAnalysis.monitoring_recommendations.push('Monitor renal function weekly');
+            }
+            if (patientData.ast_alt && patientData.ast_alt > 80) {
+                labAnalysis.monitoring_recommendations.push('Monitor liver function every 3-7 days');
+            }
+            if (patientData.egfr && patientData.egfr < 60) {
+                labAnalysis.monitoring_recommendations.push('Adjust drug dosing for renal impairment');
+            }
+
+            return labAnalysis;
+        }
+
+        // Generate comprehensive lab analysis
+        async function generateEnhancedLabAnalysis() {
+            if (!currentPatientData) {
+                showNotification('No patient data available for analysis', 'error');
+                return;
+            }
+
+            try {
+                showLoading();
+
+                // Try server-side first
+                try {
+                    const response = await fetch('/enhanced_lab_analysis', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            patient_data: currentPatientData
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        displayEnhancedLabAnalysis(result.lab_analysis);
+                        showNotification('Comprehensive lab analysis completed!', 'success');
+                        return;
+                    }
+                } catch (error) {
+                    console.log('Server endpoint not available, using client-side analysis');
+                }
+
+                // Fallback to client-side analysis
+                const labAnalysis = generateEnhancedLabAnalysisClientSide(currentPatientData);
+                displayEnhancedLabAnalysis(labAnalysis);
+                showNotification('Comprehensive lab analysis completed! (Client-side)', 'success');
+
+            } catch (error) {
+                showNotification('Error generating lab analysis: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function displayEnhancedLabAnalysis(labAnalysis) {
+            // Create modal for lab analysis results
+            const modalHtml = `
+                <div id="lab-analysis-modal" class="modal-overlay">
+                    <div class="modal-content lab-analysis-modal">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-flask"></i> Comprehensive Laboratory Analysis</h3>
+                            <button class="modal-close" onclick="closeLabAnalysisModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            ${generateLabAnalysisContent(labAnalysis)}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Remove existing modal if present
+            const existingModal = document.getElementById('lab-analysis-modal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // Add new modal
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.getElementById('lab-analysis-modal').style.display = 'flex';
+        }
+
+        function generateLabAnalysisContent(labAnalysis) {
+            let content = '';
+
+            // Renal function section
+            if (labAnalysis.renal_function && Object.keys(labAnalysis.renal_function).length > 0) {
+                content += `
+                    <div class="lab-section">
+                        <h4><i class="fas fa-kidneys"></i> Renal Function Assessment</h4>
+                        <div class="lab-results-grid">
+                `;
+
+                for (const [test, data] of Object.entries(labAnalysis.renal_function)) {
+                    const interpretations = data.interpretations || [];
+                    content += `
+                        <div class="lab-result-card">
+                            <div class="lab-test-name">${test.toUpperCase()}</div>
+                            <div class="lab-value">${data.value} ${data.unit}</div>
+                            ${interpretations.map(interp => `
+                                <div class="lab-interpretation ${interp.severity.toLowerCase()}-severity">
+                                    <span class="interp-status">${interp.status}</span>
+                                    <span class="interp-significance">${interp.clinical_significance}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                content += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Liver function section
+            if (labAnalysis.liver_function && Object.keys(labAnalysis.liver_function).length > 0) {
+                content += `
+                    <div class="lab-section">
+                        <h4><i class="fas fa-liver"></i> Liver Function Assessment</h4>
+                        <div class="lab-results-grid">
+                `;
+
+                for (const [test, data] of Object.entries(labAnalysis.liver_function)) {
+                    const interpretations = data.interpretations || [];
+                    content += `
+                        <div class="lab-result-card">
+                            <div class="lab-test-name">${test.toUpperCase()}</div>
+                            <div class="lab-value">${data.value} ${data.unit}</div>
+                            ${interpretations.map(interp => `
+                                <div class="lab-interpretation ${interp.severity.toLowerCase()}-severity">
+                                    <span class="interp-status">${interp.status}</span>
+                                    <span class="interp-significance">${interp.clinical_significance}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                content += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Overall assessment
+            if (labAnalysis.overall_assessment && labAnalysis.overall_assessment.length > 0) {
+                content += `
+                    <div class="lab-section">
+                        <h4><i class="fas fa-stethoscope"></i> Overall Clinical Assessment</h4>
+                        <div class="assessment-cards">
+                `;
+
+                labAnalysis.overall_assessment.forEach(assessment => {
+                    content += `
+                        <div class="assessment-card ${assessment.level.toLowerCase().replace(' ', '-')}">
+                            <div class="assessment-level">${assessment.level}</div>
+                            <div class="assessment-findings">
+                                ${assessment.findings.map(finding => `<div class="finding-item">${finding}</div>`).join('')}
+                            </div>
+                            <div class="assessment-recommendation">${assessment.recommendation}</div>
+                        </div>
+                    `;
+                });
+
+                content += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Monitoring recommendations
+            if (labAnalysis.monitoring_recommendations && labAnalysis.monitoring_recommendations.length > 0) {
+                content += `
+                    <div class="lab-section">
+                        <h4><i class="fas fa-calendar-check"></i> Monitoring Recommendations</h4>
+                        <div class="monitoring-list">
+                            ${labAnalysis.monitoring_recommendations.map(rec => `
+                                <div class="monitoring-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>${rec}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return content;
+        }
+
+        function closeLabAnalysisModal() {
+            const modal = document.getElementById('lab-analysis-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.remove();
+            }
+        }
+
+        // Test notification function
+        function testNotification() {
+            showNotification('Test notification is working!', 'success');
+            setTimeout(() => {
+                showNotification('Test error notification', 'error');
+            }, 1000);
+        }
+
+        // Test AI detailed analysis display
+        function testEnhancedResultsDisplay() {
+            console.log('Testing AI detailed analysis display...');
+
+            // Mock data for testing
+            const mockResult = {
+                risk_level: 'High',
+                predicted_adr_type: 'Hepatotoxicity',
+                no_adr_probability: 25.5,
+                timestamp: new Date().toISOString()
+            };
+
+            // Show results container first
+            const resultsContainer = document.getElementById('results-container');
+            if (resultsContainer) {
+                resultsContainer.style.display = 'block';
+            }
+
+            // Set mock patient data
+            currentPatientData = {
+                age: 75,
+                sex: 'M',
+                medication_name: 'Warfarin',
+                indication: 'Cardiovascular'
+            };
+
+            // Call the AI analysis function
+            if (typeof generateAIDetailedAnalysis === 'function') {
+                generateAIDetailedAnalysis(mockResult);
+                showNotification('AI detailed analysis test started!', 'success');
+            } else {
+                showNotification('generateAIDetailedAnalysis function not found!', 'error');
+            }
+        }
+
+        // Update the main displayResults function to include enhanced features
+        const originalDisplayResults = displayResults;
+        displayResults = function (result) {
+            originalDisplayResults(result);
+            displayEnhancedResults(result);
+
+            // Enhanced results container is now part of main results, so it shows automatically
+            // No need to separately show/hide it
+        };
+
     </script>
+
+    <!-- Liver Function Modal -->
+    <div id="liver-function-modal" class="modal-overlay">
+        <div class="modal-content liver-function-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-liver"></i> Liver Function Test Files</h3>
+                <button class="modal-close" onclick="closeLiverFunctionModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-section">
+                    <h4>Upload New File</h4>
+                    <div class="file-upload-area">
+                        <input type="file" id="liver-function-file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.txt"
+                            class="file-input">
+                        <label for="liver-function-file" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose file or drag and drop</span>
+                            <small>Supported: PDF, Images, Word documents, Text files</small>
+                        </label>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="uploadLiverFunction()">
+                        <i class="fas fa-upload"></i> Upload File
+                    </button>
+                </div>
+
+                <div class="uploaded-files-section">
+                    <h4>Uploaded Files</h4>
+                    <div id="uploaded-files-list" class="uploaded-files-list">
+                        <div class="no-files">No files uploaded yet</div>
+                    </div>
+                </div>
+
+                <div class="liver-parameters-section">
+                    <h4>Additional Liver Function Parameters</h4>
+                    <div class="parameter-grid">
+                        <div class="parameter-item">
+                            <label>ALP (U/L)</label>
+                            <input type="number" placeholder="44-147" class="parameter-input">
+                        </div>
+                        <div class="parameter-item">
+                            <label>GGT (U/L)</label>
+                            <input type="number" placeholder="9-48" class="parameter-input">
+                        </div>
+                        <div class="parameter-item">
+                            <label>PT/INR</label>
+                            <input type="number" step="0.1" placeholder="0.8-1.1" class="parameter-input">
+                        </div>
+                        <div class="parameter-item">
+                            <label>Total Protein (g/dL)</label>
+                            <input type="number" step="0.1" placeholder="6.0-8.3" class="parameter-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Enhanced Lab Function Group Styles */
+        .liver-function-group label,
+        .form-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lab-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .file-attach-btn,
+        .lab-interpret-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lab-interpret-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .file-attach-btn:hover,
+        .lab-interpret-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .lab-interpret-btn:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Lab Interpretation Styles */
+        .lab-interpretation {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+        }
+
+        .lab-interp-container h6 {
+            margin: 0 0 10px 0;
+            color: #374151;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lab-interp-item {
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #e5e7eb;
+        }
+
+        .lab-interp-item.high-severity {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+        }
+
+        .lab-interp-item.moderate-severity {
+            background: #fffbeb;
+            border-left-color: #f59e0b;
+        }
+
+        .lab-interp-item.low-severity {
+            background: #f0fdf4;
+            border-left-color: #10b981;
+        }
+
+        .lab-interp-container.normal {
+            background: #f0fdf4;
+            border-color: #10b981;
+        }
+
+        .interp-status {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1f2937;
+        }
+
+        .interp-significance {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin: 4px 0;
+        }
+
+        .interp-severity {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .interp-normal {
+            color: #065f46;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .factor-reference {
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: #f3f4f6;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Concomitant Drugs Styles */
+        .concomitant-drugs-group {
+            margin-top: 20px;
+        }
+
+        .concomitant-drug-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .concomitant-drug-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .remove-drug-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-drug-btn:hover {
+            background: #dc2626;
+        }
+
+        .add-drug-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .add-drug-btn:hover {
+            background: #059669;
+        }
+
+        /* Modal Styles */
+        .liver-function-modal {
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .upload-section,
+        .uploaded-files-section,
+        .liver-parameters-section {
+            margin-bottom: 25px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background: #f8fafc;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-upload-label {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-upload-label i {
+            font-size: 2rem;
+            color: #667eea;
+        }
+
+        .uploaded-files-list {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .parameter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .parameter-item label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #374151;
+        }
+
+        .parameter-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+        }
+
+        /* Enhanced Results Styles */
+        .adr-factor-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .adr-factor-card.high-risk {
+            border-left-color: #ef4444;
+        }
+
+        .adr-factor-card.medium-risk {
+            border-left-color: #f59e0b;
+        }
+
+        .adr-factor-card.low-risk {
+            border-left-color: #10b981;
+        }
+
+        .factor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .risk-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .risk-badge.high {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .risk-badge.medium {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+
+        .risk-badge.low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .medication-card,
+        .adr-detail-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .med-type,
+        .adr-category {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 8px;
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* AI-Powered Detailed Analysis Styles */
+        .ai-detailed-analysis-container {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.1);
+        }
+
+        .ai-analysis-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .ai-analysis-header h2 {
+            font-size: 1.4rem;
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .ai-analysis-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .ai-detailed-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 30px;
+            min-height: 200px;
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Custom scrollbar for detailed analysis content */
+        .ai-detailed-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .ai-detailed-content::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .ai-detailed-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .ai-detailed-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .ai-analysis-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .ai-analysis-loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .ai-analysis-loading p {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .ai-analysis-content {
+            line-height: 1.6;
+        }
+
+        .ai-analysis-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .analysis-timestamp {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .ai-status.ai-powered {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .ai-status.fallback {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        .ai-report-content {
+            font-size: 1rem;
+            color: #374151;
+        }
+
+        .analysis-section-title {
+            color: #667eea;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 25px 0 15px 0;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .analysis-section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .analysis-subsection-title {
+            color: #374151;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            padding: 8px 12px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 6px;
+        }
+
+        .ai-analysis-error {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .error-header {
+            margin-bottom: 20px;
+        }
+
+        .error-header i {
+            font-size: 2rem;
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+
+        .error-header h3 {
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .fallback-analysis {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .fallback-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(248, 250, 252, 0.8);
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .fallback-section h4 {
+            color: #1e293b;
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .risk-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .risk-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .risk-label {
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .risk-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .risk-value.high {
+            color: #dc2626;
+        }
+
+        .risk-value.medium {
+            color: #d97706;
+        }
+
+        .risk-value.low {
+            color: #059669;
+        }
+
+        /* Detailed Clinical Analysis Content Styles */
+        .clinical-analysis-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .risk-overview {
+            margin-top: 15px;
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .risk-metric {
+            padding: 15px;
+            background: rgba(248, 250, 252, 0.8);
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-value.risk-high {
+            color: #dc2626;
+        }
+
+        .metric-value.risk-medium {
+            color: #d97706;
+        }
+
+        .metric-value.risk-low {
+            color: #059669;
+        }
+
+        .metric-description {
+            font-size: 0.8rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .detailed-risks {
+            margin-top: 15px;
+        }
+
+        .risk-detail-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(248, 250, 252, 0.6);
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .risk-name {
+            flex: 1;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .risk-probability {
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 15px;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .risk-bar {
+            width: 100px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .risk-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .recommendations {
+            margin-top: 15px;
+        }
+
+        .recommendation-category {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(248, 250, 252, 0.6);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .recommendation-category h4 {
+            color: #1e293b;
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .recommendation-category ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .recommendation-category li {
+            margin-bottom: 8px;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .next-steps {
+            margin-top: 15px;
+        }
+
+        .step-timeline {
+            position: relative;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(248, 250, 252, 0.6);
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .timeline-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .timeline-marker.immediate {
+            background: #dc2626;
+        }
+
+        .timeline-marker.short-term {
+            background: #d97706;
+        }
+
+        .timeline-marker.long-term {
+            background: #059669;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .timeline-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .clinical-disclaimer {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .clinical-disclaimer p {
+            margin: 0;
+            color: #92400e;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* AI Report Style for Detailed Analysis */
+        .ai-report-content h2 {
+            color: #667eea;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 25px 0 15px 0;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .ai-report-content h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .ai-report-content h3 {
+            color: #374151;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            padding: 8px 12px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 6px;
+        }
+
+        .risk-summary-section {
+            margin: 20px 0;
+        }
+
+        .risk-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .metric-card {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-value.risk-high {
+            color: #dc2626;
+        }
+
+        .metric-value.risk-medium {
+            color: #d97706;
+        }
+
+        .metric-value.risk-low {
+            color: #059669;
+        }
+
+        .metric-desc {
+            font-size: 0.8rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .risk-breakdown-section {
+            margin: 20px 0;
+        }
+
+        .risk-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(248, 250, 252, 0.6);
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .risk-item-name {
+            flex: 1;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .risk-item-prob {
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 15px;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .risk-item-bar {
+            width: 100px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .risk-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .recommendations-section {
+            margin: 20px 0;
+        }
+
+        .recommendation-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(248, 250, 252, 0.6);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .recommendation-box h3 {
+            color: #1e293b;
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            background: none;
+            padding: 0;
+        }
+
+        .recommendation-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .recommendation-box li {
+            margin-bottom: 8px;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .timeline-section {
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(248, 250, 252, 0.6);
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .timeline-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .timeline-marker.immediate {
+            background: #dc2626;
+        }
+
+        .timeline-marker.short-term {
+            background: #d97706;
+        }
+
+        .timeline-marker.long-term {
+            background: #059669;
+        }
+
+        .timeline-content {
+            flex: 1;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .clinical-note {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .clinical-note p {
+            margin: 0;
+            color: #92400e;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Mobile Responsive Styles for AI Detailed Analysis */
+        @media (max-width: 768px) {
+            .ai-detailed-analysis-container {
+                margin-top: 15px;
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .ai-analysis-header h2 {
+                font-size: 1.2rem;
+                gap: 8px;
+            }
+
+            .ai-analysis-badge {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .ai-detailed-content {
+                padding: 20px;
+                max-height: 500px;
+            }
+
+            .ai-analysis-meta {
+                flex-direction: column;
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .analysis-timestamp {
+                font-size: 0.8rem;
+            }
+
+            .ai-report-content h2 {
+                font-size: 1.2rem;
+                padding: 12px 15px;
+                margin: 20px 0 12px 0;
+            }
+
+            .ai-report-content h3 {
+                font-size: 1rem;
+                padding: 6px 10px;
+                margin: 15px 0 8px 0;
+            }
+
+            .risk-metrics {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .metric-card {
+                padding: 12px;
+            }
+
+            .metric-title {
+                font-size: 0.8rem;
+            }
+
+            .metric-value {
+                font-size: 1.1rem;
+            }
+
+            .metric-desc {
+                font-size: 0.75rem;
+            }
+
+            .risk-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .risk-item-name {
+                font-size: 0.9rem;
+            }
+
+            .risk-item-prob {
+                text-align: left;
+                margin: 0;
+                font-size: 0.9rem;
+            }
+
+            .risk-item-bar {
+                width: 100%;
+                height: 6px;
+            }
+
+            .recommendation-box {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+
+            .recommendation-box h3 {
+                font-size: 0.9rem;
+                margin-bottom: 8px;
+            }
+
+            .recommendation-box li {
+                font-size: 0.85rem;
+                margin-bottom: 6px;
+                line-height: 1.4;
+            }
+
+            .timeline-item {
+                padding: 10px;
+                margin-bottom: 12px;
+            }
+
+            .timeline-marker {
+                width: 10px;
+                height: 10px;
+                margin-right: 12px;
+            }
+
+            .timeline-content {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+
+            .clinical-note {
+                padding: 12px;
+                margin-top: 20px;
+            }
+
+            .clinical-note p {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Ultra Mobile Responsive - Small Phones */
+        @media (max-width: 480px) {
+            .ai-detailed-analysis-container {
+                margin-top: 10px;
+                padding: 12px;
+            }
+
+            .ai-analysis-header h2 {
+                font-size: 1.1rem;
+                margin-bottom: 8px;
+            }
+
+            .ai-detailed-content {
+                padding: 15px;
+                max-height: 400px;
+            }
+
+            .ai-report-content h2 {
+                font-size: 1.1rem;
+                padding: 10px 12px;
+                margin: 15px 0 10px 0;
+            }
+
+            .metric-card {
+                padding: 10px;
+            }
+
+            .metric-title {
+                font-size: 0.75rem;
+                margin-bottom: 6px;
+            }
+
+            .metric-value {
+                font-size: 1rem;
+                margin-bottom: 4px;
+            }
+
+            .metric-desc {
+                font-size: 0.7rem;
+            }
+
+            .risk-item {
+                padding: 8px;
+            }
+
+            .recommendation-box {
+                padding: 10px;
+                margin-bottom: 12px;
+            }
+
+            .recommendation-box h3 {
+                font-size: 0.85rem;
+            }
+
+            .recommendation-box li {
+                font-size: 0.8rem;
+                line-height: 1.3;
+            }
+
+            .timeline-item {
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+
+            .timeline-content {
+                font-size: 0.8rem;
+            }
+
+            /* Ensure AI detailed analysis is responsive */
+            .ai-detailed-analysis-container {
+                margin-top: 8px;
+                padding: 10px;
+            }
+
+            .ai-analysis-header h2 {
+                font-size: 1rem;
+            }
+
+            .ai-detailed-content {
+                padding: 12px;
+                max-height: 350px;
+            }
+
+            .ai-detailed-content h1 {
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+            }
+
+            .ai-detailed-content h2 {
+                font-size: 1rem;
+                margin: 15px 0 8px 0;
+                padding: 6px 10px;
+            }
+
+            .ai-detailed-content h3 {
+                font-size: 0.9rem;
+                margin: 12px 0 6px 0;
+                padding: 4px 8px;
+            }
+
+            .ai-detailed-content p {
+                font-size: 0.8rem;
+                margin: 8px 0;
+                line-height: 1.4;
+            }
+
+            .ai-detailed-content ul {
+                margin: 8px 0;
+                padding-left: 20px;
+            }
+
+            .ai-detailed-content li {
+                font-size: 0.8rem;
+                margin-bottom: 4px;
+                line-height: 1.4;
+            }
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .enhanced-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .enhanced-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .enhanced-section.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .enhanced-section .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .enhanced-section .section-header i {
+            color: #667eea;
+            font-size: 1.3rem;
+        }
+
+        .enhanced-section .section-header h3 {
+            color: #1e293b;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .factors-container,
+        .medications-container,
+        .adr-details-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .liver-function-modal {
+                margin: 10px;
+                max-height: 90vh;
+            }
+
+            .parameter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .concomitant-drug-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .enhanced-results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .enhanced-section {
+                padding: 15px;
+            }
+        }
+
+        /* Lab Analysis Modal Styles */
+        .lab-analysis-modal {
+            max-width: 900px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .lab-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .lab-section h4 {
+            margin: 0 0 15px 0;
+            color: #1e293b;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lab-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .lab-result-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .lab-test-name {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .lab-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .assessment-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .assessment-card {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e5e7eb;
+        }
+
+        .assessment-card.high-risk {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+        }
+
+        .assessment-card.moderate-risk {
+            background: #fffbeb;
+            border-left-color: #f59e0b;
+        }
+
+        .assessment-level {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .finding-item {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .assessment-recommendation {
+            font-weight: 500;
+            color: #374151;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .monitoring-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .monitoring-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .monitoring-item i {
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .lab-analysis-modal {
+                margin: 10px;
+                max-height: 90vh;
+            }
+
+            .lab-results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/detailed_analysis.js') }}"></script>
 </body>
-</html>
+
+</html>  
+  <style>
+        /* Detailed Analysis Styles */
+        .detailed-analysis-placeholder {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px dashed #e5e7eb;
+        }
+        
+        .analysis-loading {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 12px;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .analysis-result {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .analysis-header h3 {
+            color: #059669;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .analysis-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .analysis-badge.ai-powered {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .analysis-badge.fallback {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .analysis-content {
+            line-height: 1.6;
+            color: #374151;
+        }
+        
+        .analysis-content h3 {
+            color: #1f2937;
+            margin: 20px 0 10px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .analysis-content h4 {
+            color: #374151;
+            margin: 15px 0 8px 0;
+        }
+        
+        .analysis-content p {
+            margin: 12px 0;
+        }
+        
+        .analysis-content ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        
+        .analysis-content li {
+            margin: 6px 0;
+        }
+        
+        .analysis-actions {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .analysis-error {
+            text-align: center;
+            padding: 40px 20px;
+            background: #fef2f2;
+            border-radius: 12px;
+            border: 1px solid #fecaca;
+        }
+        
+        .error-icon {
+            font-size: 3rem;
+            color: #dc2626;
+            margin-bottom: 15px;
+        }
+        
+        .analysis-error h3 {
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+        
+        .analysis-error p {
+            color: #7f1d1d;
+            margin-bottom: 20px;
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e5e7eb;
+            color: #374151;
+        }
+        
+        .btn-outline:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .analysis-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .analysis-actions,
+            .error-actions {
+                flex-direction: column;
+            }
+            
+            .detailed-analysis-placeholder {
+                padding: 20px 15px;
+            }
+            
+            .analysis-loading {
+                padding: 30px 15px;
+            }
+            
+            .analysis-result {
+                padding: 20px 15px;
+            }
+        }
+    </style>
