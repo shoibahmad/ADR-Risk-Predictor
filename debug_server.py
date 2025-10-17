@@ -285,13 +285,11 @@ def generate_medication_analysis():
         prediction_result = data.get('prediction_result', {})
         patient_name = data.get('patient_name', 'Patient')
         
-        # Use fallback medication analysis for now (Gemini API may be slow)
-        logger.info("💊 Generating medication analysis using clinical algorithms...")
+        # Use enhanced fallback for now (Gemini may timeout)
+        logger.info("💊 Generating enhanced medication analysis with dietary guidance...")
         try:
-            # For now, use fallback to ensure reliability
-            # TODO: Re-enable Gemini after API stability is confirmed
-            raise Exception("Using fallback for reliability")
-            
+            # Force fallback to show enhanced content
+            raise Exception("Using enhanced fallback")
             prompt = f"""As a clinical pharmacist and medication therapy management specialist, provide a comprehensive medication analysis for:
 
 Patient: {patient_name}
@@ -314,38 +312,68 @@ Provide a detailed medication analysis including:
 1. **Current Medication Assessment**
    - Appropriateness of current medication and dose
    - Risk-benefit analysis based on patient profile
+   - Contraindications and cautions for this patient
 
 2. **Dose Optimization Recommendations**
    - Recommended dose adjustments (if any)
    - Rationale for dose modifications
    - Frequency and timing recommendations
+   - Dose titration schedule if needed
 
-3. **Administration Guidelines**
-   - Best time to take medication (morning/evening)
+3. **Administration Guidelines & Timing**
+   - Best time to take medication (morning/evening/bedtime)
    - Relationship to meals (with food/empty stomach/specific timing)
    - Special administration instructions
+   - What to do if a dose is missed
 
-4. **Food and Drug Interactions**
-   - Foods to avoid or include
-   - Dietary recommendations to enhance efficacy
-   - Foods that may reduce side effects
+4. **Detailed Food & Dietary Recommendations**
+   - **Foods to Take WITH Medication:** Specific foods that enhance absorption or reduce side effects
+   - **Foods to AVOID:** Foods that interfere with medication or increase side effects
+   - **Timing of Meals:** How long before/after meals to take medication
+   - **Beneficial Foods:** Foods that support medication effectiveness
+   - **Hydration Requirements:** Specific fluid intake recommendations
+   - **Alcohol Restrictions:** Detailed alcohol interaction warnings
+   - **Supplements to Avoid:** Vitamins/minerals that may interfere
 
-5. **Alternative Medication Options**
+5. **Safety Precautions & Warnings**
+   - **Critical Warning Signs:** Symptoms requiring immediate medical attention
+   - **Common Side Effects:** What to expect and how to manage
+   - **Drug Interactions:** Specific medications to avoid
+   - **Activity Restrictions:** Driving, exercise, or work limitations
+   - **Environmental Precautions:** Sun exposure, temperature sensitivity
+   - **Emergency Instructions:** What to do in case of overdose or severe reaction
+
+6. **Lifestyle Modifications**
+   - Diet modifications to support treatment
+   - Exercise recommendations or restrictions
+   - Sleep hygiene considerations
+   - Stress management advice
+
+7. **Alternative Medication Options**
    - Safer alternatives if current medication is high risk
    - Different drug classes to consider
    - Rationale for alternatives
+   - Switching protocols if needed
 
-6. **Monitoring Schedule**
+8. **Monitoring Schedule**
    - Laboratory tests needed and frequency
    - Clinical parameters to monitor
    - Timeline for follow-up assessments
+   - Self-monitoring instructions for patients
 
-7. **Patient Education Points**
-   - What to expect from the medication
-   - Signs of effectiveness
-   - Warning signs to watch for
+9. **Patient Education & Compliance**
+   - What to expect from the medication (timeline for effects)
+   - Signs of effectiveness vs. side effects
+   - Importance of adherence and consequences of stopping
+   - Storage instructions and medication handling
 
-Format with clear headings and practical, actionable recommendations."""
+10. **Special Considerations**
+    - Age-related considerations for this patient
+    - Kidney/liver function impact on medication
+    - Pregnancy/breastfeeding considerations if applicable
+    - Travel considerations and medication management
+
+Format with clear headings, bullet points, and practical, actionable recommendations. Be specific about foods, timing, and precautions."""
             
             logger.info("📝 Sending medication analysis prompt to Gemini...")
             response = model_gemini.generate_content(prompt)
@@ -1792,6 +1820,144 @@ def get_long_term_management_plan(risk_level, predicted_adr):
 - Support for medication adherence and lifestyle modifications
     """
 
+def get_meal_timing_recommendations(medication):
+    """Get meal timing recommendations for specific medications"""
+    # This would be medication-specific in a real implementation
+    return "Take with food to reduce stomach irritation, preferably with breakfast for morning doses"
+
+def get_beneficial_foods(medication):
+    """Get foods that should be taken with medication"""
+    return """- **High-fiber foods:** Oatmeal, whole grains to support digestive health
+- **Lean proteins:** Fish, chicken, tofu to support medication metabolism
+- **Calcium-rich foods:** Dairy products, leafy greens (if not contraindicated)
+- **Probiotics:** Yogurt, kefir to maintain gut health during treatment
+- **Anti-inflammatory foods:** Berries, fatty fish, nuts to reduce inflammation"""
+
+def get_foods_to_avoid(medication):
+    """Get foods to avoid with medication"""
+    return """- **Grapefruit & Grapefruit Juice:** Can significantly alter medication levels
+- **High-fat meals:** May delay or reduce medication absorption
+- **Excessive caffeine:** Coffee, energy drinks may increase side effects
+- **Alcohol:** Can increase risk of side effects and liver toxicity
+- **High-sodium foods:** Processed foods, canned soups may worsen certain conditions
+- **Tyramine-rich foods:** Aged cheeses, cured meats (if applicable to medication)"""
+
+def get_detailed_meal_timing(medication):
+    """Get detailed meal timing guidelines"""
+    return """- **30 minutes before meals:** For optimal absorption if stomach irritation is not a concern
+- **With meals:** If medication causes nausea or stomach upset
+- **2 hours after meals:** For medications requiring empty stomach
+- **Bedtime:** For medications that may cause drowsiness
+- **Consistent timing:** Same relationship to meals every day"""
+
+def get_critical_warning_signs(predicted_adr):
+    """Get critical warning signs based on predicted ADR"""
+    warning_signs = {
+        'Gastrointestinal': """- Severe abdominal pain or cramping
+- Blood in vomit or stool (black, tarry stools)
+- Persistent vomiting preventing fluid intake
+- Signs of dehydration (dizziness, dry mouth, decreased urination)
+- Severe diarrhea lasting more than 24 hours""",
+        
+        'Cardiovascular': """- Chest pain or pressure
+- Severe shortness of breath
+- Irregular or very fast/slow heartbeat
+- Sudden swelling of face, lips, tongue, or throat
+- Fainting or severe dizziness
+- Sudden severe headache""",
+        
+        'Neurological': """- Sudden severe headache
+- Confusion or disorientation
+- Seizures or convulsions
+- Sudden weakness or numbness
+- Vision changes or loss
+- Difficulty speaking or understanding speech""",
+        
+        'Dermatological': """- Widespread rash with fever
+- Blistering or peeling skin
+- Severe itching with difficulty breathing
+- Swelling of face, lips, or tongue
+- Rash spreading rapidly""",
+        
+        'Hematological': """- Unusual bleeding that won't stop
+- Severe bruising without injury
+- Extreme fatigue or weakness
+- Frequent infections or fever
+- Pale skin or shortness of breath""",
+        
+        'Nephrotoxicity': """- Significant decrease in urination
+- Blood in urine
+- Severe swelling of legs, ankles, or face
+- Persistent nausea and vomiting
+- Confusion or difficulty concentrating""",
+        
+        'Hepatotoxicity': """- Yellowing of skin or eyes (jaundice)
+- Dark urine or pale stools
+- Severe fatigue or weakness
+- Loss of appetite with nausea
+- Severe abdominal pain (upper right side)"""
+    }
+    
+    return warning_signs.get(predicted_adr, """- Severe allergic reactions (difficulty breathing, swelling)
+- Any symptoms that worsen rapidly
+- Symptoms that significantly interfere with daily activities
+- New symptoms not previously experienced""")
+
+def get_side_effect_management(predicted_adr):
+    """Get side effect management strategies"""
+    management = {
+        'Gastrointestinal': """- **Nausea:** Take with food, eat small frequent meals, avoid spicy foods
+- **Diarrhea:** Stay hydrated, eat bland foods (BRAT diet), avoid dairy temporarily
+- **Constipation:** Increase fiber intake, drink more water, gentle exercise
+- **Stomach upset:** Take with milk or food, avoid acidic foods""",
+        
+        'Cardiovascular': """- **Dizziness:** Rise slowly from sitting/lying, stay hydrated
+- **Swelling:** Elevate legs, reduce sodium intake, monitor weight daily
+- **Palpitations:** Avoid caffeine, practice relaxation techniques
+- **Fatigue:** Pace activities, ensure adequate rest""",
+        
+        'Neurological': """- **Headache:** Stay hydrated, maintain regular sleep schedule
+- **Dizziness:** Move slowly, avoid sudden position changes
+- **Drowsiness:** Avoid driving, take medication at bedtime if possible
+- **Memory issues:** Use reminders, maintain routine""",
+        
+        'Dermatological': """- **Mild rash:** Keep skin moisturized, avoid harsh soaps
+- **Sun sensitivity:** Use sunscreen SPF 30+, wear protective clothing
+- **Dry skin:** Use gentle moisturizers, avoid hot showers
+- **Itching:** Cool compresses, loose clothing, avoid scratching"""
+    }
+    
+    return management.get(predicted_adr, """- Monitor symptoms and report changes to healthcare provider
+- Keep a symptom diary to track patterns
+- Follow general health maintenance practices
+- Stay hydrated and maintain good nutrition""")
+
+def get_lifestyle_precautions(medication, age):
+    """Get lifestyle and activity precautions"""
+    try:
+        age_val = float(age) if age != 'Unknown' else 65
+        precautions = []
+        
+        if age_val > 65:
+            precautions.append("- **Fall Prevention:** Use handrails, ensure good lighting, remove trip hazards")
+            precautions.append("- **Medication Management:** Use pill organizers, set reminders")
+        
+        precautions.extend([
+            "- **Driving:** Avoid if experiencing dizziness, drowsiness, or vision changes",
+            "- **Sun Exposure:** Use sunscreen and protective clothing (many medications increase sun sensitivity)",
+            "- **Exercise:** Start slowly, stay hydrated, avoid overexertion",
+            "- **Alcohol:** Avoid or strictly limit as directed by healthcare provider",
+            "- **Other Medications:** Check with pharmacist before taking any new medications or supplements",
+            "- **Dental Work:** Inform dentist about all medications before procedures",
+            "- **Surgery:** Inform all healthcare providers about medications before any procedures"
+        ])
+        
+        return "\n".join(precautions)
+    except:
+        return """- Follow general safety precautions
+- Avoid activities requiring alertness if experiencing side effects
+- Maintain regular communication with healthcare providers"""
+
 def generate_fallback_medication_analysis(patient_data, prediction_result, patient_name):
     """Generate a fallback medication analysis when Gemini API is not available"""
     
@@ -1824,17 +1990,39 @@ Current dose of {dose} mg should be evaluated considering patient age ({age} yea
 - Consider dose adjustment based on clinical response
 - Regular reassessment recommended
 
-## Administration Guidelines
+## Administration Guidelines & Timing
 
-### Timing Recommendations
-- **Morning Administration:** Generally recommended for most medications
-- **Consistent Timing:** Take at the same time each day
-- **With or Without Food:** Follow specific medication guidelines
+### Optimal Timing Recommendations
+- **Morning Administration:** Generally recommended for most medications to align with circadian rhythms
+- **Consistent Daily Timing:** Take at the same time each day (±1 hour) to maintain steady blood levels
+- **Meal Relationship:** {get_meal_timing_recommendations(medication)}
 
-### Food Interactions
-- Take with food to reduce gastrointestinal irritation if applicable
-- Avoid grapefruit juice and alcohol
-- Maintain adequate hydration
+## Detailed Food & Dietary Recommendations
+
+### Foods to Take WITH Medication
+{get_beneficial_foods(medication)}
+
+### Foods to AVOID
+{get_foods_to_avoid(medication)}
+
+### Hydration & Fluid Requirements
+- **Water Intake:** Drink at least 8-10 glasses of water daily
+- **With Medication:** Take with a full glass (8 oz) of water
+- **Avoid:** Grapefruit juice, excessive caffeine, alcohol
+
+### Meal Timing Guidelines
+{get_detailed_meal_timing(medication)}
+
+## Safety Precautions & Warnings
+
+### Critical Warning Signs (Seek Immediate Medical Attention)
+{get_critical_warning_signs(predicted_adr)}
+
+### Common Side Effects & Management
+{get_side_effect_management(predicted_adr)}
+
+### Activity & Lifestyle Precautions
+{get_lifestyle_precautions(medication, age)}
 
 ## Alternative Medication Options
 
