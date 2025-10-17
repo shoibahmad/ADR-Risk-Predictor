@@ -54,7 +54,7 @@ def index():
 
 @app.route('/patient-details')
 def patient_details():
-    return render_template('welcome.html')
+    return render_template('patient_details.html')
 
 @app.route('/assessment')
 def assessment():
@@ -77,6 +77,8 @@ def predict_adr():
             'ethnicity': 'White',
             'height': 170,
             'weight': 70,
+            'weight_kg': 70,
+            'height_cm': 170,
             'bmi': 24.2,
             'creatinine': 1.0,
             'egfr': 90,
@@ -120,8 +122,47 @@ def predict_adr():
             data['indication'] = 'Pain'  # Use most common indication from training data
             logger.info("Added default indication for model compatibility")
         
-        # Create DataFrame from input data
-        input_df = pd.DataFrame([data])
+        # Calculate derived fields required by the model
+        data['polypharmacy_flag'] = 1 if data.get('concomitant_drugs_count', 0) > 5 else 0
+        data['cumulative_dose_mg'] = data.get('index_drug_dose', 100) * data.get('time_since_start_days', 30)
+        data['dose_density_mg_day'] = data['cumulative_dose_mg'] / data.get('time_since_start_days', 30)
+        logger.info("Calculated derived fields for model compatibility")
+        
+        # Map frontend column names to model expected column names
+        if 'weight' in data:
+            data['weight_kg'] = data['weight']
+        if 'height' in data:
+            data['height_cm'] = data['height']
+            
+        # Add any missing columns that the model expects
+        model_expected_columns = [
+            'age', 'sex', 'weight_kg', 'bmi', 'ethnicity',
+            'creatinine', 'egfr', 'ast_alt', 'bilirubin', 'albumin',
+            'diabetes', 'liver_disease', 'ckd', 'cardiac_disease',
+            'index_drug_dose', 'concomitant_drugs_count', 'cyp_inhibitors_flag', 'qt_prolonging_flag',
+            'cyp2c9', 'cyp2d6', 'hla_risk_allele_flag',
+            'cumulative_dose_mg', 'dose_density_mg_day', 'time_since_start_days',
+            'bp_systolic', 'bp_diastolic', 'heart_rate',
+            'polypharmacy_flag', 'indication', 'inpatient_flag', 'prior_adr_history'
+        ]
+        
+        # Ensure all expected columns are present
+        for col in model_expected_columns:
+            if col not in data:
+                if col in default_values:
+                    data[col] = default_values[col]
+                else:
+                    # Set reasonable defaults for missing columns
+                    if col == 'weight_kg':
+                        data[col] = 70
+                    elif col == 'height_cm':
+                        data[col] = 170
+                    else:
+                        data[col] = 0
+                logger.info(f"Added missing column {col} with default value")
+        
+        # Create DataFrame from input data with only the columns the model expects
+        input_df = pd.DataFrame([{col: data[col] for col in model_expected_columns}])
         
         # Convert categorical columns to object type
         categorical_cols = ['sex', 'ethnicity', 'cyp2c9', 'cyp2d6', 'indication', 'medication_name', 'drug_interactions']
@@ -413,6 +454,86 @@ def test_report():
             'status': 'error',
             'error': str(e)
         }), 500
+
+@app.route('/get_patient_details')
+def get_patient_details():
+    """Get all patient details from stored assessments"""
+    logger.info("📋 Patient details endpoint called")
+    
+    try:
+        # Load patient assessments from JSON file
+        import json
+        try:
+            with open('patient_assessments.json', 'r') as f:
+                assessments = json.load(f)
+        except FileNotFoundError:
+            assessments = []
+        
+        # Format patient details for display
+        patient_details = []
+        for assessment in assessments:
+            patient_data = assessment.get('patient_data', {})
+            prediction_result = assessment.get('prediction_result', {})
+            
+            # Format patient information
+            patient_info = {
+                'patient_id': assessment.get('patient_id', 'N/A'),
+                'patient_name': assessment.get('patient_name', 'Unknown Patient'),
+                'clinician': assessment.get('clinician', 'Unknown Clinician'),
+                'timestamp': assessment.get('timestamp', 'N/A'),
+                'demographics': {
+                    'age': f"{patient_data.get('age', 'N/A')} years",
+                    'sex': patient_data.get('sex', 'N/A'),
+                    'ethnicity': patient_data.get('ethnicity', 'N/A'),
+                    'bmi': f"{patient_data.get('bmi', 'N/A')} kg/m²"
+                },
+                'clinical_parameters': {
+                    'creatinine': f"{patient_data.get('creatinine', 'N/A')} mg/dL",
+                    'egfr': f"{patient_data.get('egfr', 'N/A')} mL/min/1.73m²",
+                    'ast_alt': f"{patient_data.get('ast_alt', 'N/A')} U/L",
+                    'bilirubin': f"{patient_data.get('bilirubin', 'N/A')} mg/dL",
+                    'albumin': f"{patient_data.get('albumin', 'N/A')} g/dL"
+                },
+                'comorbidities': {
+                    'diabetes': 'Yes' if patient_data.get('diabetes') == 1 else 'No',
+                    'liver_disease': 'Yes' if patient_data.get('liver_disease') == 1 else 'No',
+                    'ckd': 'Yes' if patient_data.get('ckd') == 1 else 'No',
+                    'cardiac_disease': 'Yes' if patient_data.get('cardiac_disease') == 1 else 'No'
+                },
+                'medication_profile': {
+                    'index_drug_dose': f"{patient_data.get('index_drug_dose', 'N/A')} mg",
+                    'concomitant_drugs_count': patient_data.get('concomitant_drugs_count', 'N/A'),
+                    'indication': patient_data.get('indication', 'N/A'),
+                    'cyp2c9': patient_data.get('cyp2c9', 'N/A'),
+                    'cyp2d6': patient_data.get('cyp2d6', 'N/A')
+                },
+                'vital_signs': {
+                    'bp_systolic': f"{patient_data.get('bp_systolic', 'N/A')} mmHg",
+                    'bp_diastolic': f"{patient_data.get('bp_diastolic', 'N/A')} mmHg",
+                    'heart_rate': f"{patient_data.get('heart_rate', 'N/A')} bpm"
+                },
+                'risk_assessment': {
+                    'predicted_adr_type': prediction_result.get('predicted_adr_type', 'N/A'),
+                    'risk_level': prediction_result.get('risk_level', 'N/A'),
+                    'no_adr_probability': f"{prediction_result.get('no_adr_probability', 'N/A')}%",
+                    'top_adr_risks': prediction_result.get('top_specific_adr_risks', {})
+                }
+            }
+            
+            patient_details.append(patient_info)
+        
+        logger.info(f"✅ Retrieved {len(patient_details)} patient records")
+        return jsonify({
+            'patients': patient_details,
+            'total_count': len(patient_details),
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"❌ Error retrieving patient details: {e}")
+        import traceback
+        logger.error(f"📋 Traceback: {traceback.format_exc()}")
+        return jsonify({'error': f'Failed to retrieve patient details: {str(e)}'}), 500
 
 @app.route('/health')
 def health_check():

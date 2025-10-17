@@ -461,18 +461,18 @@ function updateBMIDisplay(bmi, category, categoryClass) {
                         missingFields.push(field.replace(/_/g, ' '));
                         continue;
                     }
-                    
+
                     const value = element.value.trim();
                     if (!value) {
                         missingFields.push(field.replace(/_/g, ' '));
                         continue;
                     }
-                    
+
                     // Validate numeric fields
-                    const numericFields = ['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt', 
-                                         'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
-                                         'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'];
-                    
+                    const numericFields = ['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt',
+                        'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
+                        'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'];
+
                     if (numericFields.includes(field)) {
                         const numValue = parseFloat(value);
                         if (isNaN(numValue) || numValue < 0) {
@@ -485,7 +485,7 @@ function updateBMIDisplay(bmi, category, categoryClass) {
                     showError(`Please complete the following required fields: ${missingFields.join(', ')}`);
                     return;
                 }
-                
+
                 if (invalidFields.length > 0) {
                     showError(`Please correct the following fields: ${invalidFields.join(', ')}`);
                     return;
@@ -538,10 +538,10 @@ function updateBMIDisplay(bmi, category, categoryClass) {
                     patientData.dose_density_mg_day = patientData.cumulative_dose_mg / patientData.time_since_start_days;
 
                     // Validate numeric fields before sending
-                    const numericFields = ['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt', 
-                                         'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
-                                         'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'];
-                    
+                    const numericFields = ['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt',
+                        'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
+                        'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'];
+
                     for (const field of numericFields) {
                         if (field in patientData) {
                             const value = patientData[field];

@@ -1589,6 +1589,272 @@
                 opacity: 1;
             }
         }
+
+        /* Test Category Card Styles */
+        .test-category-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .test-card {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .test-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .test-card:hover::before {
+            opacity: 1;
+        }
+
+        .test-card.active {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .test-card.active::before {
+            opacity: 1;
+        }
+
+        .test-card-icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .test-card:hover .test-card-icon {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .test-category-section {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .test-category-section h5 {
+            color: #1e293b;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Test Categories */
+        @media (max-width: 768px) {
+            .test-category-cards {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            .test-card {
+                padding: 16px !important;
+            }
+
+            .test-card-icon {
+                width: 40px !important;
+                height: 40px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .test-card h6 {
+                font-size: 0.9rem !important;
+            }
+
+            .test-card p {
+                font-size: 0.75rem !important;
+            }
+
+            .test-category-section {
+                padding: 15px;
+                border-radius: 10px;
+            }
+
+            .test-category-section h5 {
+                font-size: 1rem;
+                margin-bottom: 12px;
+            }
+        }
+
+        /* Tablet Test Categories */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .test-category-cards {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        /* Enhanced Action Buttons Styles */
+        .enhanced-primary-btn:hover {
+            transform: translateY(-3px) scale(1.02) !important;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5) !important;
+        }
+
+        .enhanced-primary-btn:hover .btn-shine {
+            left: 100% !important;
+        }
+
+        .enhanced-primary-btn:hover .btn-icon {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.1) !important;
+        }
+
+        .enhanced-primary-btn:hover .btn-arrow {
+            background: rgba(255, 255, 255, 0.25) !important;
+            transform: translateX(3px) !important;
+        }
+
+        .enhanced-primary-btn:active {
+            transform: translateY(-1px) scale(0.98) !important;
+        }
+
+        .enhanced-secondary-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        .enhanced-secondary-btn:hover .secondary-btn-bg {
+            opacity: 1 !important;
+        }
+
+        .enhanced-secondary-btn:hover .secondary-icon {
+            background: #e2e8f0 !important;
+            transform: scale(1.1) !important;
+        }
+
+        .enhanced-secondary-btn:hover .secondary-icon i {
+            color: #475569 !important;
+        }
+
+        .enhanced-secondary-btn:hover span {
+            color: #334155 !important;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(226, 232, 240, 0.9) !important;
+            color: #475569 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Mobile Enhanced Action Buttons */
+        @media (max-width: 768px) {
+            .enhanced-actions-container {
+                padding: 25px 20px !important;
+                margin-top: 30px !important;
+            }
+
+            .actions-header h3 {
+                font-size: 1.3rem !important;
+            }
+
+            .enhanced-primary-btn {
+                padding: 18px 25px !important;
+                font-size: 16px !important;
+            }
+
+            .secondary-actions-grid {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+
+            .enhanced-secondary-btn {
+                padding: 16px 18px !important;
+                font-size: 14px !important;
+            }
+
+            .quick-actions-footer {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 10px !important;
+            }
+
+            .quick-action-btn {
+                width: 100% !important;
+                justify-content: center !important;
+                max-width: 200px !important;
+            }
+        }
+
+        /* Ultra Mobile */
+        @media (max-width: 480px) {
+            .enhanced-actions-container {
+                padding: 20px 15px !important;
+            }
+
+            .header-icon {
+                width: 50px !important;
+                height: 50px !important;
+            }
+
+            .header-icon i {
+                font-size: 20px !important;
+            }
+
+            .enhanced-primary-btn {
+                padding: 16px 20px !important;
+                font-size: 15px !important;
+            }
+
+            .btn-icon {
+                width: 35px !important;
+                height: 35px !important;
+            }
+
+            .btn-arrow {
+                width: 25px !important;
+                height: 25px !important;
+            }
+        }
     </style>
 </head>
 
@@ -1617,6 +1883,14 @@
                     <span class="header-value" id="timestamp-display">Loading...</span>
                 </div>
             </div>
+        </div>
+
+        <!-- Test Button for Debugging -->
+        <div style="background: red; color: white; padding: 20px; margin: 20px; text-align: center;">
+            <h2>DEBUG: If you can see this, HTML is rendering</h2>
+            <button onclick="alert('Button works!')" style="background: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+                TEST BUTTON - Click Me!
+            </button>
         </div>
 
         <!-- Main Content -->
@@ -1702,6 +1976,8 @@
                         <i class="fas fa-flask"></i>
                         <h3>Laboratory Values</h3>
                     </div>
+                    
+                    <!-- Basic Lab Values (Always Visible) -->
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="creatinine">
@@ -1730,9 +2006,6 @@
                             <label for="ast_alt">
                                 AST/ALT (U/L)
                                 <div class="lab-buttons">
-                                    <button type="button" class="file-attach-btn" onclick="openLiverFunctionModal()">
-                                        <i class="fas fa-paperclip"></i> Files Attached
-                                    </button>
                                     <button type="button" class="lab-interpret-btn"
                                         onclick="interpretLabValue('ast_alt')">
                                         <i class="fas fa-microscope"></i> Interpret
@@ -1765,6 +2038,514 @@
                             <input type="number" id="albumin" name="albumin" step="0.01" min="1" max="500"
                                 placeholder="Normal: 3.5-5.0" required>
                             <div id="albumin_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Specialized Test Categories -->
+                    <div class="specialized-tests-section">
+                        <h4 style="margin: 20px 0 15px 0; color: #1e293b; font-size: 1.1rem;">
+                            <i class="fas fa-vials"></i> Specialized Laboratory Tests
+                        </h4>
+                        
+                        <!-- Test Category Cards -->
+                        <div class="test-category-cards" style="display: grid !important; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important; gap: 16px !important; margin-bottom: 25px !important;">
+                            
+                            <!-- Diabetes Card -->
+                            <div class="test-card" onclick="toggleTestCategory('diabetes')" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-tint" style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Diabetes Mellitus</h6>
+                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">FPG, OGTT, HbA1c, C-Peptide</p>
+                            </div>
+
+                            <!-- Liver Disease Card -->
+                            <div class="test-card" onclick="toggleTestCategory('liver')" style="background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-liver" style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Liver Disease</h6>
+                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">ALT, AST, ALP, GGT, Bilirubin</p>
+                            </div>
+
+                            <!-- Kidney Disease Card -->
+                            <div class="test-card" onclick="toggleTestCategory('kidney')" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-kidneys" style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Chronic Kidney Disease</h6>
+                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">Creatinine, BUN, eGFR, UACR</p>
+                            </div>
+
+                            <!-- Cardiac Disease Card -->
+                            <div class="test-card" onclick="toggleTestCategory('cardiac')" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-heartbeat" style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Cardiac Disease</h6>
+                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">Troponin, CK-MB, BNP, Lipids</p>
+                            </div>
+
+                            <!-- Hypertension Card -->
+                            <div class="test-card" onclick="toggleTestCategory('hypertension')" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-thermometer-half" style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Hypertension</h6>
+                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">Renin, Aldosterone, ABPM</p>
+                            </div>
+
+                            <!-- Respiratory Disease Card -->
+                            <div class="test-card" onclick="toggleTestCategory('respiratory')" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-lungs" style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Respiratory Disease</h6>
+                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">ABG, Spirometry, PEFR, DLCO</p>
+                            </div>
+
+                            <!-- Neurological Disease Card -->
+                            <div class="test-card" onclick="toggleTestCategory('neurological')" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-brain" style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Neurological Disease</h6>
+                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">MRI, EEG, CSF, NCS, Amyloid</p>
+                            </div>
+
+                            <!-- Autoimmune Disease Card -->
+                            <div class="test-card" onclick="toggleTestCategory('autoimmune')" style="background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(132, 204, 22, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-shield-virus" style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Autoimmune Disease</h6>
+                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">ANA, RF, Anti-CCP, ESR, CRP</p>
+                            </div>
+
+                            <!-- Complete Blood Count Card -->
+                            <div class="test-card" onclick="toggleTestCategory('cbc')" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-microscope" style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Complete Blood Count</h6>
+                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">Hb, Hct, RBC, WBC, Platelets</p>
+                            </div>
+                        </div>
+
+                        <!-- 1. Diabetes Mellitus Tests -->
+                        <div id="diabetes-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-tint"></i> Diabetes Mellitus Tests</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="fpg">Fasting Plasma Glucose (FPG) (mg/dL)</label>
+                                    <input type="number" id="fpg" name="fpg" step="0.1" min="50" max="500" placeholder="Normal: 70-100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ogtt">Oral Glucose Tolerance Test (OGTT) (mg/dL)</label>
+                                    <input type="number" id="ogtt" name="ogtt" step="0.1" min="50" max="500" placeholder="Normal: <140">
+                                </div>
+                                <div class="form-group">
+                                    <label for="hba1c">HbA1c (%)</label>
+                                    <input type="number" id="hba1c" name="hba1c" step="0.1" min="3" max="20" placeholder="Normal: <5.7">
+                                </div>
+                                <div class="form-group">
+                                    <label for="c_peptide">C-Peptide (ng/mL)</label>
+                                    <input type="number" id="c_peptide" name="c_peptide" step="0.01" min="0" max="10" placeholder="Normal: 0.8-3.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="insulin_levels">Insulin Levels (μU/mL)</label>
+                                    <input type="number" id="insulin_levels" name="insulin_levels" step="0.1" min="0" max="200" placeholder="Normal: 2.6-24.9">
+                                </div>
+                                <div class="form-group">
+                                    <label for="fructosamine">Fructosamine (μmol/L)</label>
+                                    <input type="number" id="fructosamine" name="fructosamine" step="1" min="100" max="500" placeholder="Normal: 205-285">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Liver Disease Tests -->
+                        <div id="liver-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-liver"></i> Liver Disease Tests</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="alt">Alanine Aminotransferase (ALT) (U/L)</label>
+                                    <input type="number" id="alt" name="alt" step="1" min="0" max="1000" placeholder="Normal: 7-56">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ast">Aspartate Aminotransferase (AST) (U/L)</label>
+                                    <input type="number" id="ast" name="ast" step="1" min="0" max="1000" placeholder="Normal: 10-40">
+                                </div>
+                                <div class="form-group">
+                                    <label for="alp">Alkaline Phosphatase (ALP) (U/L)</label>
+                                    <input type="number" id="alp" name="alp" step="1" min="0" max="1000" placeholder="Normal: 44-147">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ggt">Gamma-Glutamyl Transferase (GGT) (U/L)</label>
+                                    <input type="number" id="ggt" name="ggt" step="1" min="0" max="500" placeholder="Normal: 9-48">
+                                </div>
+                                <div class="form-group">
+                                    <label for="total_bilirubin">Total Bilirubin (mg/dL)</label>
+                                    <input type="number" id="total_bilirubin" name="total_bilirubin" step="0.01" min="0" max="20" placeholder="Normal: 0.2-1.2">
+                                </div>
+                                <div class="form-group">
+                                    <label for="direct_bilirubin">Direct Bilirubin (mg/dL)</label>
+                                    <input type="number" id="direct_bilirubin" name="direct_bilirubin" step="0.01" min="0" max="10" placeholder="Normal: 0.0-0.3">
+                                </div>
+                                <div class="form-group">
+                                    <label for="liver_albumin">Albumin (g/dL)</label>
+                                    <input type="number" id="liver_albumin" name="liver_albumin" step="0.01" min="1" max="6" placeholder="Normal: 3.5-5.0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pt">Prothrombin Time (PT) (seconds)</label>
+                                    <input type="number" id="pt" name="pt" step="0.1" min="5" max="50" placeholder="Normal: 11-13">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Chronic Kidney Disease Tests -->
+                        <div id="kidney-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-kidneys"></i> Chronic Kidney Disease Tests</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="serum_creatinine">Serum Creatinine (mg/dL)</label>
+                                    <input type="number" id="serum_creatinine" name="serum_creatinine" step="0.01" min="0.3" max="15" placeholder="Normal: 0.6-1.2">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bun">Blood Urea Nitrogen (BUN) (mg/dL)</label>
+                                    <input type="number" id="bun" name="bun" step="1" min="5" max="200" placeholder="Normal: 7-20">
+                                </div>
+                                <div class="form-group">
+                                    <label for="kidney_egfr">eGFR (mL/min/1.73m²)</label>
+                                    <input type="number" id="kidney_egfr" name="kidney_egfr" step="0.1" min="5" max="150" placeholder="Normal: >90">
+                                </div>
+                                <div class="form-group">
+                                    <label for="uacr">Urine Albumin-to-Creatinine Ratio (UACR) (mg/g)</label>
+                                    <input type="number" id="uacr" name="uacr" step="0.1" min="0" max="5000" placeholder="Normal: <30">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cystatin_c">Cystatin C (mg/L)</label>
+                                    <input type="number" id="cystatin_c" name="cystatin_c" step="0.01" min="0.5" max="5" placeholder="Normal: 0.62-1.15">
+                                </div>
+                                <div class="form-group">
+                                    <label for="sodium">Sodium (Na⁺) (mEq/L)</label>
+                                    <input type="number" id="sodium" name="sodium" step="0.1" min="120" max="160" placeholder="Normal: 136-145">
+                                </div>
+                                <div class="form-group">
+                                    <label for="potassium">Potassium (K⁺) (mEq/L)</label>
+                                    <input type="number" id="potassium" name="potassium" step="0.1" min="2" max="8" placeholder="Normal: 3.5-5.0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="chloride">Chloride (Cl⁻) (mEq/L)</label>
+                                    <input type="number" id="chloride" name="chloride" step="0.1" min="90" max="120" placeholder="Normal: 98-107">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Cardiac Disease Tests -->
+                        <div id="cardiac-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-heartbeat"></i> Cardiac Disease Tests</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="troponin_i">Troponin I (ng/mL)</label>
+                                    <input type="number" id="troponin_i" name="troponin_i" step="0.001" min="0" max="50" placeholder="Normal: <0.04">
+                                </div>
+                                <div class="form-group">
+                                    <label for="troponin_t">Troponin T (ng/mL)</label>
+                                    <input type="number" id="troponin_t" name="troponin_t" step="0.001" min="0" max="50" placeholder="Normal: <0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ck_mb">Creatine Kinase-MB (CK-MB) (ng/mL)</label>
+                                    <input type="number" id="ck_mb" name="ck_mb" step="0.1" min="0" max="100" placeholder="Normal: <6.3">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bnp">B-type Natriuretic Peptide (BNP) (pg/mL)</label>
+                                    <input type="number" id="bnp" name="bnp" step="1" min="0" max="5000" placeholder="Normal: <100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nt_probnp">NT-proBNP (pg/mL)</label>
+                                    <input type="number" id="nt_probnp" name="nt_probnp" step="1" min="0" max="10000" placeholder="Normal: <125">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ldl">LDL Cholesterol (mg/dL)</label>
+                                    <input type="number" id="ldl" name="ldl" step="1" min="20" max="500" placeholder="Normal: <100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="hdl">HDL Cholesterol (mg/dL)</label>
+                                    <input type="number" id="hdl" name="hdl" step="1" min="10" max="150" placeholder="Normal: >40 (M), >50 (F)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="triglycerides">Triglycerides (mg/dL)</label>
+                                    <input type="number" id="triglycerides" name="triglycerides" step="1" min="20" max="1000" placeholder="Normal: <150">
+                                </div>
+                                <div class="form-group">
+                                    <label for="total_cholesterol">Total Cholesterol (mg/dL)</label>
+                                    <input type="number" id="total_cholesterol" name="total_cholesterol" step="1" min="100" max="500" placeholder="Normal: <200">
+                                </div>
+                                <div class="form-group">
+                                    <label for="hs_crp">High-sensitivity CRP (mg/L)</label>
+                                    <input type="number" id="hs_crp" name="hs_crp" step="0.01" min="0" max="50" placeholder="Normal: <3.0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Hypertension Tests -->
+                        <div id="hypertension-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-thermometer-half"></i> Hypertension Tests</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="plasma_renin">Plasma Renin Activity (ng/mL/hr)</label>
+                                    <input type="number" id="plasma_renin" name="plasma_renin" step="0.1" min="0" max="50" placeholder="Normal: 0.2-2.3">
+                                </div>
+                                <div class="form-group">
+                                    <label for="serum_aldosterone">Serum Aldosterone (ng/dL)</label>
+                                    <input type="number" id="serum_aldosterone" name="serum_aldosterone" step="0.1" min="0" max="100" placeholder="Normal: 4-31">
+                                </div>
+                                <div class="form-group">
+                                    <label for="htn_sodium">Sodium (Na⁺) (mEq/L)</label>
+                                    <input type="number" id="htn_sodium" name="htn_sodium" step="0.1" min="120" max="160" placeholder="Normal: 136-145">
+                                </div>
+                                <div class="form-group">
+                                    <label for="htn_potassium">Potassium (K⁺) (mEq/L)</label>
+                                    <input type="number" id="htn_potassium" name="htn_potassium" step="0.1" min="2" max="8" placeholder="Normal: 3.5-5.0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="urinary_metanephrines">Urinary Metanephrines (μg/24hr)</label>
+                                    <input type="number" id="urinary_metanephrines" name="urinary_metanephrines" step="1" min="0" max="2000" placeholder="Normal: <350">
+                                </div>
+                                <div class="form-group">
+                                    <label for="abpm_systolic">ABPM Average Systolic (mmHg)</label>
+                                    <input type="number" id="abpm_systolic" name="abpm_systolic" step="1" min="80" max="250" placeholder="Normal: <130">
+                                </div>
+                                <div class="form-group">
+                                    <label for="abpm_diastolic">ABPM Average Diastolic (mmHg)</label>
+                                    <input type="number" id="abpm_diastolic" name="abpm_diastolic" step="1" min="40" max="150" placeholder="Normal: <80">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Respiratory Disease Tests -->
+                        <div id="respiratory-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-lungs"></i> Respiratory Disease Tests</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="abg_ph">ABG pH</label>
+                                    <input type="number" id="abg_ph" name="abg_ph" step="0.01" min="6.8" max="7.8" placeholder="Normal: 7.35-7.45">
+                                </div>
+                                <div class="form-group">
+                                    <label for="abg_pco2">ABG PCO₂ (mmHg)</label>
+                                    <input type="number" id="abg_pco2" name="abg_pco2" step="0.1" min="10" max="100" placeholder="Normal: 35-45">
+                                </div>
+                                <div class="form-group">
+                                    <label for="abg_po2">ABG PO₂ (mmHg)</label>
+                                    <input type="number" id="abg_po2" name="abg_po2" step="0.1" min="40" max="150" placeholder="Normal: 80-100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="fev1">FEV₁ (L)</label>
+                                    <input type="number" id="fev1" name="fev1" step="0.01" min="0.5" max="6" placeholder="Normal: >80% predicted">
+                                </div>
+                                <div class="form-group">
+                                    <label for="fvc">FVC (L)</label>
+                                    <input type="number" id="fvc" name="fvc" step="0.01" min="0.5" max="8" placeholder="Normal: >80% predicted">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pefr">Peak Expiratory Flow Rate (L/min)</label>
+                                    <input type="number" id="pefr" name="pefr" step="1" min="100" max="800" placeholder="Normal: varies by age/sex">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pulse_oximetry">Pulse Oximetry (%)</label>
+                                    <input type="number" id="pulse_oximetry" name="pulse_oximetry" step="0.1" min="70" max="100" placeholder="Normal: >95%">
+                                </div>
+                                <div class="form-group">
+                                    <label for="dlco">DLCO (mL/min/mmHg)</label>
+                                    <input type="number" id="dlco" name="dlco" step="0.1" min="5" max="50" placeholder="Normal: >75% predicted">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 7. Neurological Disease Tests -->
+                        <div id="neurological-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-brain"></i> Neurological Disease Tests</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="mri_findings">MRI Brain Findings</label>
+                                    <select id="mri_findings" name="mri_findings">
+                                        <option value="">Select findings...</option>
+                                        <option value="normal">Normal</option>
+                                        <option value="atrophy">Cerebral Atrophy</option>
+                                        <option value="infarct">Infarct</option>
+                                        <option value="hemorrhage">Hemorrhage</option>
+                                        <option value="tumor">Mass/Tumor</option>
+                                        <option value="demyelination">Demyelination</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ct_findings">CT Brain Findings</label>
+                                    <select id="ct_findings" name="ct_findings">
+                                        <option value="">Select findings...</option>
+                                        <option value="normal">Normal</option>
+                                        <option value="atrophy">Atrophy</option>
+                                        <option value="infarct">Infarct</option>
+                                        <option value="hemorrhage">Hemorrhage</option>
+                                        <option value="mass">Mass Effect</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eeg_findings">EEG Findings</label>
+                                    <select id="eeg_findings" name="eeg_findings">
+                                        <option value="">Select findings...</option>
+                                        <option value="normal">Normal</option>
+                                        <option value="seizure">Seizure Activity</option>
+                                        <option value="slowing">Generalized Slowing</option>
+                                        <option value="focal">Focal Abnormalities</option>
+                                        <option value="spikes">Spike-Wave Complexes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="csf_protein">CSF Protein (mg/dL)</label>
+                                    <input type="number" id="csf_protein" name="csf_protein" step="1" min="10" max="500" placeholder="Normal: 15-45">
+                                </div>
+                                <div class="form-group">
+                                    <label for="csf_glucose">CSF Glucose (mg/dL)</label>
+                                    <input type="number" id="csf_glucose" name="csf_glucose" step="1" min="10" max="200" placeholder="Normal: 50-80">
+                                </div>
+                                <div class="form-group">
+                                    <label for="csf_cells">CSF Cell Count (cells/μL)</label>
+                                    <input type="number" id="csf_cells" name="csf_cells" step="1" min="0" max="1000" placeholder="Normal: <5">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ncs_findings">Nerve Conduction Studies</label>
+                                    <select id="ncs_findings" name="ncs_findings">
+                                        <option value="">Select findings...</option>
+                                        <option value="normal">Normal</option>
+                                        <option value="neuropathy">Peripheral Neuropathy</option>
+                                        <option value="myopathy">Myopathy</option>
+                                        <option value="radiculopathy">Radiculopathy</option>
+                                        <option value="carpal_tunnel">Carpal Tunnel Syndrome</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ck_total">Creatine Kinase (CK) (U/L)</label>
+                                    <input type="number" id="ck_total" name="ck_total" step="1" min="20" max="5000" placeholder="Normal: 30-200">
+                                </div>
+                                <div class="form-group">
+                                    <label for="amyloid_beta">Amyloid Beta (pg/mL)</label>
+                                    <input type="number" id="amyloid_beta" name="amyloid_beta" step="1" min="100" max="2000" placeholder="Normal: >500">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tau_protein">Tau Protein (pg/mL)</label>
+                                    <input type="number" id="tau_protein" name="tau_protein" step="1" min="50" max="1000" placeholder="Normal: <300">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 8. Autoimmune Disease Tests -->
+                        <div id="autoimmune-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-shield-virus"></i> Autoimmune Disease Tests</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="ana">Antinuclear Antibody (ANA)</label>
+                                    <select id="ana" name="ana">
+                                        <option value="">Select result...</option>
+                                        <option value="negative">Negative</option>
+                                        <option value="1:80">1:80</option>
+                                        <option value="1:160">1:160</option>
+                                        <option value="1:320">1:320</option>
+                                        <option value="1:640">1:640</option>
+                                        <option value="1:1280">1:1280</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rf">Rheumatoid Factor (RF) (IU/mL)</label>
+                                    <input type="number" id="rf" name="rf" step="0.1" min="0" max="500" placeholder="Normal: <14">
+                                </div>
+                                <div class="form-group">
+                                    <label for="anti_ccp">Anti-CCP (U/mL)</label>
+                                    <input type="number" id="anti_ccp" name="anti_ccp" step="0.1" min="0" max="300" placeholder="Normal: <20">
+                                </div>
+                                <div class="form-group">
+                                    <label for="esr">ESR (mm/hr)</label>
+                                    <input type="number" id="esr" name="esr" step="1" min="0" max="150" placeholder="Normal: <30">
+                                </div>
+                                <div class="form-group">
+                                    <label for="autoimmune_crp">CRP (mg/L)</label>
+                                    <input type="number" id="autoimmune_crp" name="autoimmune_crp" step="0.1" min="0" max="200" placeholder="Normal: <3.0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="c3">Complement C3 (mg/dL)</label>
+                                    <input type="number" id="c3" name="c3" step="1" min="20" max="200" placeholder="Normal: 90-180">
+                                </div>
+                                <div class="form-group">
+                                    <label for="c4">Complement C4 (mg/dL)</label>
+                                    <input type="number" id="c4" name="c4" step="1" min="5" max="100" placeholder="Normal: 10-40">
+                                </div>
+                                <div class="form-group">
+                                    <label for="anti_dsdna">Anti-dsDNA (IU/mL)</label>
+                                    <input type="number" id="anti_dsdna" name="anti_dsdna" step="0.1" min="0" max="500" placeholder="Normal: <7">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 9. Complete Blood Count (CBC) -->
+                        <div id="cbc-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-microscope"></i> Complete Blood Count (CBC)</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="hemoglobin">Hemoglobin (Hb) (g/dL)</label>
+                                    <input type="number" id="hemoglobin" name="hemoglobin" step="0.1" min="5" max="20" placeholder="Normal: 12-16 (F), 14-18 (M)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="hematocrit">Hematocrit (Hct) (%)</label>
+                                    <input type="number" id="hematocrit" name="hematocrit" step="0.1" min="15" max="60" placeholder="Normal: 36-46 (F), 41-50 (M)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rbc_count">RBC Count (×10⁶/μL)</label>
+                                    <input type="number" id="rbc_count" name="rbc_count" step="0.01" min="2" max="7" placeholder="Normal: 4.2-5.4 (F), 4.7-6.1 (M)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="wbc_count">WBC Count (×10³/μL)</label>
+                                    <input type="number" id="wbc_count" name="wbc_count" step="0.1" min="1" max="50" placeholder="Normal: 4.5-11.0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="neutrophils">Neutrophils (%)</label>
+                                    <input type="number" id="neutrophils" name="neutrophils" step="0.1" min="0" max="100" placeholder="Normal: 50-70">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lymphocytes">Lymphocytes (%)</label>
+                                    <input type="number" id="lymphocytes" name="lymphocytes" step="0.1" min="0" max="100" placeholder="Normal: 20-40">
+                                </div>
+                                <div class="form-group">
+                                    <label for="monocytes">Monocytes (%)</label>
+                                    <input type="number" id="monocytes" name="monocytes" step="0.1" min="0" max="20" placeholder="Normal: 2-8">
+                                </div>
+                                <div class="form-group">
+                                    <label for="eosinophils">Eosinophils (%)</label>
+                                    <input type="number" id="eosinophils" name="eosinophils" step="0.1" min="0" max="20" placeholder="Normal: 1-4">
+                                </div>
+                                <div class="form-group">
+                                    <label for="basophils">Basophils (%)</label>
+                                    <input type="number" id="basophils" name="basophils" step="0.1" min="0" max="5" placeholder="Normal: 0.5-1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="platelet_count">Platelet Count (×10³/μL)</label>
+                                    <input type="number" id="platelet_count" name="platelet_count" step="1" min="50" max="1000" placeholder="Normal: 150-450">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mcv">Mean Corpuscular Volume (MCV) (fL)</label>
+                                    <input type="number" id="mcv" name="mcv" step="0.1" min="60" max="120" placeholder="Normal: 80-100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mch">Mean Corpuscular Hemoglobin (MCH) (pg)</label>
+                                    <input type="number" id="mch" name="mch" step="0.1" min="20" max="40" placeholder="Normal: 27-32">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mchc">MCHC (g/dL)</label>
+                                    <input type="number" id="mchc" name="mchc" step="0.1" min="25" max="40" placeholder="Normal: 32-36">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rdw">Red Cell Distribution Width (RDW) (%)</label>
+                                    <input type="number" id="rdw" name="rdw" step="0.1" min="10" max="25" placeholder="Normal: 11.5-14.5">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1947,19 +2728,220 @@
                     </div>
                 </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-calculator"></i>
-                        Assess ADR Risk
-                    </button>
-                    <button type="button" id="clear-form" class="btn btn-secondary">
-                        <i class="fas fa-undo"></i>
-                        Clear Form
-                    </button>
-                    <a href="/patient-details" class="btn btn-secondary">
-                        <i class="fas fa-user"></i>
-                        Back to Patient Details
-                    </a>
+                <!-- Enhanced Action Buttons Section -->
+                <div class="enhanced-actions-container" style="margin-top: 40px !important; padding: 35px !important; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important; border-radius: 20px !important; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.8) !important;">
+                    
+                    <!-- Section Header -->
+                    <div class="actions-header" style="text-align: center !important; margin-bottom: 30px !important;">
+                        <div class="header-icon" style="width: 60px !important; height: 60px !important; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; margin: 0 auto 15px auto !important; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;">
+                            <i class="fas fa-cogs" style="color: white !important; font-size: 24px !important;"></i>
+                        </div>
+                        <h3 style="color: #1e293b !important; font-size: 1.5rem !important; font-weight: 700 !important; margin: 0 0 8px 0 !important; letter-spacing: -0.025em !important;">Assessment Actions</h3>
+                        <p style="color: #64748b !important; font-size: 1rem !important; margin: 0 !important; font-weight: 400 !important;">Complete your risk assessment with the options below</p>
+                    </div>
+
+                    <!-- Primary Action Button -->
+                    <div class="primary-action-wrapper" style="margin-bottom: 25px !important;">
+                        <button type="submit" class="enhanced-primary-btn" style="
+                            width: 100% !important;
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                            border: none !important;
+                            border-radius: 16px !important;
+                            padding: 20px 30px !important;
+                            color: white !important;
+                            font-size: 18px !important;
+                            font-weight: 700 !important;
+                            cursor: pointer !important;
+                            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+                            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4) !important;
+                            position: relative !important;
+                            overflow: hidden !important;
+                            text-transform: uppercase !important;
+                            letter-spacing: 1px !important;
+                            display: flex !important;
+                            align-items: center !important;
+                            justify-content: center !important;
+                            gap: 12px !important;
+                        ">
+                            <div class="btn-shine" style="
+                                position: absolute !important;
+                                top: 0 !important;
+                                left: -100% !important;
+                                width: 100% !important;
+                                height: 100% !important;
+                                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+                                transition: left 0.6s ease !important;
+                            "></div>
+                            <div class="btn-icon" style="
+                                width: 40px !important;
+                                height: 40px !important;
+                                background: rgba(255, 255, 255, 0.2) !important;
+                                border-radius: 10px !important;
+                                display: flex !important;
+                                align-items: center !important;
+                                justify-content: center !important;
+                                transition: all 0.3s ease !important;
+                            ">
+                                <i class="fas fa-calculator" style="font-size: 18px !important; color: white !important;"></i>
+                            </div>
+                            <span style="flex: 1 !important; text-align: center !important;">Assess ADR Risk</span>
+                            <div class="btn-arrow" style="
+                                width: 30px !important;
+                                height: 30px !important;
+                                background: rgba(255, 255, 255, 0.15) !important;
+                                border-radius: 50% !important;
+                                display: flex !important;
+                                align-items: center !important;
+                                justify-content: center !important;
+                                transition: all 0.3s ease !important;
+                            ">
+                                <i class="fas fa-arrow-right" style="font-size: 12px !important; color: white !important;"></i>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Secondary Actions Grid -->
+                    <div class="secondary-actions-grid" style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; margin-bottom: 25px !important;">
+                        
+                        <!-- Clear Form Button -->
+                        <button type="button" id="clear-form" class="enhanced-secondary-btn" style="
+                            background: white !important;
+                            border: 2px solid #e2e8f0 !important;
+                            border-radius: 14px !important;
+                            padding: 18px 20px !important;
+                            color: #475569 !important;
+                            font-size: 15px !important;
+                            font-weight: 600 !important;
+                            cursor: pointer !important;
+                            transition: all 0.3s ease !important;
+                            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+                            display: flex !important;
+                            flex-direction: column !important;
+                            align-items: center !important;
+                            gap: 8px !important;
+                            position: relative !important;
+                            overflow: hidden !important;
+                        ">
+                            <div class="secondary-btn-bg" style="
+                                position: absolute !important;
+                                top: 0 !important;
+                                left: 0 !important;
+                                width: 100% !important;
+                                height: 100% !important;
+                                background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+                                opacity: 0 !important;
+                                transition: opacity 0.3s ease !important;
+                            "></div>
+                            <div class="secondary-icon" style="
+                                width: 36px !important;
+                                height: 36px !important;
+                                background: #f1f5f9 !important;
+                                border-radius: 10px !important;
+                                display: flex !important;
+                                align-items: center !important;
+                                justify-content: center !important;
+                                transition: all 0.3s ease !important;
+                                position: relative !important;
+                                z-index: 2 !important;
+                            ">
+                                <i class="fas fa-undo" style="font-size: 16px !important; color: #64748b !important; transition: all 0.3s ease !important;"></i>
+                            </div>
+                            <span style="position: relative !important; z-index: 2 !important; transition: all 0.3s ease !important;">Clear Form</span>
+                        </button>
+
+                        <!-- Back to Patient Details Button -->
+                        <a href="/patient-details" class="enhanced-secondary-btn" style="
+                            background: white !important;
+                            border: 2px solid #e2e8f0 !important;
+                            border-radius: 14px !important;
+                            padding: 18px 20px !important;
+                            color: #475569 !important;
+                            font-size: 15px !important;
+                            font-weight: 600 !important;
+                            cursor: pointer !important;
+                            transition: all 0.3s ease !important;
+                            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+                            display: flex !important;
+                            flex-direction: column !important;
+                            align-items: center !important;
+                            gap: 8px !important;
+                            text-decoration: none !important;
+                            position: relative !important;
+                            overflow: hidden !important;
+                        ">
+                            <div class="secondary-btn-bg" style="
+                                position: absolute !important;
+                                top: 0 !important;
+                                left: 0 !important;
+                                width: 100% !important;
+                                height: 100% !important;
+                                background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+                                opacity: 0 !important;
+                                transition: opacity 0.3s ease !important;
+                            "></div>
+                            <div class="secondary-icon" style="
+                                width: 36px !important;
+                                height: 36px !important;
+                                background: #f1f5f9 !important;
+                                border-radius: 10px !important;
+                                display: flex !important;
+                                align-items: center !important;
+                                justify-content: center !important;
+                                transition: all 0.3s ease !important;
+                                position: relative !important;
+                                z-index: 2 !important;
+                            ">
+                                <i class="fas fa-user" style="font-size: 16px !important; color: #64748b !important; transition: all 0.3s ease !important;"></i>
+                            </div>
+                            <span style="position: relative !important; z-index: 2 !important; transition: all 0.3s ease !important;">Patient Details</span>
+                        </a>
+                    </div>
+
+                    <!-- Quick Actions Footer -->
+                    <div class="quick-actions-footer" style="
+                        display: flex !important;
+                        justify-content: center !important;
+                        gap: 15px !important;
+                        padding-top: 20px !important;
+                        border-top: 1px solid rgba(226, 232, 240, 0.6) !important;
+                    ">
+                        <button type="button" onclick="window.print()" class="quick-action-btn" style="
+                            background: rgba(248, 250, 252, 0.8) !important;
+                            border: 1px solid #e2e8f0 !important;
+                            color: #64748b !important;
+                            padding: 8px 16px !important;
+                            border-radius: 20px !important;
+                            font-size: 13px !important;
+                            font-weight: 500 !important;
+                            cursor: pointer !important;
+                            display: flex !important;
+                            align-items: center !important;
+                            gap: 6px !important;
+                            transition: all 0.3s ease !important;
+                            backdrop-filter: blur(10px) !important;
+                        ">
+                            <i class="fas fa-print" style="font-size: 12px !important;"></i>
+                            Print Form
+                        </button>
+                        <button type="button" onclick="showInfoModal()" class="quick-action-btn" style="
+                            background: rgba(248, 250, 252, 0.8) !important;
+                            border: 1px solid #e2e8f0 !important;
+                            color: #64748b !important;
+                            padding: 8px 16px !important;
+                            border-radius: 20px !important;
+                            font-size: 13px !important;
+                            font-weight: 500 !important;
+                            cursor: pointer !important;
+                            display: flex !important;
+                            align-items: center !important;
+                            gap: 6px !important;
+                            transition: all 0.3s ease !important;
+                            backdrop-filter: blur(10px) !important;
+                        ">
+                            <i class="fas fa-info-circle" style="font-size: 12px !important;"></i>
+                            Help & Info
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -2902,9 +3884,40 @@
             }
         }
 
+        // Ensure buttons are visible
+        function ensureButtonsVisible() {
+            const formActions = document.querySelector('.form-actions');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const clearBtn = document.getElementById('clear-form');
+            
+            if (formActions) {
+                formActions.style.display = 'flex';
+                formActions.style.visibility = 'visible';
+                formActions.style.opacity = '1';
+                console.log('Form actions container found and made visible');
+            } else {
+                console.error('Form actions container not found!');
+            }
+            
+            if (submitBtn) {
+                console.log('Submit button found');
+            } else {
+                console.error('Submit button not found!');
+            }
+            
+            if (clearBtn) {
+                console.log('Clear button found');
+            } else {
+                console.error('Clear button not found!');
+            }
+        }
+
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function () {
             initializePatientInfo();
+            
+            // Ensure buttons are visible
+            setTimeout(ensureButtonsVisible, 100);
 
             // Test server connection
             testServerConnection();
@@ -2923,14 +3936,7 @@
                 hideLoading();
             }, 1500);
         });
-        // Liver Function Modal Functions
-        function openLiverFunctionModal() {
-            document.getElementById('liver-function-modal').style.display = 'flex';
-        }
 
-        function closeLiverFunctionModal() {
-            document.getElementById('liver-function-modal').style.display = 'none';
-        }
 
         // Concomitant Drug Functions
         function addDrugField() {
@@ -2981,47 +3987,7 @@
             }
         });
 
-        // File upload function
-        async function uploadLiverFunction() {
-            const fileInput = document.getElementById('liver-function-file');
-            const file = fileInput.files[0];
 
-            if (!file) {
-                showNotification('Please select a file to upload', 'error');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('file', file);
-
-            try {
-                showLoading();
-                const response = await fetch('/upload_liver_function', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    showNotification('Liver function file uploaded successfully!', 'success');
-                    document.getElementById('uploaded-files-list').innerHTML += `
-                        <div class="uploaded-file">
-                            <i class="fas fa-file"></i>
-                            <span>${result.filename}</span>
-                            <small>${new Date().toLocaleString()}</small>
-                        </div>
-                    `;
-                    closeLiverFunctionModal();
-                } else {
-                    showNotification(result.error || 'Upload failed', 'error');
-                }
-            } catch (error) {
-                showNotification('Upload failed: ' + error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        }
 
         // Client-side lab interpretation (fallback when server endpoint not available)
         function getLabInterpretationClientSide(testName, value, sex = 'M') {
@@ -3352,6 +4318,34 @@
             return labAnalysis;
         }
 
+        // Toggle test category sections
+        function toggleTestCategory(categoryName) {
+            const section = document.getElementById(categoryName + '-tests');
+            const card = event.target.closest('.test-card');
+            
+            if (section.style.display === 'none' || section.style.display === '') {
+                // Hide all other sections
+                const allSections = document.querySelectorAll('.test-category-section');
+                const allCards = document.querySelectorAll('.test-card');
+                
+                allSections.forEach(s => s.style.display = 'none');
+                allCards.forEach(c => c.classList.remove('active'));
+                
+                // Show selected section
+                section.style.display = 'block';
+                card.classList.add('active');
+                
+                // Smooth scroll to the section
+                setTimeout(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                // Hide selected section
+                section.style.display = 'none';
+                card.classList.remove('active');
+            }
+        }
+
         // Generate comprehensive lab analysis
         async function generateEnhancedLabAnalysis() {
             if (!currentPatientData) {
@@ -3596,63 +4590,7 @@
 
     </script>
 
-    <!-- Liver Function Modal -->
-    <div id="liver-function-modal" class="modal-overlay">
-        <div class="modal-content liver-function-modal">
-            <div class="modal-header">
-                <h3><i class="fas fa-liver"></i> Liver Function Test Files</h3>
-                <button class="modal-close" onclick="closeLiverFunctionModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="upload-section">
-                    <h4>Upload New File</h4>
-                    <div class="file-upload-area">
-                        <input type="file" id="liver-function-file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.txt"
-                            class="file-input">
-                        <label for="liver-function-file" class="file-upload-label">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <span>Choose file or drag and drop</span>
-                            <small>Supported: PDF, Images, Word documents, Text files</small>
-                        </label>
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="uploadLiverFunction()">
-                        <i class="fas fa-upload"></i> Upload File
-                    </button>
-                </div>
 
-                <div class="uploaded-files-section">
-                    <h4>Uploaded Files</h4>
-                    <div id="uploaded-files-list" class="uploaded-files-list">
-                        <div class="no-files">No files uploaded yet</div>
-                    </div>
-                </div>
-
-                <div class="liver-parameters-section">
-                    <h4>Additional Liver Function Parameters</h4>
-                    <div class="parameter-grid">
-                        <div class="parameter-item">
-                            <label>ALP (U/L)</label>
-                            <input type="number" placeholder="44-147" class="parameter-input">
-                        </div>
-                        <div class="parameter-item">
-                            <label>GGT (U/L)</label>
-                            <input type="number" placeholder="9-48" class="parameter-input">
-                        </div>
-                        <div class="parameter-item">
-                            <label>PT/INR</label>
-                            <input type="number" step="0.1" placeholder="0.8-1.1" class="parameter-input">
-                        </div>
-                        <div class="parameter-item">
-                            <label>Total Protein (g/dL)</label>
-                            <input type="number" step="0.1" placeholder="6.0-8.3" class="parameter-input">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <style>
         /* Enhanced Lab Function Group Styles */
@@ -3668,9 +4606,8 @@
             gap: 8px;
         }
 
-        .file-attach-btn,
         .lab-interpret-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border: none;
             padding: 6px 12px;
@@ -3680,14 +4617,9 @@
             transition: all 0.3s ease;
         }
 
-        .lab-interpret-btn {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
-
-        .file-attach-btn:hover,
         .lab-interpret-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .lab-interpret-btn:hover {
