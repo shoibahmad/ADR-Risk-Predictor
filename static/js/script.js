@@ -294,40 +294,40 @@ function updateBMIDisplay(bmi, category, categoryClass) {
 
         // Check if a form section is complete
         function checkSectionCompletion(section) {
+            // All sections are now optional - users can leave fields empty
+            // We'll just check if at least one field in each section has a value
             switch (section) {
                 case 'demographics':
-                    return document.getElementById('age').value &&
-                        document.getElementById('sex').value &&
-                        document.getElementById('ethnicity').value &&
-                        document.getElementById('height').value &&
-                        document.getElementById('weight').value &&
-                        document.getElementById('bmi').value;
+                    return document.getElementById('age').value ||
+                        document.getElementById('sex').value ||
+                        document.getElementById('ethnicity').value ||
+                        document.getElementById('height').value ||
+                        document.getElementById('weight').value;
 
                 case 'laboratory':
-                    return document.getElementById('creatinine').value &&
-                        document.getElementById('egfr').value &&
-                        document.getElementById('ast_alt').value &&
-                        document.getElementById('bilirubin').value &&
+                    return document.getElementById('creatinine').value ||
+                        document.getElementById('egfr').value ||
+                        document.getElementById('ast_alt').value ||
+                        document.getElementById('bilirubin').value ||
                         document.getElementById('albumin').value;
 
                 case 'comorbidities':
-                    return true; // Comorbidities are optional
+                    return true; // Comorbidities are always optional
 
                 case 'medication':
-                    return document.getElementById('medication_name').value &&
-                        document.getElementById('index_drug_dose').value &&
-                        document.getElementById('concomitant_drugs_count').value &&
-                        document.getElementById('drug_interactions').value &&
-                        document.getElementById('indication').value;
+                    return document.getElementById('medication_name').value ||
+                        document.getElementById('index_drug_dose').value ||
+                        document.getElementById('concomitant_drugs_count').value ||
+                        document.getElementById('drug_interactions').value;
 
                 case 'pharmacogenomics':
-                    return document.getElementById('cyp2c9').value &&
+                    return document.getElementById('cyp2c9').value ||
                         document.getElementById('cyp2d6').value;
 
                 case 'clinical':
-                    return document.getElementById('bp_systolic').value &&
-                        document.getElementById('bp_diastolic').value &&
-                        document.getElementById('heart_rate').value &&
+                    return document.getElementById('bp_systolic').value ||
+                        document.getElementById('bp_diastolic').value ||
+                        document.getElementById('heart_rate').value ||
                         document.getElementById('time_since_start_days').value;
 
                 default:
@@ -443,47 +443,21 @@ function updateBMIDisplay(bmi, category, categoryClass) {
                 console.log('Results container:', document.getElementById('results-container'));
                 console.log('AI analysis container:', document.getElementById('ai-detailed-analysis-container'));
 
-                // Enhanced validation
-                const requiredFields = [
-                    'age', 'sex', 'ethnicity', 'height', 'weight', 'bmi',
-                    'creatinine', 'egfr', 'ast_alt', 'bilirubin', 'albumin',
-                    'medication_name', 'index_drug_dose', 'concomitant_drugs_count', 'drug_interactions', 'indication',
-                    'cyp2c9', 'cyp2d6',
-                    'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'
-                ];
-                const missingFields = [];
+                // Basic validation - only check for invalid numeric values, not missing fields
                 const invalidFields = [];
+                const numericFields = ['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt',
+                    'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
+                    'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'];
 
-                for (const field of requiredFields) {
+                for (const field of numericFields) {
                     const element = document.getElementById(field);
-                    if (!element) {
-                        console.error(`❌ Form element not found: ${field}`);
-                        missingFields.push(field.replace(/_/g, ' '));
-                        continue;
-                    }
-
-                    const value = element.value.trim();
-                    if (!value) {
-                        missingFields.push(field.replace(/_/g, ' '));
-                        continue;
-                    }
-
-                    // Validate numeric fields
-                    const numericFields = ['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt',
-                        'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
-                        'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'];
-
-                    if (numericFields.includes(field)) {
+                    if (element && element.value.trim()) {
+                        const value = element.value.trim();
                         const numValue = parseFloat(value);
                         if (isNaN(numValue) || numValue < 0) {
                             invalidFields.push(`${field.replace(/_/g, ' ')} (must be a positive number)`);
                         }
                     }
-                }
-
-                if (missingFields.length > 0) {
-                    showError(`Please complete the following required fields: ${missingFields.join(', ')}`);
-                    return;
                 }
 
                 if (invalidFields.length > 0) {

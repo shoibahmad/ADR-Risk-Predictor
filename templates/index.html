@@ -1921,12 +1921,11 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="age">Age (years)</label>
-                            <input type="number" id="age" name="age" min="18" max="120" placeholder="Enter age (18-120)"
-                                required>
+                            <input type="number" id="age" name="age" min="18" max="120" placeholder="Enter age (18-120)">
                         </div>
                         <div class="form-group">
                             <label for="sex">Sex</label>
-                            <select id="sex" name="sex" required>
+                            <select id="sex" name="sex">
                                 <option value="">Select sex...</option>
                                 <option value="M">Male</option>
                                 <option value="F">Female</option>
@@ -1934,7 +1933,7 @@
                         </div>
                         <div class="form-group">
                             <label for="ethnicity">Ethnicity</label>
-                            <select id="ethnicity" name="ethnicity" required>
+                            <select id="ethnicity" name="ethnicity">
                                 <option value="">Select ethnicity...</option>
                                 <option value="White">White</option>
                                 <option value="Asian">Asian</option>
@@ -1945,17 +1944,17 @@
                         <div class="form-group">
                             <label for="height">Height (cm)</label>
                             <input type="number" id="height" name="height" min="100" max="250" step="0.1"
-                                placeholder="Enter height (100-250 cm)" required>
+                                placeholder="Enter height (100-250 cm)">
                         </div>
                         <div class="form-group">
                             <label for="weight">Weight (kg)</label>
                             <input type="number" id="weight" name="weight" min="30" max="300" step="0.1"
-                                placeholder="Enter weight (30-300 kg)" required>
+                                placeholder="Enter weight (30-300 kg)">
                         </div>
                         <div class="form-group">
                             <label for="bmi">BMI (kg/m²)</label>
                             <input type="number" id="bmi" name="bmi" step="0.1" min="15" max="50"
-                                placeholder="Auto-calculated" readonly required>
+                                placeholder="Auto-calculated" readonly>
                             <div class="bmi-display">
                                 <span class="bmi-value" id="bmi-value">--</span>
                                 <span class="bmi-category" id="bmi-category">Enter height & weight</span>
@@ -1982,7 +1981,7 @@
                                 </button>
                             </label>
                             <input type="number" id="creatinine" name="creatinine" step="0.01" min="0.5" max="10"
-                                placeholder="Normal: 0.6-1.2" required>
+                                placeholder="Normal: 0.6-1.2">
                             <div id="creatinine_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                         <div class="form-group">
@@ -1993,7 +1992,7 @@
                                 </button>
                             </label>
                             <input type="number" id="egfr" name="egfr" step="0.1" min="5" max="150"
-                                placeholder="Normal: >90" required>
+                                placeholder="Normal: >90">
                             <div id="egfr_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                         <div class="form-group liver-function-group">
@@ -2007,7 +2006,7 @@
                                 </div>
                             </label>
                             <input type="number" id="ast_alt" name="ast_alt" min="5" max="1000"
-                                placeholder="Normal: 10-40" required>
+                                placeholder="Normal: 10-40">
                             <div id="ast_alt_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                         <div class="form-group">
@@ -2019,7 +2018,7 @@
                                 </button>
                             </label>
                             <input type="number" id="bilirubin" name="bilirubin" step="0.01" min="0.1" max="10"
-                                placeholder="Normal: 0.2-1.2" required>
+                                placeholder="Normal: 0.2-1.2">
                             <div id="bilirubin_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                         <div class="form-group">
@@ -2029,8 +2028,8 @@
                                     <i class="fas fa-microscope"></i> Interpret
                                 </button>
                             </label>
-                            <input type="number" id="albumin" name="albumin" step="0.01" min="1" max="500"
-                                placeholder="Normal: 3.5-5.0" required>
+                            <input type="number" id="albumin" name="albumin" step="0.01" min="1" max="600"
+                                placeholder="Normal: 3.5-5.0">
                             <div id="albumin_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                     </div>
@@ -2596,17 +2595,17 @@
                         <div class="form-group">
                             <label for="medication_name">Medication Name</label>
                             <input type="text" id="medication_name" name="medication_name" 
-                                placeholder="Enter medication name (e.g., Warfarin)" required>
+                                placeholder="Enter medication name (e.g., Warfarin)">
                         </div>
                         <div class="form-group">
                             <label for="index_drug_dose">Drug Dose (mg)</label>
                             <input type="number" id="index_drug_dose" name="index_drug_dose" min="1" max="2000"
-                                step="0.1" placeholder="Enter dose (1-2000 mg)" required>
+                                step="0.1" placeholder="Enter dose (1-2000 mg)">
                         </div>
                         <div class="form-group">
                             <label for="concomitant_drugs_count">Concomitant Drugs Count</label>
                             <input type="number" id="concomitant_drugs_count" name="concomitant_drugs_count" min="0"
-                                max="20" placeholder="Number of other medications (0-20)" required>
+                                max="20" placeholder="Number of other medications (0-20)">
                         </div>
                         <div class="form-group concomitant-drugs-group" style="grid-column: 1 / -1;">
                             <label>Concomitant Drug Names</label>
@@ -2627,7 +2626,7 @@
                         </div>
                         <div class="form-group">
                             <label for="drug_interactions">Drug-Drug Interactions</label>
-                            <select id="drug_interactions" name="drug_interactions" required>
+                            <select id="drug_interactions" name="drug_interactions">
                                 <option value="">Select interaction level...</option>
                                 <option value="None">None</option>
                                 <option value="Minor">Minor</option>
@@ -2640,7 +2639,7 @@
                         <div class="form-group">
                             <label for="time_since_start_days">Days Since Drug Start</label>
                             <input type="number" id="time_since_start_days" name="time_since_start_days" min="1"
-                                max="365" placeholder="Days (1-365)" required>
+                                max="365" placeholder="Days (1-365)">
                         </div>
                     </div>
                 </div>
@@ -2654,7 +2653,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="cyp2c9">CYP2C9 Status</label>
-                            <select id="cyp2c9" name="cyp2c9" required>
+                            <select id="cyp2c9" name="cyp2c9">
                                 <option value="">Select CYP2C9 status...</option>
                                 <option value="Wild">Wild Type</option>
                                 <option value="Intermediate">Intermediate</option>
@@ -2663,7 +2662,7 @@
                         </div>
                         <div class="form-group">
                             <label for="cyp2d6">CYP2D6 Status</label>
-                            <select id="cyp2d6" name="cyp2d6" required>
+                            <select id="cyp2d6" name="cyp2d6">
                                 <option value="">Select CYP2D6 status...</option>
                                 <option value="UM">Ultra-rapid Metabolizer</option>
                                 <option value="EM">Extensive Metabolizer</option>
@@ -2684,17 +2683,17 @@
                         <div class="form-group">
                             <label for="bp_systolic">Systolic BP (mmHg)</label>
                             <input type="number" id="bp_systolic" name="bp_systolic" min="80" max="250"
-                                placeholder="Normal: 90-140" required>
+                                placeholder="Normal: 90-140">
                         </div>
                         <div class="form-group">
                             <label for="bp_diastolic">Diastolic BP (mmHg)</label>
                             <input type="number" id="bp_diastolic" name="bp_diastolic" min="40" max="150"
-                                placeholder="Normal: 60-90" required>
+                                placeholder="Normal: 60-90">
                         </div>
                         <div class="form-group">
                             <label for="heart_rate">Heart Rate (bpm)</label>
                             <input type="number" id="heart_rate" name="heart_rate" min="40" max="200"
-                                placeholder="Normal: 60-100" required>
+                                placeholder="Normal: 60-100">
                         </div>
                     </div>
 

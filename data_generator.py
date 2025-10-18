@@ -92,7 +92,7 @@ def generate_synthetic_data(num_patients=200000):
 
     data['ast_alt'] = np.clip(ast_alt_base, 10, 500).astype(int)
     data['bilirubin'] = np.clip(bilirubin_base, 0.2, 5.0).round(2)
-    data['albumin'] = np.clip(albumin_base, 2.0, 5.5).round(2)
+    data['albumin'] = np.clip(albumin_base, 2.0, 600.0).round(2)
 
     # --- 4. Medications & Genomics (Kept similar to previous version) ---
     data['index_drug_dose'] = np.random.choice([50, 100, 150, 200], num_patients, p=[0.2, 0.3, 0.3, 0.2])
@@ -209,5 +209,5 @@ def generate_synthetic_data(num_patients=200000):
     return df
 
 if __name__ == '__main__':
-    # Generating 100,000 patient records now
-    generate_synthetic_data(num_patients=200000)
+    # Generating 10,000 patient records for faster processing
+    generate_synthetic_data(num_patients=10000)

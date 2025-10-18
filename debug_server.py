@@ -192,13 +192,13 @@ def predict_adr():
             'prior_adr_history': 0
         }
         
-        # Fill empty or missing fields with defaults
+        # Fill empty or missing fields with defaults - improved handling
         for key, default_value in default_values.items():
-            if key not in data or data[key] is None or data[key] == '' or data[key] == 'null':
+            if key not in data or data[key] is None or data[key] == '' or data[key] == 'null' or str(data[key]).lower() == 'false':
                 data[key] = default_value
                 logger.info(f"Using default value for {key}: {default_value}")
         
-        # Validate numeric fields
+        # Validate numeric fields with better error handling
         numeric_fields = ['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt', 
                          'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
                          'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days']
@@ -206,10 +206,15 @@ def predict_adr():
         for field in numeric_fields:
             if field in data:
                 try:
-                    data[field] = float(data[field])
-                except (ValueError, TypeError):
-                    logger.error(f"❌ Invalid numeric value for {field}: {data[field]}")
-                    return jsonify({'error': f'Invalid numeric value for {field}: {data[field]}'}), 400
+                    # Handle various empty/invalid cases
+                    if data[field] is None or data[field] == '' or str(data[field]).lower() in ['null', 'false', 'undefined']:
+                        data[field] = default_values.get(field, 0)
+                        logger.info(f"Converted empty/invalid {field} to default: {data[field]}")
+                    else:
+                        data[field] = float(data[field])
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"⚠️ Invalid numeric value for {field}: {data[field]}, using default")
+                    data[field] = default_values.get(field, 0)
         
         logger.info(f"✅ Data validation passed")
         

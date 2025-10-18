@@ -15,7 +15,7 @@ def test_gemini_api():
     try:
         print("🧪 Testing Gemini API...")
         genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         # Simple test
         test_prompt = "Generate a simple test response: Hello, this is a test of the Gemini API."
@@ -38,7 +38,7 @@ def test_medical_prompt():
     try:
         print("\n🏥 Testing medical prompt...")
         genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         medical_prompt = """
         As a clinical pharmacologist, generate a brief ADR risk assessment for:
