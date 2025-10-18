@@ -58,6 +58,8 @@ function updatePatientDisplay() {
 
 // Initialize DOM elements
 function initializeDOMElements() {
+    console.log('🔍 Initializing DOM elements...');
+    
     form = document.getElementById('adr-form');
     clearButton = document.getElementById('clear-form');
     resultsContainer = document.getElementById('results-container');
@@ -66,6 +68,23 @@ function initializeDOMElements() {
     reportContainer = document.getElementById('report-container');
     reportContent = document.getElementById('report-content');
     loadingOverlay = document.getElementById('loading-overlay');
+
+    // Log which elements were found
+    console.log('📋 DOM Elements Status:', {
+        'adr-form': !!form,
+        'clear-form': !!clearButton,
+        'results-container': !!resultsContainer,
+        'results-content': !!resultsContent,
+        'generate-report': !!generateReportButton,
+        'report-container': !!reportContainer,
+        'report-content': !!reportContent,
+        'loading-overlay': !!loadingOverlay
+    });
+
+    // Make elements globally accessible for debugging
+    window.resultsContainer = resultsContainer;
+    window.resultsContent = resultsContent;
+    window.reportContent = reportContent;
 
     // Setup BMI calculation
     setupBMICalculation();
@@ -664,8 +683,9 @@ function updateBMIDisplay(bmi, category, categoryClass) {
                 showError(`Failed to generate clinical report: ${error.message}`);
 
                 // Show fallback message in report area
-                if (reportContent) {
-                    reportContent.innerHTML = `
+                const reportContentElement = document.getElementById('report-content');
+                if (reportContentElement) {
+                    reportContentElement.innerHTML = `
                 <div class="report-error">
                     <i class="fas fa-exclamation-triangle"></i>
                     <h4>Report Generation Failed</h4>
@@ -675,6 +695,8 @@ function updateBMIDisplay(bmi, category, categoryClass) {
                     </button>
                 </div>
             `;
+                } else {
+                    console.error('❌ report-content element not found');
                 }
             } finally {
                 hideLoading();
@@ -1662,7 +1684,11 @@ function updateBMIDisplay(bmi, category, categoryClass) {
             formattedReport = formattedReport.replace(/<p><\/p>/g, '');
 
             // Display the formatted report
-            reportContent.innerHTML = patientHeader + formattedReport;
+            if (reportContent) {
+                reportContent.innerHTML = patientHeader + formattedReport;
+            } else {
+                console.error('❌ reportContent is null, cannot display report');
+            }
 
             // Add success styling
             reportContent.parentElement.classList.add('report-success');
@@ -4158,7 +4184,11 @@ function displayResults(result) {
 
     // Generate results HTML
     const resultsHTML = generateResultsHTML(result);
-    resultsContent.innerHTML = resultsHTML;
+    if (resultsContent) {
+        resultsContent.innerHTML = resultsHTML;
+    } else {
+        console.error('❌ resultsContent is null, cannot set innerHTML');
+    }
 
     // Trigger detailed clinical analysis
     setTimeout(() => {
@@ -4807,12 +4837,13 @@ function showInfo(message) {
         }
     }, 3000);
 }// Displa
-// y results function
+// Display results function
 function displayResults(result) {
     console.log('🎯 displayResults called with:', result);
 
-    const resultsContainer = document.getElementById('results-container');
-    const resultsContent = document.getElementById('results-content');
+    // Use global variables first, fallback to getElementById
+    let resultsContainer = window.resultsContainer || document.getElementById('results-container');
+    let resultsContent = window.resultsContent || document.getElementById('results-content');
 
     console.log('📦 Results container found:', !!resultsContainer);
     console.log('📄 Results content found:', !!resultsContent);
@@ -4825,6 +4856,19 @@ function displayResults(result) {
             'ai-detailed-analysis-container': !!document.getElementById('ai-detailed-analysis-container'),
             'ai-detailed-content': !!document.getElementById('ai-detailed-content')
         });
+        
+        // Try to create a temporary results display
+        const tempContainer = document.createElement('div');
+        tempContainer.innerHTML = `
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 20px; margin: 20px; text-align: center;">
+                <h3 style="color: #dc2626; margin-bottom: 10px;">⚠️ Display Error</h3>
+                <p style="color: #7f1d1d;">Results container not found. Please refresh the page.</p>
+                <button onclick="location.reload()" style="background: #dc2626; color: white; border: none; padding: 10px 20px; border-radius: 4px; margin-top: 10px; cursor: pointer;">
+                    Refresh Page
+                </button>
+            </div>
+        `;
+        document.body.appendChild(tempContainer);
         return;
     }
 
@@ -4835,8 +4879,12 @@ function displayResults(result) {
     // Generate results HTML
     console.log('🔧 Generating results HTML...');
     const resultsHTML = generateResultsHTML(result);
-    resultsContent.innerHTML = resultsHTML;
-    console.log('✅ Results HTML set');
+    if (resultsContent) {
+        resultsContent.innerHTML = resultsHTML;
+        console.log('✅ Results HTML set');
+    } else {
+        console.error('❌ resultsContent is null, cannot set innerHTML');
+    }
 
     // Trigger detailed clinical analysis
     console.log('🤖 Triggering detailed analysis in 1 second...');
@@ -4980,4 +5028,69 @@ function generateResultsHTML(result) {
 
     console.log('✅ Results HTML generated');
     return html;
+}
+
+// DOM Initialization - Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 DOM Content Loaded - Initializing application...');
+    
+    try {
+        // Initialize DOM elements
+        initializeDOMElements();
+        console.log('✅ DOM elements initialized');
+        
+        // Initialize patient info
+        initializePatientInfo();
+        console.log('✅ Patient info initialized');
+        
+        // Setup form handlers
+        setupFormHandler();
+        setupClearHandler();
+        setupReportHandler();
+        console.log('✅ Form handlers setup');
+        
+        // Initialize mobile navigation
+        initializeMobileNavigation();
+        console.log('✅ Mobile navigation initialized');
+        
+        // Initialize quick actions
+        initializeQuickActions();
+        console.log('✅ Quick actions initialized');
+        
+        console.log('🎉 Application initialization complete!');
+        
+    } catch (error) {
+        console.error('❌ Error during initialization:', error);
+        showError('Application initialization failed. Please refresh the page.');
+    }
+});
+
+// Backup initialization for older browsers
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    // DOM already loaded
+    initializeApp();
+}
+
+function initializeApp() {
+    console.log('🔄 Backup initialization triggered');
+    if (!document.getElementById('adr-form')) {
+        console.log('⏳ Waiting for DOM elements...');
+        setTimeout(initializeApp, 100);
+        return;
+    }
+    
+    try {
+        initializeDOMElements();
+        initializePatientInfo();
+        setupFormHandler();
+        setupClearHandler();
+        setupReportHandler();
+        initializeMobileNavigation();
+        initializeQuickActions();
+        console.log('✅ Backup initialization complete');
+    } catch (error) {
+        console.error('❌ Backup initialization error:', error);
+    }
 }

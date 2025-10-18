@@ -94,6 +94,29 @@ def generate_synthetic_data(num_patients=200000):
     data['bilirubin'] = np.clip(bilirubin_base, 0.2, 5.0).round(2)
     data['albumin'] = np.clip(albumin_base, 2.0, 600.0).round(2)
 
+    # --- NEW: Additional Clinical Parameters ---
+    # Temperature (influenced by infection/inflammation)
+    temperature_base = np.random.normal(loc=98.6, scale=0.8, size=num_patients)  # Normal body temp in Fahrenheit
+    # Add fever for some patients (simulate infection/inflammation)
+    fever_indices = np.random.choice(range(num_patients), size=int(num_patients * 0.15), replace=False)
+    temperature_base[fever_indices] += np.random.uniform(1.0, 4.0, size=len(fever_indices))
+    data['temperature'] = np.clip(temperature_base, 95.0, 106.0).round(1)
+
+    # IND (International Normalized Ratio) - coagulation parameter
+    ind_base = np.random.normal(loc=1.0, scale=0.2, size=num_patients)
+    # Higher IND for patients on anticoagulants or with liver disease
+    anticoag_indices = np.random.choice(range(num_patients), size=int(num_patients * 0.2), replace=False)
+    ind_base[anticoag_indices] += np.random.uniform(0.5, 2.0, size=len(anticoag_indices))
+    ind_base[liver_indices] += np.random.uniform(0.3, 1.5, size=len(liver_indices))
+    data['ind_value'] = np.clip(ind_base, 0.8, 5.0).round(2)
+
+    # ATPP (Activated Thromboplastin Time Partial) - coagulation parameter
+    atpp_base = np.random.normal(loc=30, scale=5, size=num_patients)  # Normal range ~25-35 seconds
+    # Higher ATPP for patients on heparin or with coagulation disorders
+    heparin_indices = np.random.choice(range(num_patients), size=int(num_patients * 0.15), replace=False)
+    atpp_base[heparin_indices] += np.random.uniform(10, 40, size=len(heparin_indices))
+    data['atpp_value'] = np.clip(atpp_base, 20, 120).round(1)
+
     # --- 4. Medications & Genomics (Kept similar to previous version) ---
     data['index_drug_dose'] = np.random.choice([50, 100, 150, 200], num_patients, p=[0.2, 0.3, 0.3, 0.2])
     data['concomitant_drugs_count'] = np.random.randint(1, 15, num_patients)
@@ -189,6 +212,7 @@ def generate_synthetic_data(num_patients=200000):
     final_cols = [
         'age', 'sex', 'weight_kg', 'bmi', 'ethnicity',
         'creatinine', 'egfr', 'ast_alt', 'bilirubin', 'albumin',
+        'temperature', 'ind_value', 'atpp_value',  # NEW COLUMNS
         'diabetes', 'liver_disease', 'ckd', 'cardiac_disease',
         'index_drug_dose', 'concomitant_drugs_count', 'cyp_inhibitors_flag', 'qt_prolonging_flag',
         'cyp2c9', 'cyp2d6', 'hla_risk_allele_flag',
@@ -210,4 +234,4 @@ def generate_synthetic_data(num_patients=200000):
 
 if __name__ == '__main__':
     # Generating 10,000 patient records for faster processing
-    generate_synthetic_data(num_patients=10000)
+    generate_synthetic_data(num_patients=200000)

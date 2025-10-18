@@ -198,9 +198,9 @@
     </div>
 
     <script>
-        // Auto-redirect to welcome page after loading
+        // Auto-redirect to patient details page after loading
         setTimeout(() => {
-            window.location.href = '/assessment';
+            window.location.href = '/patient-details';
         }, 5500);
         
         // Add skip button functionality
@@ -234,7 +234,7 @@
             });
             
             skipButton.addEventListener('click', function() {
-                window.location.href = '/assessment';
+                window.location.href = '/patient-details';
             });
             
             document.body.appendChild(skipButton);

@@ -2032,6 +2032,46 @@
                                 placeholder="Normal: 3.5-5.0">
                             <div id="albumin_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
+                        
+                        <!-- NEW FIELDS -->
+                        <div class="form-group">
+                            <label for="temperature">
+                                <i class="fas fa-thermometer-half"></i>
+                                Temperature (°F)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('temperature')">
+                                    <i class="fas fa-thermometer-half"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="temperature" name="temperature" step="0.1" min="95" max="106"
+                                placeholder="Normal: 97.0-99.5">
+                            <div id="temperature_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ind_value">
+                                <i class="fas fa-vial"></i>
+                                INR (International Normalized Ratio)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('ind_value')">
+                                    <i class="fas fa-vial"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="ind_value" name="ind_value" step="0.01" min="0.8" max="5.0"
+                                placeholder="Normal: 0.8-1.2">
+                            <div id="ind_value_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="atpp_value">
+                                <i class="fas fa-clock"></i>
+                                aPTT (Activated Partial Thromboplastin Time) (sec)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('atpp_value')">
+                                    <i class="fas fa-clock"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="atpp_value" name="atpp_value" step="0.1" min="20" max="120"
+                                placeholder="Normal: 25-35">
+                            <div id="atpp_value_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
                     </div>
 
                     <!-- Specialized Test Categories -->
@@ -3049,6 +3089,28 @@
     </div>
 
     <script>
+        // Load patient information from sessionStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPatientInformation();
+        });
+
+        function loadPatientInformation() {
+            const patientName = sessionStorage.getItem('patientName') || 'Unknown Patient';
+            const clinicianName = sessionStorage.getItem('clinicianName') || 'Unknown Clinician';
+            const assessmentTime = sessionStorage.getItem('assessmentStartTime');
+            
+            // Update header displays
+            document.getElementById('patient-name-display').textContent = patientName;
+            document.getElementById('clinician-name-display').textContent = clinicianName;
+            
+            if (assessmentTime) {
+                const date = new Date(assessmentTime);
+                document.getElementById('timestamp-display').textContent = date.toLocaleString();
+            } else {
+                document.getElementById('timestamp-display').textContent = new Date().toLocaleString();
+            }
+        }
+
         // Global variables
         let currentPatientData = {};
         let currentPredictionResult = {};
@@ -3296,7 +3358,8 @@
                     } else {
                         // Convert numeric fields
                         if (['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt',
-                            'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
+                            'bilirubin', 'albumin', 'temperature', 'ind_value', 'atpp_value',
+                            'index_drug_dose', 'concomitant_drugs_count',
                             'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'].includes(key)) {
                             patientData[key] = parseFloat(value);
                         } else {
@@ -4003,6 +4066,61 @@
                         status: 'Low',
                         clinical_significance: 'Liver dysfunction/malnutrition',
                         severity: 'Moderate'
+                    });
+                }
+            }
+
+            // NEW FIELD INTERPRETATIONS
+            else if (testName === 'temperature') {
+                if (value > 100.4) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Fever - possible infection/inflammation',
+                        severity: value > 103.0 ? 'High' : 'Moderate'
+                    });
+                } else if (value < 97.0) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Hypothermia - possible shock/exposure',
+                        severity: value < 95.0 ? 'High' : 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'ind_value') {
+                if (value > 3.0) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Increased bleeding risk',
+                        severity: 'High'
+                    });
+                } else if (value > 1.5) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Anticoagulation therapy range',
+                        severity: 'Moderate'
+                    });
+                } else if (value < 0.8) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Possible clotting tendency',
+                        severity: 'Low'
+                    });
+                }
+            }
+
+            else if (testName === 'atpp_value') {
+                if (value > 45) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Prolonged clotting - bleeding risk',
+                        severity: value > 80 ? 'High' : 'Moderate'
+                    });
+                } else if (value < 25) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Shortened clotting time',
+                        severity: 'Low'
                     });
                 }
             }

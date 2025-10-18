@@ -8,8 +8,9 @@ import os
 from datetime import datetime
 import logging
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
+# Configure logging - use INFO level for production, DEBUG for development
+log_level = logging.DEBUG if os.getenv('FLASK_ENV') == 'development' else logging.INFO
+logging.basicConfig(level=log_level)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -32,18 +33,23 @@ except Exception as e:
 
 @app.route('/')
 def index():
-    logger.info("📱 Welcome page accessed")
-    return render_template('welcome.html')
+    logger.info("📱 Loading page accessed")
+    return render_template('loading.html')
+
+@app.route('/patient-details')
+def patient_details_page():
+    logger.info("👥 Patient details form accessed")
+    return render_template('patient_details_form.html')
+
+@app.route('/patient-records')
+def patient_records_page():
+    logger.info("📋 Patient records page accessed")
+    return render_template('patient_details.html')
 
 @app.route('/assessment')
 def assessment():
     logger.info("🔬 Assessment page accessed")
     return render_template('index.html')
-
-@app.route('/patient-details')
-def patient_details_page():
-    logger.info("👥 Patient details page accessed")
-    return render_template('patient_details.html')
 
 @app.route('/debug')
 def debug_info():
@@ -167,6 +173,9 @@ def predict_adr():
             'ast_alt': 30,
             'bilirubin': 0.8,
             'albumin': 4.0,
+            'temperature': 98.6,
+            'ind_value': 1.0,
+            'atpp_value': 30.0,
             'diabetes': 0,
             'liver_disease': 0,
             'ckd': 0,
@@ -200,7 +209,8 @@ def predict_adr():
         
         # Validate numeric fields with better error handling
         numeric_fields = ['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt', 
-                         'bilirubin', 'albumin', 'index_drug_dose', 'concomitant_drugs_count',
+                         'bilirubin', 'albumin', 'temperature', 'ind_value', 'atpp_value',
+                         'index_drug_dose', 'concomitant_drugs_count',
                          'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days']
         
         for field in numeric_fields:
@@ -240,6 +250,7 @@ def predict_adr():
         model_expected_columns = [
             'age', 'sex', 'weight_kg', 'bmi', 'ethnicity',
             'creatinine', 'egfr', 'ast_alt', 'bilirubin', 'albumin',
+            'temperature', 'ind_value', 'atpp_value',  # NEW COLUMNS
             'diabetes', 'liver_disease', 'ckd', 'cardiac_disease',
             'index_drug_dose', 'concomitant_drugs_count', 'cyp_inhibitors_flag', 'qt_prolonging_flag',
             'cyp2c9', 'cyp2d6', 'hla_risk_allele_flag',
@@ -2225,11 +2236,19 @@ Current dose of {dose} mg should be evaluated considering patient age ({age} yea
     return analysis
 
 if __name__ == '__main__':
-    print("🐛 Debug Server Starting...")
-    print("📱 Web interface: http://localhost:5000")
-    print("🔍 Debug info: http://localhost:5000/debug")
-    print("💊 Health check: http://localhost:5000/health")
-    print("🔥 Report test: http://localhost:5000/generate_report (GET)")
-    print("=" * 60)
+    # Check if running in production or development
+    is_production = os.getenv('RENDER') or os.getenv('PRODUCTION')
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    if is_production:
+        print("🚀 ADR Risk Predictor Starting (Production Mode)...")
+        print("💊 Health check: /health")
+        print("🔍 Debug info: /debug")
+        app.run(debug=False, host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
+    else:
+        print("🐛 Debug Server Starting (Development Mode)...")
+        print("📱 Web interface: http://localhost:5000")
+        print("🔍 Debug info: http://localhost:5000/debug")
+        print("💊 Health check: http://localhost:5000/health")
+        print("🔥 Report test: http://localhost:5000/generate_report (GET)")
+        print("=" * 60)
+        app.run(debug=True, host='0.0.0.0', port=5000)

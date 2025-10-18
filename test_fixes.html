@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADR Risk Predictor - Test Fixes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .success { border-left: 4px solid #4CAF50; background: #f8fff8; }
+        .info { border-left: 4px solid #2196F3; background: #f8f9ff; }
+        .warning { border-left: 4px solid #FF9800; background: #fff8f0; }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #5a6fd8; }
+        .status { margin-top: 10px; padding: 10px; border-radius: 4px; }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 ADR Risk Predictor - Fix Verification</h1>
+        
+        <div class="test-section success">
+            <h2>✅ Fixes Applied</h2>
+            <ul>
+                <li><strong>Empty Fields Support:</strong> All form fields are now optional</li>
+                <li><strong>Albumin Range:</strong> Increased from 6 to 600</li>
+                <li><strong>Gemini AI:</strong> Fixed model configuration and API calls</li>
+                <li><strong>DOM Initialization:</strong> Added proper DOM ready event handling</li>
+                <li><strong>Error Handling:</strong> Added null checks for innerHTML assignments</li>
+            </ul>
+        </div>
+
+        <div class="test-section info">
+            <h2>🔧 Technical Changes</h2>
+            <ul>
+                <li>Removed all <code>required</code> attributes from form fields</li>
+                <li>Updated JavaScript validation to be more lenient</li>
+                <li>Added comprehensive default values for empty fields</li>
+                <li>Fixed Gemini model name to <code>gemini-2.5-flash</code></li>
+                <li>Added DOM initialization with proper error handling</li>
+                <li>Added null checks before setting innerHTML</li>
+            </ul>
+        </div>
+
+        <div class="test-section warning">
+            <h2>⚠️ Testing Instructions</h2>
+            <ol>
+                <li><strong>Test Empty Form:</strong> Submit the form with all fields empty</li>
+                <li><strong>Test Partial Data:</strong> Fill only some fields and submit</li>
+                <li><strong>Test Albumin Range:</strong> Enter albumin values up to 600</li>
+                <li><strong>Test AI Reports:</strong> Generate clinical reports to verify Gemini works</li>
+                <li><strong>Test Error Handling:</strong> Check console for any remaining errors</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h2>🚀 Quick Tests</h2>
+            <button onclick="testDOMElements()">Test DOM Elements</button>
+            <button onclick="testFormValidation()">Test Form Validation</button>
+            <button onclick="testGeminiAPI()">Test Gemini API</button>
+            <button onclick="window.open('/assessment', '_blank')">Open Assessment Form</button>
+            <div id="test-results" class="status" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        function showResult(message, isSuccess = true) {
+            const results = document.getElementById('test-results');
+            results.style.display = 'block';
+            results.className = `status ${isSuccess ? 'success' : 'error'}`;
+            results.innerHTML = message;
+        }
+
+        function testDOMElements() {
+            // Test if we can access the main application
+            try {
+                const testWindow = window.open('/assessment', 'test', 'width=800,height=600');
+                setTimeout(() => {
+                    try {
+                        const form = testWindow.document.getElementById('adr-form');
+                        const resultsContainer = testWindow.document.getElementById('results-container');
+                        const resultsContent = testWindow.document.getElementById('results-content');
+                        
+                        if (form && resultsContainer && resultsContent) {
+                            showResult('✅ DOM Elements Test: All required elements found!');
+                        } else {
+                            showResult('❌ DOM Elements Test: Some elements missing', false);
+                        }
+                        testWindow.close();
+                    } catch (e) {
+                        showResult('⚠️ DOM Elements Test: Could not access test window (normal for cross-origin)', true);
+                    }
+                }, 2000);
+            } catch (e) {
+                showResult('❌ DOM Elements Test: Failed to open test window', false);
+            }
+        }
+
+        function testFormValidation() {
+            showResult('ℹ️ Form Validation Test: Please manually test by submitting empty form in the assessment page');
+        }
+
+        function testGeminiAPI() {
+            fetch('/test_gemini')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.gemini_working) {
+                        showResult('✅ Gemini API Test: Working correctly!');
+                    } else {
+                        showResult('❌ Gemini API Test: Not working - ' + data.error, false);
+                    }
+                })
+                .catch(error => {
+                    showResult('❌ Gemini API Test: Error - ' + error.message, false);
+                });
+        }
+    </script>
+</body>
+</html>

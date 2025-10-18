@@ -2,11 +2,15 @@ services:
   - type: web
     name: adr-risk-predictor
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: gunicorn debug_server:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: GEMINI_API_KEY
         value: AIzaSyDxALLzLCIsdADHTCLOGeJuL0rWwCtnm1w
+      - key: FLASK_ENV
+        value: production
+      - key: PRODUCTION
+        value: "true"
     healthCheckPath: /health
