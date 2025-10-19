@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADR High Risk Warning Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        body {
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .test-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .test-btn.high-risk {
+            background: #dc2626;
+            color: white;
+        }
+        .test-btn.medium-risk {
+            background: #f59e0b;
+            color: white;
+        }
+        .test-btn.clear {
+            background: #6b7280;
+            color: white;
+        }
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .demo-results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1><i class="fas fa-flask"></i> ADR High Risk Warning Demo</h1>
+            <p>This page demonstrates the high-risk ADR warning feature that appears below the clinical management plan when a patient has high or medium ADR risk.</p>
+        </div>
+        
+        <div class="test-buttons">
+            <button class="test-btn high-risk" onclick="showHighRiskDemo()">
+                <i class="fas fa-exclamation-triangle"></i> Show High Risk Warning
+            </button>
+            <button class="test-btn medium-risk" onclick="showMediumRiskDemo()">
+                <i class="fas fa-exclamation-circle"></i> Show Medium Risk Warning
+            </button>
+            <button class="test-btn clear" onclick="clearDemo()">
+                <i class="fas fa-times"></i> Clear Demo
+            </button>
+        </div>
+        
+        <div id="demo-results" class="demo-results"></div>
+    </div>
+
+    <script>
+        // Mock patient info for demo
+        const patientInfo = {
+            name: 'John Doe (Demo Patient)',
+            id: 'PT20241019001',
+            clinician: 'Dr. Smith'
+        };
+        
+        // Mock current patient data for demo
+        const currentPatientData = {
+            age: 75,
+            egfr: 35,
+            ast_alt: 95,
+            concomitant_drugs_count: 8,
+            diabetes: 1,
+            cardiac_disease: 1
+        };
+        
+        // Mock current prediction result
+        let currentPredictionResult = {};
+        
+        function showHighRiskDemo() {
+            const mockResult = {
+                risk_level: 'High',
+                predicted_adr_type: 'Hepatotoxicity',
+                no_adr_probability: 25,
+                top_specific_adr_risks: {
+                    'Hepatotoxicity': 18.5,
+                    'Nephrotoxicity': 12.3,
+                    'Cardiotoxicity': 8.7
+                }
+            };
+            
+            currentPredictionResult = mockResult;
+            displayWarningDemo(mockResult);
+        }
+        
+        function showMediumRiskDemo() {
+            const mockResult = {
+                risk_level: 'Medium',
+                predicted_adr_type: 'Dermatologic',
+                no_adr_probability: 55,
+                top_specific_adr_risks: {
+                    'Dermatologic': 8.2,
+                    'Gastrointestinal': 6.1,
+                    'Neurologic': 4.3
+                }
+            };
+            
+            currentPredictionResult = mockResult;
+            displayWarningDemo(mockResult);
+        }
+        
+        function clearDemo() {
+            document.getElementById('demo-results').innerHTML = '';
+        }
+        
+        function displayWarningDemo(result) {
+            const demoContainer = document.getElementById('demo-results');
+            demoContainer.innerHTML = generateHighRiskADRWarning(result);
+            
+            // Scroll to warning
+            setTimeout(() => {
+                demoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+        
+        // Generate High Risk ADR Warning (simplified for demo)
+        function generateHighRiskADRWarning(result) {
+            const riskLevel = result.risk_level.toLowerCase();
+            const predictedADR = result.predicted_adr_type;
+            const noAdrProb = result.no_adr_probability;
+            
+            // Show warning for high and medium risk cases
+            if (riskLevel === 'low') {
+                return '';
+            }
+            
+            // Get the highest specific ADR risk
+            const topSpecificRisks = result.top_specific_adr_risks || {};
+            const topADRs = Object.entries(topSpecificRisks)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 3);
+            
+            const warningColor = getWarningColor(riskLevel);
+            const urgencyLevel = getUrgencyLevel(noAdrProb);
+            const clinicalRecommendations = getClinicalRecommendations(predictedADR, riskLevel);
+            const alertTitle = riskLevel === 'high' ? '⚠️ HIGH RISK ADR ALERT' : '⚠️ MODERATE RISK ADR ALERT';
+            const alertIcon = riskLevel === 'high' ? 'fas fa-exclamation-triangle' : 'fas fa-exclamation-circle';
+            
+            return `
+                <div class="high-risk-adr-warning ${warningColor}" data-risk-level="${riskLevel}">
+                    <div class="warning-header">
+                        <div class="warning-icon">
+                            <i class="${alertIcon}"></i>
+                        </div>
+                        <div class="warning-title">
+                            <h3>${alertTitle}</h3>
+                            <p class="urgency-badge ${urgencyLevel.class}">${urgencyLevel.text}</p>
+                        </div>
+                        <div class="warning-actions">
+                            <button class="btn-acknowledge" onclick="acknowledgeWarning(this)" title="Acknowledge Warning">
+                                <i class="fas fa-check"></i> Acknowledge
+                            </button>
+                            <button class="btn-print-warning" onclick="printWarning(this)" title="Print Warning">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                            <button class="btn-share-warning" onclick="shareWarning(this)" title="Share Warning">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-content">
+                        <div class="risk-summary-alert">
+                            <div class="alert-item">
+                                <span class="alert-label">Risk Level:</span>
+                                <span class="alert-value high-risk">${result.risk_level}</span>
+                            </div>
+                            <div class="alert-item">
+                                <span class="alert-label">Primary ADR Risk:</span>
+                                <span class="alert-value">${predictedADR}</span>
+                            </div>
+                            <div class="alert-item">
+                                <span class="alert-label">Safety Probability:</span>
+                                <span class="alert-value">${noAdrProb}%</span>
+                            </div>
+                        </div>
+                        
+                        ${topADRs.length > 0 ? `
+                        <div class="specific-adr-alerts">
+                            <h4><i class="fas fa-medical-kit"></i> Specific ADR Risks to Monitor</h4>
+                            <div class="adr-risk-grid">
+                                ${topADRs.map(([adrType, probability]) => `
+                                    <div class="adr-risk-item ${getRiskClass(probability)}">
+                                        <div class="adr-name">${adrType}</div>
+                                        <div class="adr-probability">${probability}%</div>
+                                        <div class="adr-severity">${getSeverityText(probability)}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="clinical-recommendations">
+                            <h4><i class="fas fa-stethoscope"></i> Immediate Clinical Actions Required</h4>
+                            <div class="recommendations-grid">
+                                ${clinicalRecommendations.map(rec => `
+                                    <div class="recommendation-item ${rec.priority}">
+                                        <div class="rec-icon">
+                                            <i class="${rec.icon}"></i>
+                                        </div>
+                                        <div class="rec-content">
+                                            <div class="rec-title">${rec.title}</div>
+                                            <div class="rec-description">${rec.description}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="emergency-contacts">
+                            <h4><i class="fas fa-phone-alt"></i> Emergency Response</h4>
+                            <div class="emergency-grid">
+                                <div class="emergency-item critical">
+                                    <i class="fas fa-ambulance"></i>
+                                    <div>
+                                        <strong>Severe ADR Emergency</strong>
+                                        <p>Call 911 immediately</p>
+                                    </div>
+                                </div>
+                                <div class="emergency-item urgent">
+                                    <i class="fas fa-user-md"></i>
+                                    <div>
+                                        <strong>Physician Consultation</strong>
+                                        <p>Contact prescribing physician within 2 hours</p>
+                                    </div>
+                                </div>
+                                <div class="emergency-item moderate">
+                                    <i class="fas fa-pills"></i>
+                                    <div>
+                                        <strong>Pharmacy Consultation</strong>
+                                        <p>Consult clinical pharmacist for medication review</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-footer">
+                        <div class="disclaimer">
+                            <i class="fas fa-info-circle"></i>
+                            <span>This is a predictive assessment. Clinical judgment should always take precedence. Document all interventions and patient responses.</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Helper functions
+        function getWarningColor(riskLevel) {
+            switch(riskLevel) {
+                case 'high': return 'danger';
+                case 'medium': return 'warning';
+                case 'low': return 'info';
+                default: return 'info';
+            }
+        }
+        
+        function getUrgencyLevel(noAdrProb) {
+            if (noAdrProb < 30) {
+                return { class: 'critical', text: 'CRITICAL - Immediate Action Required' };
+            } else if (noAdrProb < 50) {
+                return { class: 'urgent', text: 'URGENT - Enhanced Monitoring' };
+            } else if (noAdrProb < 70) {
+                return { class: 'moderate', text: 'MODERATE - Increased Vigilance' };
+            } else {
+                return { class: 'low', text: 'LOW - Standard Monitoring' };
+            }
+        }
+        
+        function getRiskClass(probability) {
+            if (probability > 15) return 'high-risk';
+            if (probability > 5) return 'medium-risk';
+            return 'low-risk';
+        }
+        
+        function getSeverityText(probability) {
+            if (probability > 15) return 'High Risk';
+            if (probability > 5) return 'Moderate Risk';
+            return 'Low Risk';
+        }
+        
+        function getClinicalRecommendations(predictedADR, riskLevel) {
+            return [
+                {
+                    priority: 'critical',
+                    icon: 'fas fa-heartbeat',
+                    title: 'Vital Signs Monitoring',
+                    description: 'Monitor blood pressure, heart rate, temperature every 2-4 hours'
+                },
+                {
+                    priority: 'urgent',
+                    icon: 'fas fa-vial',
+                    title: 'Laboratory Monitoring',
+                    description: 'Order CBC, CMP, liver function tests within 24 hours'
+                },
+                {
+                    priority: 'urgent',
+                    icon: 'fas fa-pills',
+                    title: 'Medication Review',
+                    description: 'Consider dose reduction or alternative therapy options'
+                },
+                {
+                    priority: 'moderate',
+                    icon: 'fas fa-clipboard-list',
+                    title: 'Symptom Assessment',
+                    description: 'Document any new symptoms or changes in patient condition'
+                }
+            ];
+        }
+        
+        // Action functions for demo
+        function acknowledgeWarning(button) {
+            const warningContainer = button.closest('.high-risk-adr-warning');
+            const riskLevel = warningContainer.dataset.riskLevel;
+            
+            warningContainer.classList.add('acknowledged');
+            button.innerHTML = '<i class="fas fa-check-circle"></i> Acknowledged';
+            button.disabled = true;
+            button.classList.add('acknowledged');
+            
+            showSuccess(`${riskLevel.toUpperCase()} risk ADR warning acknowledged.`);
+            
+            const timestamp = document.createElement('div');
+            timestamp.className = 'acknowledgment-timestamp';
+            timestamp.innerHTML = `<i class="fas fa-clock"></i> Acknowledged at ${new Date().toLocaleString()}`;
+            warningContainer.querySelector('.warning-footer').appendChild(timestamp);
+        }
+        
+        function printWarning(button) {
+            showSuccess('Print functionality would open a print dialog with the warning details.');
+        }
+        
+        function shareWarning(button) {
+            showSuccess('Share functionality would copy warning details to clipboard or open share dialog.');
+        }
+        
+        // Success message function for demo
+        function showSuccess(message) {
+            alert('✅ ' + message);
+        }
+        
+        // Console log for demo
+        console.log('ADR Warning Demo loaded successfully');
+    </script>
+</body>
+</html>

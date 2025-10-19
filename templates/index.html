@@ -1756,6 +1756,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1976,7 +1977,8 @@
                         Quick Start: Load Sample Patient Data
                     </p>
                     <p class="sample-indication-subtitle">
-                        Select a sample patient from the dropdown below to automatically populate the form with realistic clinical data
+                        Select a sample patient from the dropdown below to automatically populate the form with
+                        realistic clinical data
                     </p>
                 </div>
 
@@ -2017,7 +2019,8 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="age">Age (years)</label>
-                            <input type="number" id="age" name="age" min="18" max="120" placeholder="Enter age (18-120)">
+                            <input type="number" id="age" name="age" min="18" max="120"
+                                placeholder="Enter age (18-120)">
                         </div>
                         <div class="form-group">
                             <label for="sex">Sex</label>
@@ -2065,7 +2068,7 @@
                         <i class="fas fa-flask"></i>
                         <h3>Laboratory Values</h3>
                     </div>
-                    
+
                     <!-- Basic Lab Values (Always Visible) -->
                     <div class="form-grid">
                         <div class="form-group">
@@ -2128,26 +2131,29 @@
                                 placeholder="Normal: 3.5-5.0">
                             <div id="albumin_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
-                        
+
                         <!-- NEW FIELDS -->
                         <div class="form-group">
                             <label for="temperature">
                                 <i class="fas fa-thermometer-half"></i>
                                 Temperature (°F)
-                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('temperature')">
+                                <button type="button" class="lab-interpret-btn"
+                                    onclick="interpretLabValue('temperature')">
                                     <i class="fas fa-thermometer-half"></i> Interpret
                                 </button>
                             </label>
                             <input type="number" id="temperature" name="temperature" step="0.1" min="95" max="106"
                                 placeholder="Normal: 97.0-99.5">
-                            <div id="temperature_interpretation" class="lab-interpretation" style="display: none;"></div>
+                            <div id="temperature_interpretation" class="lab-interpretation" style="display: none;">
+                            </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="ind_value">
                                 <i class="fas fa-vial"></i>
                                 INR (International Normalized Ratio)
-                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('ind_value')">
+                                <button type="button" class="lab-interpret-btn"
+                                    onclick="interpretLabValue('ind_value')">
                                     <i class="fas fa-vial"></i> Interpret
                                 </button>
                             </label>
@@ -2155,12 +2161,13 @@
                                 placeholder="Normal: 0.8-1.2">
                             <div id="ind_value_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="atpp_value">
                                 <i class="fas fa-clock"></i>
                                 aPTT (Activated Partial Thromboplastin Time) (sec)
-                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('atpp_value')">
+                                <button type="button" class="lab-interpret-btn"
+                                    onclick="interpretLabValue('atpp_value')">
                                     <i class="fas fa-clock"></i> Interpret
                                 </button>
                             </label>
@@ -2168,72 +2175,7 @@
                                 placeholder="Normal: 25-35">
                             <div id="atpp_value_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
-                        
-                        <!-- CBC (Complete Blood Count) Fields -->
-                        <div class="form-group">
-                            <label for="hemoglobin">
-                                <i class="fas fa-tint"></i>
-                                Hemoglobin (g/dL)
-                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('hemoglobin')">
-                                    <i class="fas fa-tint"></i> Interpret
-                                </button>
-                            </label>
-                            <input type="number" id="hemoglobin" name="hemoglobin" step="0.1" min="6" max="200"
-                                placeholder="Normal: M: 13.5-17.5, F: 12.0-15.5">
-                            <div id="hemoglobin_interpretation" class="lab-interpretation" style="display: none;"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="hematocrit">
-                                <i class="fas fa-percentage"></i>
-                                Hematocrit (%)
-                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('hematocrit')">
-                                    <i class="fas fa-percentage"></i> Interpret
-                                </button>
-                            </label>
-                            <input type="number" id="hematocrit" name="hematocrit" step="0.1" min="18" max="60"
-                                placeholder="Normal: M: 41-50, F: 36-44">
-                            <div id="hematocrit_interpretation" class="lab-interpretation" style="display: none;"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="wbc_count">
-                                <i class="fas fa-shield-virus"></i>
-                                WBC Count (×10³/μL)
-                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('wbc_count')">
-                                    <i class="fas fa-shield-virus"></i> Interpret
-                                </button>
-                            </label>
-                            <input type="number" id="wbc_count" name="wbc_count" step="0.1" min="2" max="30"
-                                placeholder="Normal: 4.5-11.0">
-                            <div id="wbc_count_interpretation" class="lab-interpretation" style="display: none;"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="platelet_count">
-                                <i class="fas fa-circle"></i>
-                                Platelet Count (×10³/μL)
-                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('platelet_count')">
-                                    <i class="fas fa-circle"></i> Interpret
-                                </button>
-                            </label>
-                            <input type="number" id="platelet_count" name="platelet_count" step="1" min="50" max="600"
-                                placeholder="Normal: 150-450">
-                            <div id="platelet_count_interpretation" class="lab-interpretation" style="display: none;"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="rbc_count">
-                                <i class="fas fa-circle-notch"></i>
-                                RBC Count (×10⁶/μL)
-                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('rbc_count')">
-                                    <i class="fas fa-circle-notch"></i> Interpret
-                                </button>
-                            </label>
-                            <input type="number" id="rbc_count" name="rbc_count" step="0.01" min="3" max="7"
-                                placeholder="Normal: M: 4.7-6.1, F: 4.2-5.4">
-                            <div id="rbc_count_interpretation" class="lab-interpretation" style="display: none;"></div>
-                        </div>
+
                     </div>
 
                     <!-- Specialized Test Categories -->
@@ -2241,82 +2183,154 @@
                         <h4 style="margin: 20px 0 15px 0; color: #1e293b; font-size: 1.1rem;">
                             <i class="fas fa-vials"></i> Specialized Laboratory Tests
                         </h4>
-                        
+
                         <!-- Test Category Cards -->
-                        <div class="test-category-cards" style="display: grid !important; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important; gap: 16px !important; margin-bottom: 25px !important;">
-                            
+                        <div class="test-category-cards"
+                            style="display: grid !important; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important; gap: 16px !important; margin-bottom: 25px !important;">
+
                             <!-- Diabetes Card -->
-                            <div class="test-card" onclick="toggleTestCategory('diabetes')" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important; border: none !important;">
-                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
-                                    <i class="fas fa-tint" style="color: white !important; font-size: 20px !important;"></i>
+                            <div class="test-card" onclick="toggleTestCategory('diabetes')"
+                                style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon"
+                                    style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-tint"
+                                        style="color: white !important; font-size: 20px !important;"></i>
                                 </div>
-                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Diabetes Mellitus</h6>
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">FPG, OGTT, HbA1c, C-Peptide</p>
+                                <h6
+                                    style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">
+                                    Diabetes Mellitus</h6>
+                                <p
+                                    style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">
+                                    FPG, OGTT, HbA1c, C-Peptide</p>
                             </div>
 
                             <!-- Liver Disease Card -->
-                            <div class="test-card" onclick="toggleTestCategory('liver')" style="background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important; border: none !important;">
-                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
-                                    <i class="fas fa-liver" style="color: white !important; font-size: 20px !important;"></i>
+                            <div class="test-card" onclick="toggleTestCategory('liver')"
+                                style="background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon"
+                                    style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-liver"
+                                        style="color: white !important; font-size: 20px !important;"></i>
                                 </div>
-                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Liver Disease</h6>
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">ALT, AST, ALP, GGT, Bilirubin</p>
+                                <h6
+                                    style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">
+                                    Liver Disease</h6>
+                                <p
+                                    style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">
+                                    ALT, AST, ALP, GGT, Bilirubin</p>
                             </div>
 
                             <!-- Kidney Disease Card -->
-                            <div class="test-card" onclick="toggleTestCategory('kidney')" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3) !important; border: none !important;">
-                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
-                                    <i class="fas fa-kidneys" style="color: white !important; font-size: 20px !important;"></i>
+                            <div class="test-card" onclick="toggleTestCategory('kidney')"
+                                style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon"
+                                    style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-kidneys"
+                                        style="color: white !important; font-size: 20px !important;"></i>
                                 </div>
-                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Chronic Kidney Disease</h6>
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">Creatinine, BUN, eGFR, UACR</p>
+                                <h6
+                                    style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">
+                                    Chronic Kidney Disease</h6>
+                                <p
+                                    style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">
+                                    Creatinine, BUN, eGFR, UACR</p>
                             </div>
 
                             <!-- Cardiac Disease Card -->
-                            <div class="test-card" onclick="toggleTestCategory('cardiac')" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3) !important; border: none !important;">
-                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
-                                    <i class="fas fa-heartbeat" style="color: white !important; font-size: 20px !important;"></i>
+                            <div class="test-card" onclick="toggleTestCategory('cardiac')"
+                                style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon"
+                                    style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-heartbeat"
+                                        style="color: white !important; font-size: 20px !important;"></i>
                                 </div>
-                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Cardiac Disease</h6>
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">Troponin, CK-MB, BNP, Lipids</p>
+                                <h6
+                                    style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">
+                                    Cardiac Disease</h6>
+                                <p
+                                    style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">
+                                    Troponin, CK-MB, BNP, Lipids</p>
                             </div>
 
                             <!-- Hypertension Card -->
-                            <div class="test-card" onclick="toggleTestCategory('hypertension')" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important; border: none !important;">
-                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
-                                    <i class="fas fa-thermometer-half" style="color: white !important; font-size: 20px !important;"></i>
+                            <div class="test-card" onclick="toggleTestCategory('hypertension')"
+                                style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon"
+                                    style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-thermometer-half"
+                                        style="color: white !important; font-size: 20px !important;"></i>
                                 </div>
-                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Hypertension</h6>
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">Renin, Aldosterone, ABPM</p>
+                                <h6
+                                    style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">
+                                    Hypertension</h6>
+                                <p
+                                    style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">
+                                    Renin, Aldosterone, ABPM</p>
                             </div>
 
                             <!-- Respiratory Disease Card -->
-                            <div class="test-card" onclick="toggleTestCategory('respiratory')" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3) !important; border: none !important;">
-                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
-                                    <i class="fas fa-lungs" style="color: white !important; font-size: 20px !important;"></i>
+                            <div class="test-card" onclick="toggleTestCategory('respiratory')"
+                                style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon"
+                                    style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-lungs"
+                                        style="color: white !important; font-size: 20px !important;"></i>
                                 </div>
-                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Respiratory Disease</h6>
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">ABG, Spirometry, PEFR, DLCO</p>
+                                <h6
+                                    style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">
+                                    Respiratory Disease</h6>
+                                <p
+                                    style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">
+                                    ABG, Spirometry, PEFR, DLCO</p>
                             </div>
 
                             <!-- Neurological Disease Card -->
-                            <div class="test-card" onclick="toggleTestCategory('neurological')" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3) !important; border: none !important;">
-                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
-                                    <i class="fas fa-brain" style="color: white !important; font-size: 20px !important;"></i>
+                            <div class="test-card" onclick="toggleTestCategory('neurological')"
+                                style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon"
+                                    style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-brain"
+                                        style="color: white !important; font-size: 20px !important;"></i>
                                 </div>
-                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Neurological Disease</h6>
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">MRI, EEG, CSF, NCS, Amyloid</p>
+                                <h6
+                                    style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">
+                                    Neurological Disease</h6>
+                                <p
+                                    style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">
+                                    MRI, EEG, CSF, NCS, Amyloid</p>
                             </div>
 
                             <!-- Autoimmune Disease Card -->
-                            <div class="test-card" onclick="toggleTestCategory('autoimmune')" style="background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(132, 204, 22, 0.3) !important; border: none !important;">
-                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
-                                    <i class="fas fa-shield-virus" style="color: white !important; font-size: 20px !important;"></i>
+                            <div class="test-card" onclick="toggleTestCategory('autoimmune')"
+                                style="background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(132, 204, 22, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon"
+                                    style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-shield-virus"
+                                        style="color: white !important; font-size: 20px !important;"></i>
                                 </div>
-                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Autoimmune Disease</h6>
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">ANA, RF, Anti-CCP, ESR, CRP</p>
+                                <h6
+                                    style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">
+                                    Autoimmune Disease</h6>
+                                <p
+                                    style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">
+                                    ANA, RF, Anti-CCP, ESR, CRP</p>
                             </div>
 
+                            <!-- Complete Blood Count (CBC) Card -->
+                            <div class="test-card" onclick="toggleTestCategory('cbc')"
+                                style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3) !important; border: none !important;">
+                                <div class="test-card-icon"
+                                    style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
+                                    <i class="fas fa-microscope"
+                                        style="color: white !important; font-size: 20px !important;"></i>
+                                </div>
+                                <h6
+                                    style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">
+                                    Complete Blood Count (CBC)</h6>
+                                <p
+                                    style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">
+                                    Hemoglobin, Hematocrit, WBC, RBC, Platelets</p>
+                            </div>
 
                         </div>
 
@@ -2326,27 +2340,33 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="fpg">Fasting Plasma Glucose (FPG) (mg/dL)</label>
-                                    <input type="number" id="fpg" name="fpg" step="0.1" min="50" max="500" placeholder="Normal: 70-100">
+                                    <input type="number" id="fpg" name="fpg" step="0.1" min="50" max="500"
+                                        placeholder="Normal: 70-100">
                                 </div>
                                 <div class="form-group">
                                     <label for="ogtt">Oral Glucose Tolerance Test (OGTT) (mg/dL)</label>
-                                    <input type="number" id="ogtt" name="ogtt" step="0.1" min="50" max="500" placeholder="Normal: <140">
+                                    <input type="number" id="ogtt" name="ogtt" step="0.1" min="50" max="500"
+                                        placeholder="Normal: <140">
                                 </div>
                                 <div class="form-group">
                                     <label for="hba1c">HbA1c (%)</label>
-                                    <input type="number" id="hba1c" name="hba1c" step="0.1" min="3" max="20" placeholder="Normal: <5.7">
+                                    <input type="number" id="hba1c" name="hba1c" step="0.1" min="3" max="20"
+                                        placeholder="Normal: <5.7">
                                 </div>
                                 <div class="form-group">
                                     <label for="c_peptide">C-Peptide (ng/mL)</label>
-                                    <input type="number" id="c_peptide" name="c_peptide" step="0.01" min="0" max="10" placeholder="Normal: 0.8-3.1">
+                                    <input type="number" id="c_peptide" name="c_peptide" step="0.01" min="0" max="10"
+                                        placeholder="Normal: 0.8-3.1">
                                 </div>
                                 <div class="form-group">
                                     <label for="insulin_levels">Insulin Levels (μU/mL)</label>
-                                    <input type="number" id="insulin_levels" name="insulin_levels" step="0.1" min="0" max="200" placeholder="Normal: 2.6-24.9">
+                                    <input type="number" id="insulin_levels" name="insulin_levels" step="0.1" min="0"
+                                        max="200" placeholder="Normal: 2.6-24.9">
                                 </div>
                                 <div class="form-group">
                                     <label for="fructosamine">Fructosamine (μmol/L)</label>
-                                    <input type="number" id="fructosamine" name="fructosamine" step="1" min="100" max="500" placeholder="Normal: 205-285">
+                                    <input type="number" id="fructosamine" name="fructosamine" step="1" min="100"
+                                        max="500" placeholder="Normal: 205-285">
                                 </div>
                             </div>
                         </div>
@@ -2357,35 +2377,43 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="alt">Alanine Aminotransferase (ALT) (U/L)</label>
-                                    <input type="number" id="alt" name="alt" step="1" min="0" max="1000" placeholder="Normal: 7-56">
+                                    <input type="number" id="alt" name="alt" step="1" min="0" max="1000"
+                                        placeholder="Normal: 7-56">
                                 </div>
                                 <div class="form-group">
                                     <label for="ast">Aspartate Aminotransferase (AST) (U/L)</label>
-                                    <input type="number" id="ast" name="ast" step="1" min="0" max="1000" placeholder="Normal: 10-40">
+                                    <input type="number" id="ast" name="ast" step="1" min="0" max="1000"
+                                        placeholder="Normal: 10-40">
                                 </div>
                                 <div class="form-group">
                                     <label for="alp">Alkaline Phosphatase (ALP) (U/L)</label>
-                                    <input type="number" id="alp" name="alp" step="1" min="0" max="1000" placeholder="Normal: 44-147">
+                                    <input type="number" id="alp" name="alp" step="1" min="0" max="1000"
+                                        placeholder="Normal: 44-147">
                                 </div>
                                 <div class="form-group">
                                     <label for="ggt">Gamma-Glutamyl Transferase (GGT) (U/L)</label>
-                                    <input type="number" id="ggt" name="ggt" step="1" min="0" max="500" placeholder="Normal: 9-48">
+                                    <input type="number" id="ggt" name="ggt" step="1" min="0" max="500"
+                                        placeholder="Normal: 9-48">
                                 </div>
                                 <div class="form-group">
                                     <label for="total_bilirubin">Total Bilirubin (mg/dL)</label>
-                                    <input type="number" id="total_bilirubin" name="total_bilirubin" step="0.01" min="0" max="20" placeholder="Normal: 0.2-1.2">
+                                    <input type="number" id="total_bilirubin" name="total_bilirubin" step="0.01" min="0"
+                                        max="20" placeholder="Normal: 0.2-1.2">
                                 </div>
                                 <div class="form-group">
                                     <label for="direct_bilirubin">Direct Bilirubin (mg/dL)</label>
-                                    <input type="number" id="direct_bilirubin" name="direct_bilirubin" step="0.01" min="0" max="10" placeholder="Normal: 0.0-0.3">
+                                    <input type="number" id="direct_bilirubin" name="direct_bilirubin" step="0.01"
+                                        min="0" max="10" placeholder="Normal: 0.0-0.3">
                                 </div>
                                 <div class="form-group">
                                     <label for="liver_albumin">Albumin (g/dL)</label>
-                                    <input type="number" id="liver_albumin" name="liver_albumin" step="0.01" min="1" max="6" placeholder="Normal: 3.5-5.0">
+                                    <input type="number" id="liver_albumin" name="liver_albumin" step="0.01" min="1"
+                                        max="6" placeholder="Normal: 3.5-5.0">
                                 </div>
                                 <div class="form-group">
                                     <label for="pt">Prothrombin Time (PT) (seconds)</label>
-                                    <input type="number" id="pt" name="pt" step="0.1" min="5" max="50" placeholder="Normal: 11-13">
+                                    <input type="number" id="pt" name="pt" step="0.1" min="5" max="50"
+                                        placeholder="Normal: 11-13">
                                 </div>
                             </div>
                         </div>
@@ -2396,35 +2424,43 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="serum_creatinine">Serum Creatinine (mg/dL)</label>
-                                    <input type="number" id="serum_creatinine" name="serum_creatinine" step="0.01" min="0.3" max="15" placeholder="Normal: 0.6-1.2">
+                                    <input type="number" id="serum_creatinine" name="serum_creatinine" step="0.01"
+                                        min="0.3" max="15" placeholder="Normal: 0.6-1.2">
                                 </div>
                                 <div class="form-group">
                                     <label for="bun">Blood Urea Nitrogen (BUN) (mg/dL)</label>
-                                    <input type="number" id="bun" name="bun" step="1" min="5" max="200" placeholder="Normal: 7-20">
+                                    <input type="number" id="bun" name="bun" step="1" min="5" max="200"
+                                        placeholder="Normal: 7-20">
                                 </div>
                                 <div class="form-group">
                                     <label for="kidney_egfr">eGFR (mL/min/1.73m²)</label>
-                                    <input type="number" id="kidney_egfr" name="kidney_egfr" step="0.1" min="5" max="150" placeholder="Normal: >90">
+                                    <input type="number" id="kidney_egfr" name="kidney_egfr" step="0.1" min="5"
+                                        max="150" placeholder="Normal: >90">
                                 </div>
                                 <div class="form-group">
                                     <label for="uacr">Urine Albumin-to-Creatinine Ratio (UACR) (mg/g)</label>
-                                    <input type="number" id="uacr" name="uacr" step="0.1" min="0" max="5000" placeholder="Normal: <30">
+                                    <input type="number" id="uacr" name="uacr" step="0.1" min="0" max="5000"
+                                        placeholder="Normal: <30">
                                 </div>
                                 <div class="form-group">
                                     <label for="cystatin_c">Cystatin C (mg/L)</label>
-                                    <input type="number" id="cystatin_c" name="cystatin_c" step="0.01" min="0.5" max="5" placeholder="Normal: 0.62-1.15">
+                                    <input type="number" id="cystatin_c" name="cystatin_c" step="0.01" min="0.5" max="5"
+                                        placeholder="Normal: 0.62-1.15">
                                 </div>
                                 <div class="form-group">
                                     <label for="sodium">Sodium (Na⁺) (mEq/L)</label>
-                                    <input type="number" id="sodium" name="sodium" step="0.1" min="120" max="160" placeholder="Normal: 136-145">
+                                    <input type="number" id="sodium" name="sodium" step="0.1" min="120" max="160"
+                                        placeholder="Normal: 136-145">
                                 </div>
                                 <div class="form-group">
                                     <label for="potassium">Potassium (K⁺) (mEq/L)</label>
-                                    <input type="number" id="potassium" name="potassium" step="0.1" min="2" max="8" placeholder="Normal: 3.5-5.0">
+                                    <input type="number" id="potassium" name="potassium" step="0.1" min="2" max="8"
+                                        placeholder="Normal: 3.5-5.0">
                                 </div>
                                 <div class="form-group">
                                     <label for="chloride">Chloride (Cl⁻) (mEq/L)</label>
-                                    <input type="number" id="chloride" name="chloride" step="0.1" min="90" max="120" placeholder="Normal: 98-107">
+                                    <input type="number" id="chloride" name="chloride" step="0.1" min="90" max="120"
+                                        placeholder="Normal: 98-107">
                                 </div>
                             </div>
                         </div>
@@ -2435,43 +2471,53 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="troponin_i">Troponin I (ng/mL)</label>
-                                    <input type="number" id="troponin_i" name="troponin_i" step="0.001" min="0" max="50" placeholder="Normal: <0.04">
+                                    <input type="number" id="troponin_i" name="troponin_i" step="0.001" min="0" max="50"
+                                        placeholder="Normal: <0.04">
                                 </div>
                                 <div class="form-group">
                                     <label for="troponin_t">Troponin T (ng/mL)</label>
-                                    <input type="number" id="troponin_t" name="troponin_t" step="0.001" min="0" max="50" placeholder="Normal: <0.01">
+                                    <input type="number" id="troponin_t" name="troponin_t" step="0.001" min="0" max="50"
+                                        placeholder="Normal: <0.01">
                                 </div>
                                 <div class="form-group">
                                     <label for="ck_mb">Creatine Kinase-MB (CK-MB) (ng/mL)</label>
-                                    <input type="number" id="ck_mb" name="ck_mb" step="0.1" min="0" max="100" placeholder="Normal: <6.3">
+                                    <input type="number" id="ck_mb" name="ck_mb" step="0.1" min="0" max="100"
+                                        placeholder="Normal: <6.3">
                                 </div>
                                 <div class="form-group">
                                     <label for="bnp">B-type Natriuretic Peptide (BNP) (pg/mL)</label>
-                                    <input type="number" id="bnp" name="bnp" step="1" min="0" max="5000" placeholder="Normal: <100">
+                                    <input type="number" id="bnp" name="bnp" step="1" min="0" max="5000"
+                                        placeholder="Normal: <100">
                                 </div>
                                 <div class="form-group">
                                     <label for="nt_probnp">NT-proBNP (pg/mL)</label>
-                                    <input type="number" id="nt_probnp" name="nt_probnp" step="1" min="0" max="10000" placeholder="Normal: <125">
+                                    <input type="number" id="nt_probnp" name="nt_probnp" step="1" min="0" max="10000"
+                                        placeholder="Normal: <125">
                                 </div>
                                 <div class="form-group">
                                     <label for="ldl">LDL Cholesterol (mg/dL)</label>
-                                    <input type="number" id="ldl" name="ldl" step="1" min="20" max="500" placeholder="Normal: <100">
+                                    <input type="number" id="ldl" name="ldl" step="1" min="20" max="500"
+                                        placeholder="Normal: <100">
                                 </div>
                                 <div class="form-group">
                                     <label for="hdl">HDL Cholesterol (mg/dL)</label>
-                                    <input type="number" id="hdl" name="hdl" step="1" min="10" max="150" placeholder="Normal: >40 (M), >50 (F)">
+                                    <input type="number" id="hdl" name="hdl" step="1" min="10" max="150"
+                                        placeholder="Normal: >40 (M), >50 (F)">
                                 </div>
                                 <div class="form-group">
                                     <label for="triglycerides">Triglycerides (mg/dL)</label>
-                                    <input type="number" id="triglycerides" name="triglycerides" step="1" min="20" max="1000" placeholder="Normal: <150">
+                                    <input type="number" id="triglycerides" name="triglycerides" step="1" min="20"
+                                        max="1000" placeholder="Normal: <150">
                                 </div>
                                 <div class="form-group">
                                     <label for="total_cholesterol">Total Cholesterol (mg/dL)</label>
-                                    <input type="number" id="total_cholesterol" name="total_cholesterol" step="1" min="100" max="500" placeholder="Normal: <200">
+                                    <input type="number" id="total_cholesterol" name="total_cholesterol" step="1"
+                                        min="100" max="500" placeholder="Normal: <200">
                                 </div>
                                 <div class="form-group">
                                     <label for="hs_crp">High-sensitivity CRP (mg/L)</label>
-                                    <input type="number" id="hs_crp" name="hs_crp" step="0.01" min="0" max="50" placeholder="Normal: <3.0">
+                                    <input type="number" id="hs_crp" name="hs_crp" step="0.01" min="0" max="50"
+                                        placeholder="Normal: <3.0">
                                 </div>
                             </div>
                         </div>
@@ -2482,31 +2528,38 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="plasma_renin">Plasma Renin Activity (ng/mL/hr)</label>
-                                    <input type="number" id="plasma_renin" name="plasma_renin" step="0.1" min="0" max="50" placeholder="Normal: 0.2-2.3">
+                                    <input type="number" id="plasma_renin" name="plasma_renin" step="0.1" min="0"
+                                        max="50" placeholder="Normal: 0.2-2.3">
                                 </div>
                                 <div class="form-group">
                                     <label for="serum_aldosterone">Serum Aldosterone (ng/dL)</label>
-                                    <input type="number" id="serum_aldosterone" name="serum_aldosterone" step="0.1" min="0" max="100" placeholder="Normal: 4-31">
+                                    <input type="number" id="serum_aldosterone" name="serum_aldosterone" step="0.1"
+                                        min="0" max="100" placeholder="Normal: 4-31">
                                 </div>
                                 <div class="form-group">
                                     <label for="htn_sodium">Sodium (Na⁺) (mEq/L)</label>
-                                    <input type="number" id="htn_sodium" name="htn_sodium" step="0.1" min="120" max="160" placeholder="Normal: 136-145">
+                                    <input type="number" id="htn_sodium" name="htn_sodium" step="0.1" min="120"
+                                        max="160" placeholder="Normal: 136-145">
                                 </div>
                                 <div class="form-group">
                                     <label for="htn_potassium">Potassium (K⁺) (mEq/L)</label>
-                                    <input type="number" id="htn_potassium" name="htn_potassium" step="0.1" min="2" max="8" placeholder="Normal: 3.5-5.0">
+                                    <input type="number" id="htn_potassium" name="htn_potassium" step="0.1" min="2"
+                                        max="8" placeholder="Normal: 3.5-5.0">
                                 </div>
                                 <div class="form-group">
                                     <label for="urinary_metanephrines">Urinary Metanephrines (μg/24hr)</label>
-                                    <input type="number" id="urinary_metanephrines" name="urinary_metanephrines" step="1" min="0" max="2000" placeholder="Normal: <350">
+                                    <input type="number" id="urinary_metanephrines" name="urinary_metanephrines"
+                                        step="1" min="0" max="2000" placeholder="Normal: <350">
                                 </div>
                                 <div class="form-group">
                                     <label for="abpm_systolic">ABPM Average Systolic (mmHg)</label>
-                                    <input type="number" id="abpm_systolic" name="abpm_systolic" step="1" min="80" max="250" placeholder="Normal: <130">
+                                    <input type="number" id="abpm_systolic" name="abpm_systolic" step="1" min="80"
+                                        max="250" placeholder="Normal: <130">
                                 </div>
                                 <div class="form-group">
                                     <label for="abpm_diastolic">ABPM Average Diastolic (mmHg)</label>
-                                    <input type="number" id="abpm_diastolic" name="abpm_diastolic" step="1" min="40" max="150" placeholder="Normal: <80">
+                                    <input type="number" id="abpm_diastolic" name="abpm_diastolic" step="1" min="40"
+                                        max="150" placeholder="Normal: <80">
                                 </div>
                             </div>
                         </div>
@@ -2517,35 +2570,43 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="abg_ph">ABG pH</label>
-                                    <input type="number" id="abg_ph" name="abg_ph" step="0.01" min="6.8" max="7.8" placeholder="Normal: 7.35-7.45">
+                                    <input type="number" id="abg_ph" name="abg_ph" step="0.01" min="6.8" max="7.8"
+                                        placeholder="Normal: 7.35-7.45">
                                 </div>
                                 <div class="form-group">
                                     <label for="abg_pco2">ABG PCO₂ (mmHg)</label>
-                                    <input type="number" id="abg_pco2" name="abg_pco2" step="0.1" min="10" max="100" placeholder="Normal: 35-45">
+                                    <input type="number" id="abg_pco2" name="abg_pco2" step="0.1" min="10" max="100"
+                                        placeholder="Normal: 35-45">
                                 </div>
                                 <div class="form-group">
                                     <label for="abg_po2">ABG PO₂ (mmHg)</label>
-                                    <input type="number" id="abg_po2" name="abg_po2" step="0.1" min="40" max="150" placeholder="Normal: 80-100">
+                                    <input type="number" id="abg_po2" name="abg_po2" step="0.1" min="40" max="150"
+                                        placeholder="Normal: 80-100">
                                 </div>
                                 <div class="form-group">
                                     <label for="fev1">FEV₁ (L)</label>
-                                    <input type="number" id="fev1" name="fev1" step="0.01" min="0.5" max="6" placeholder="Normal: >80% predicted">
+                                    <input type="number" id="fev1" name="fev1" step="0.01" min="0.5" max="6"
+                                        placeholder="Normal: >80% predicted">
                                 </div>
                                 <div class="form-group">
                                     <label for="fvc">FVC (L)</label>
-                                    <input type="number" id="fvc" name="fvc" step="0.01" min="0.5" max="8" placeholder="Normal: >80% predicted">
+                                    <input type="number" id="fvc" name="fvc" step="0.01" min="0.5" max="8"
+                                        placeholder="Normal: >80% predicted">
                                 </div>
                                 <div class="form-group">
                                     <label for="pefr">Peak Expiratory Flow Rate (L/min)</label>
-                                    <input type="number" id="pefr" name="pefr" step="1" min="100" max="800" placeholder="Normal: varies by age/sex">
+                                    <input type="number" id="pefr" name="pefr" step="1" min="100" max="800"
+                                        placeholder="Normal: varies by age/sex">
                                 </div>
                                 <div class="form-group">
                                     <label for="pulse_oximetry">Pulse Oximetry (%)</label>
-                                    <input type="number" id="pulse_oximetry" name="pulse_oximetry" step="0.1" min="70" max="100" placeholder="Normal: >95%">
+                                    <input type="number" id="pulse_oximetry" name="pulse_oximetry" step="0.1" min="70"
+                                        max="100" placeholder="Normal: >95%">
                                 </div>
                                 <div class="form-group">
                                     <label for="dlco">DLCO (mL/min/mmHg)</label>
-                                    <input type="number" id="dlco" name="dlco" step="0.1" min="5" max="50" placeholder="Normal: >75% predicted">
+                                    <input type="number" id="dlco" name="dlco" step="0.1" min="5" max="50"
+                                        placeholder="Normal: >75% predicted">
                                 </div>
                             </div>
                         </div>
@@ -2590,15 +2651,18 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="csf_protein">CSF Protein (mg/dL)</label>
-                                    <input type="number" id="csf_protein" name="csf_protein" step="1" min="10" max="500" placeholder="Normal: 15-45">
+                                    <input type="number" id="csf_protein" name="csf_protein" step="1" min="10" max="500"
+                                        placeholder="Normal: 15-45">
                                 </div>
                                 <div class="form-group">
                                     <label for="csf_glucose">CSF Glucose (mg/dL)</label>
-                                    <input type="number" id="csf_glucose" name="csf_glucose" step="1" min="10" max="200" placeholder="Normal: 50-80">
+                                    <input type="number" id="csf_glucose" name="csf_glucose" step="1" min="10" max="200"
+                                        placeholder="Normal: 50-80">
                                 </div>
                                 <div class="form-group">
                                     <label for="csf_cells">CSF Cell Count (cells/μL)</label>
-                                    <input type="number" id="csf_cells" name="csf_cells" step="1" min="0" max="1000" placeholder="Normal: <5">
+                                    <input type="number" id="csf_cells" name="csf_cells" step="1" min="0" max="1000"
+                                        placeholder="Normal: <5">
                                 </div>
                                 <div class="form-group">
                                     <label for="ncs_findings">Nerve Conduction Studies</label>
@@ -2613,15 +2677,18 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="ck_total">Creatine Kinase (CK) (U/L)</label>
-                                    <input type="number" id="ck_total" name="ck_total" step="1" min="20" max="5000" placeholder="Normal: 30-200">
+                                    <input type="number" id="ck_total" name="ck_total" step="1" min="20" max="5000"
+                                        placeholder="Normal: 30-200">
                                 </div>
                                 <div class="form-group">
                                     <label for="amyloid_beta">Amyloid Beta (pg/mL)</label>
-                                    <input type="number" id="amyloid_beta" name="amyloid_beta" step="1" min="100" max="2000" placeholder="Normal: >500">
+                                    <input type="number" id="amyloid_beta" name="amyloid_beta" step="1" min="100"
+                                        max="2000" placeholder="Normal: >500">
                                 </div>
                                 <div class="form-group">
                                     <label for="tau_protein">Tau Protein (pg/mL)</label>
-                                    <input type="number" id="tau_protein" name="tau_protein" step="1" min="50" max="1000" placeholder="Normal: <300">
+                                    <input type="number" id="tau_protein" name="tau_protein" step="1" min="50"
+                                        max="1000" placeholder="Normal: <300">
                                 </div>
                             </div>
                         </div>
@@ -2644,31 +2711,254 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="rf">Rheumatoid Factor (RF) (IU/mL)</label>
-                                    <input type="number" id="rf" name="rf" step="0.1" min="0" max="500" placeholder="Normal: <14">
+                                    <input type="number" id="rf" name="rf" step="0.1" min="0" max="500"
+                                        placeholder="Normal: <14">
                                 </div>
                                 <div class="form-group">
                                     <label for="anti_ccp">Anti-CCP (U/mL)</label>
-                                    <input type="number" id="anti_ccp" name="anti_ccp" step="0.1" min="0" max="300" placeholder="Normal: <20">
+                                    <input type="number" id="anti_ccp" name="anti_ccp" step="0.1" min="0" max="300"
+                                        placeholder="Normal: <20">
                                 </div>
                                 <div class="form-group">
                                     <label for="esr">ESR (mm/hr)</label>
-                                    <input type="number" id="esr" name="esr" step="1" min="0" max="150" placeholder="Normal: <30">
+                                    <input type="number" id="esr" name="esr" step="1" min="0" max="150"
+                                        placeholder="Normal: <30">
                                 </div>
                                 <div class="form-group">
                                     <label for="autoimmune_crp">CRP (mg/L)</label>
-                                    <input type="number" id="autoimmune_crp" name="autoimmune_crp" step="0.1" min="0" max="200" placeholder="Normal: <3.0">
+                                    <input type="number" id="autoimmune_crp" name="autoimmune_crp" step="0.1" min="0"
+                                        max="200" placeholder="Normal: <3.0">
                                 </div>
                                 <div class="form-group">
                                     <label for="c3">Complement C3 (mg/dL)</label>
-                                    <input type="number" id="c3" name="c3" step="1" min="20" max="200" placeholder="Normal: 90-180">
+                                    <input type="number" id="c3" name="c3" step="1" min="20" max="200"
+                                        placeholder="Normal: 90-180">
                                 </div>
                                 <div class="form-group">
                                     <label for="c4">Complement C4 (mg/dL)</label>
-                                    <input type="number" id="c4" name="c4" step="1" min="5" max="100" placeholder="Normal: 10-40">
+                                    <input type="number" id="c4" name="c4" step="1" min="5" max="100"
+                                        placeholder="Normal: 10-40">
                                 </div>
                                 <div class="form-group">
                                     <label for="anti_dsdna">Anti-dsDNA (IU/mL)</label>
-                                    <input type="number" id="anti_dsdna" name="anti_dsdna" step="0.1" min="0" max="500" placeholder="Normal: <7">
+                                    <input type="number" id="anti_dsdna" name="anti_dsdna" step="0.1" min="0" max="500"
+                                        placeholder="Normal: <7">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 9. Complete Blood Count (CBC) Tests -->
+                        <div id="cbc-tests" class="test-category-section" style="display: none;">
+                            <h5><i class="fas fa-microscope"></i> Complete Blood Count (CBC)</h5>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="hemoglobin">
+                                        <i class="fas fa-tint"></i>
+                                        Hemoglobin (g/dL)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('hemoglobin')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="hemoglobin" name="hemoglobin" step="0.1" min="6" max="20"
+                                        placeholder="Normal: M: 13.5-17.5, F: 12.0-15.5">
+                                    <div id="hemoglobin_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="hematocrit">
+                                        <i class="fas fa-percentage"></i>
+                                        Hematocrit (%)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('hematocrit')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="hematocrit" name="hematocrit" step="0.1" min="18" max="60"
+                                        placeholder="Normal: M: 41-50, F: 36-44">
+                                    <div id="hematocrit_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="wbc_count">
+                                        <i class="fas fa-shield-virus"></i>
+                                        WBC Count (×10³/μL)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('wbc_count')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="wbc_count" name="wbc_count" step="0.1" min="2" max="30"
+                                        placeholder="Normal: 4.5-11.0">
+                                    <div id="wbc_count_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="platelet_count">
+                                        <i class="fas fa-circle"></i>
+                                        Platelet Count (×10³/μL)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('platelet_count')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="platelet_count" name="platelet_count" step="1" min="50"
+                                        max="600" placeholder="Normal: 150-450">
+                                    <div id="platelet_count_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="rbc_count">
+                                        <i class="fas fa-circle-notch"></i>
+                                        RBC Count (×10⁶/μL)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('rbc_count')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="rbc_count" name="rbc_count" step="0.01" min="3" max="7"
+                                        placeholder="Normal: M: 4.7-6.1, F: 4.2-5.4">
+                                    <div id="rbc_count_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="neutrophils">
+                                        <i class="fas fa-shield"></i>
+                                        Neutrophils (%)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('neutrophils')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="neutrophils" name="neutrophils" step="0.1" min="0"
+                                        max="100" placeholder="Normal: 50-70">
+                                    <div id="neutrophils_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="lymphocytes">
+                                        <i class="fas fa-virus"></i>
+                                        Lymphocytes (%)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('lymphocytes')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="lymphocytes" name="lymphocytes" step="0.1" min="0"
+                                        max="100" placeholder="Normal: 20-40">
+                                    <div id="lymphocytes_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="monocytes">
+                                        <i class="fas fa-bacteria"></i>
+                                        Monocytes (%)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('monocytes')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="monocytes" name="monocytes" step="0.1" min="0" max="20"
+                                        placeholder="Normal: 2-8">
+                                    <div id="monocytes_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="eosinophils">
+                                        <i class="fas fa-allergies"></i>
+                                        Eosinophils (%)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('eosinophils')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="eosinophils" name="eosinophils" step="0.1" min="0" max="20"
+                                        placeholder="Normal: 1-4">
+                                    <div id="eosinophils_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="basophils">
+                                        <i class="fas fa-dot-circle"></i>
+                                        Basophils (%)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('basophils')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="basophils" name="basophils" step="0.1" min="0" max="5"
+                                        placeholder="Normal: 0.5-1">
+                                    <div id="basophils_interpretation" class="lab-interpretation"
+                                        style="display: none;"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mcv">
+                                        <i class="fas fa-expand-arrows-alt"></i>
+                                        Mean Corpuscular Volume (MCV) (fL)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('mcv')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="mcv" name="mcv" step="0.1" min="60" max="120"
+                                        placeholder="Normal: 80-100">
+                                    <div id="mcv_interpretation" class="lab-interpretation" style="display: none;">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mch">
+                                        <i class="fas fa-weight"></i>
+                                        Mean Corpuscular Hemoglobin (MCH) (pg)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('mch')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="mch" name="mch" step="0.1" min="20" max="40"
+                                        placeholder="Normal: 27-32">
+                                    <div id="mch_interpretation" class="lab-interpretation" style="display: none;">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mchc">
+                                        <i class="fas fa-compress"></i>
+                                        MCHC (g/dL)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('mchc')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="mchc" name="mchc" step="0.1" min="25" max="40"
+                                        placeholder="Normal: 32-36">
+                                    <div id="mchc_interpretation" class="lab-interpretation" style="display: none;">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="rdw">
+                                        <i class="fas fa-chart-bar"></i>
+                                        Red Cell Distribution Width (RDW) (%)
+                                        <button type="button" class="lab-interpret-btn"
+                                            onclick="interpretLabValue('rdw')">
+                                            <i class="fas fa-microscope"></i> Interpret
+                                        </button>
+                                    </label>
+                                    <input type="number" id="rdw" name="rdw" step="0.1" min="10" max="25"
+                                        placeholder="Normal: 11.5-14.5">
+                                    <div id="rdw_interpretation" class="lab-interpretation" style="display: none;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2728,7 +3018,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="medication_name">Medication Name</label>
-                            <input type="text" id="medication_name" name="medication_name" 
+                            <input type="text" id="medication_name" name="medication_name"
                                 placeholder="Enter medication name (e.g., Warfarin)">
                         </div>
                         <div class="form-group">
@@ -2856,15 +3146,21 @@
                 </div>
 
                 <!-- Enhanced Action Buttons Section -->
-                <div class="enhanced-actions-container" style="margin-top: 40px !important; padding: 35px !important; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important; border-radius: 20px !important; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.8) !important;">
-                    
+                <div class="enhanced-actions-container"
+                    style="margin-top: 40px !important; padding: 35px !important; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important; border-radius: 20px !important; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.8) !important;">
+
                     <!-- Section Header -->
                     <div class="actions-header" style="text-align: center !important; margin-bottom: 30px !important;">
-                        <div class="header-icon" style="width: 60px !important; height: 60px !important; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; margin: 0 auto 15px auto !important; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;">
+                        <div class="header-icon"
+                            style="width: 60px !important; height: 60px !important; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; margin: 0 auto 15px auto !important; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;">
                             <i class="fas fa-cogs" style="color: white !important; font-size: 24px !important;"></i>
                         </div>
-                        <h3 style="color: #1e293b !important; font-size: 1.5rem !important; font-weight: 700 !important; margin: 0 0 8px 0 !important; letter-spacing: -0.025em !important;">Assessment Actions</h3>
-                        <p style="color: #64748b !important; font-size: 1rem !important; margin: 0 !important; font-weight: 400 !important;">Complete your risk assessment with the options below</p>
+                        <h3
+                            style="color: #1e293b !important; font-size: 1.5rem !important; font-weight: 700 !important; margin: 0 0 8px 0 !important; letter-spacing: -0.025em !important;">
+                            Assessment Actions</h3>
+                        <p
+                            style="color: #64748b !important; font-size: 1rem !important; margin: 0 !important; font-weight: 400 !important;">
+                            Complete your risk assessment with the options below</p>
                     </div>
 
                     <!-- Primary Action Button -->
@@ -2909,7 +3205,8 @@
                                 justify-content: center !important;
                                 transition: all 0.3s ease !important;
                             ">
-                                <i class="fas fa-calculator" style="font-size: 18px !important; color: white !important;"></i>
+                                <i class="fas fa-calculator"
+                                    style="font-size: 18px !important; color: white !important;"></i>
                             </div>
                             <span style="flex: 1 !important; text-align: center !important;">Assess ADR Risk</span>
                             <div class="btn-arrow" style="
@@ -2922,14 +3219,16 @@
                                 justify-content: center !important;
                                 transition: all 0.3s ease !important;
                             ">
-                                <i class="fas fa-arrow-right" style="font-size: 12px !important; color: white !important;"></i>
+                                <i class="fas fa-arrow-right"
+                                    style="font-size: 12px !important; color: white !important;"></i>
                             </div>
                         </button>
                     </div>
 
                     <!-- Secondary Actions Grid -->
-                    <div class="secondary-actions-grid" style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; margin-bottom: 25px !important;">
-                        
+                    <div class="secondary-actions-grid"
+                        style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; margin-bottom: 25px !important;">
+
                         <!-- Clear Form Button -->
                         <button type="button" id="clear-form" class="enhanced-secondary-btn" style="
                             background: white !important;
@@ -2971,9 +3270,12 @@
                                 position: relative !important;
                                 z-index: 2 !important;
                             ">
-                                <i class="fas fa-undo" style="font-size: 16px !important; color: #64748b !important; transition: all 0.3s ease !important;"></i>
+                                <i class="fas fa-undo"
+                                    style="font-size: 16px !important; color: #64748b !important; transition: all 0.3s ease !important;"></i>
                             </div>
-                            <span style="position: relative !important; z-index: 2 !important; transition: all 0.3s ease !important;">Clear Form</span>
+                            <span
+                                style="position: relative !important; z-index: 2 !important; transition: all 0.3s ease !important;">Clear
+                                Form</span>
                         </button>
                     </div>
 
@@ -3061,8 +3363,68 @@
                         </div>
                     </div>
 
+                    <!-- Clinical Decision Support -->
+                    <div id="clinical-decision-support" class="clinical-decision-support" style="display: none;">
+                        <div class="cds-header">
+                            <h2><i class="fas fa-stethoscope"></i> Clinical Decision Support</h2>
+                            <div class="cds-badge">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Evidence-Based Guidelines</span>
+                            </div>
+                        </div>
+
+                        <!-- Alert System -->
+                        <div id="alert-system" class="alert-system">
+                            <div class="alert-header">
+                                <h3><i class="fas fa-exclamation-triangle"></i> Clinical Alerts</h3>
+                                <div class="alert-controls">
+                                    <button id="refresh-alerts" class="btn-alert-control" onclick="refreshAlerts()">
+                                        <i class="fas fa-sync-alt"></i> Refresh
+                                    </button>
+                                    <button id="clear-alerts" class="btn-alert-control" onclick="clearAlerts()">
+                                        <i class="fas fa-times"></i> Clear All
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="alerts-container" class="alerts-container">
+                                <div class="no-alerts">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>No active alerts. Complete assessment to generate clinical alerts.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clinical Guidelines -->
+                        <div id="clinical-guidelines" class="clinical-guidelines">
+                            <div class="guidelines-header">
+                                <h3><i class="fas fa-book-medical"></i> Clinical Guidelines</h3>
+                                <div class="guidelines-controls">
+                                    <select id="guideline-source" class="guideline-selector">
+                                        <option value="all">All Guidelines</option>
+                                        <option value="fda">FDA Drug Labeling</option>
+                                        <option value="aha">AHA/ACC Guidelines</option>
+                                        <option value="asco">ASCO Guidelines</option>
+                                        <option value="idsa">IDSA Guidelines</option>
+                                        <option value="nice">NICE Guidelines</option>
+                                    </select>
+                                    <button id="search-guidelines" class="btn-guideline-control"
+                                        onclick="searchGuidelines()">
+                                        <i class="fas fa-search"></i> Search
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="guidelines-container" class="guidelines-container">
+                                <div class="no-guidelines">
+                                    <i class="fas fa-book-open"></i>
+                                    <p>Complete assessment to view relevant clinical guidelines.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- AI-Powered Detailed Clinical Analysis -->
-                    <div id="ai-detailed-analysis-container" class="ai-detailed-analysis-container" style="display: none;">
+                    <div id="ai-detailed-analysis-container" class="ai-detailed-analysis-container"
+                        style="display: none;">
                         <div class="ai-analysis-header">
                             <h2><i class="fas fa-brain"></i> Detailed Clinical Analysis using AI</h2>
                             <div class="ai-analysis-badge">
@@ -3073,8 +3435,10 @@
 
                         <div id="ai-detailed-content" class="ai-detailed-content">
                             <div class="detailed-analysis-placeholder">
-                                <p>Click "Generate Detailed Analysis" to create a comprehensive AI-powered clinical assessment.</p>
-                                <button id="generate-detailed-analysis-btn" class="btn btn-primary" onclick="triggerDetailedAnalysis()">
+                                <p>Click "Generate Detailed Analysis" to create a comprehensive AI-powered clinical
+                                    assessment.</p>
+                                <button id="generate-detailed-analysis-btn" class="btn btn-primary"
+                                    onclick="triggerDetailedAnalysis()">
                                     <i class="fas fa-brain"></i> Generate Detailed Analysis
                                 </button>
                             </div>
@@ -3184,7 +3548,7 @@
 
     <script>
         // Load patient information from sessionStorage
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadPatientInformation();
         });
 
@@ -3192,11 +3556,11 @@
             const patientName = sessionStorage.getItem('patientName') || 'Unknown Patient';
             const clinicianName = sessionStorage.getItem('clinicianName') || 'Unknown Clinician';
             const assessmentTime = sessionStorage.getItem('assessmentStartTime');
-            
+
             // Update header displays
             document.getElementById('patient-name-display').textContent = patientName;
             document.getElementById('clinician-name-display').textContent = clinicianName;
-            
+
             if (assessmentTime) {
                 const date = new Date(assessmentTime);
                 document.getElementById('timestamp-display').textContent = date.toLocaleString();
@@ -3347,6 +3711,8 @@
                     age: 75, sex: 'M', ethnicity: 'White', height: 175, weight: 95, bmi: 31.0,
                     creatinine: 4.5, egfr: 25, ast_alt: 285, bilirubin: 4.2, albumin: 2.1,
                     hemoglobin: 8.5, hematocrit: 25.5, wbc_count: 12.8, platelet_count: 95, rbc_count: 3.2,
+                    neutrophils: 75, lymphocytes: 15, monocytes: 8, eosinophils: 2, basophils: 0.5,
+                    mcv: 85, mch: 28, mchc: 33, rdw: 16.2,
                     diabetes: 1, liver_disease: 1, ckd: 1, cardiac_disease: 1, hypertension: 1,
                     medication_name: 'Warfarin', index_drug_dose: 400, drug_interactions: 'Major',
                     concomitant_drugs_count: 18,
@@ -3358,6 +3724,8 @@
                     age: 55, sex: 'F', ethnicity: 'Asian', height: 160, weight: 70, bmi: 27.3,
                     creatinine: 2.8, egfr: 45, ast_alt: 125, bilirubin: 2.1, albumin: 3.2,
                     hemoglobin: 10.5, hematocrit: 31.5, wbc_count: 9.2, platelet_count: 185, rbc_count: 3.8,
+                    neutrophils: 65, lymphocytes: 25, monocytes: 7, eosinophils: 3, basophils: 0.8,
+                    mcv: 88, mch: 30, mchc: 34, rdw: 14.8,
                     diabetes: 1, cardiac_disease: 1, hypertension: 1,
                     medication_name: 'Metformin', index_drug_dose: 300, drug_interactions: 'Moderate',
                     concomitant_drugs_count: 12,
@@ -3369,6 +3737,8 @@
                     age: 35, sex: 'M', ethnicity: 'White', height: 180, weight: 78, bmi: 24.1,
                     creatinine: 1.1, egfr: 85, ast_alt: 45, bilirubin: 0.8, albumin: 4.5,
                     hemoglobin: 14.2, hematocrit: 42.6, wbc_count: 6.8, platelet_count: 285, rbc_count: 4.7,
+                    neutrophils: 60, lymphocytes: 30, monocytes: 6, eosinophils: 3, basophils: 1,
+                    mcv: 90, mch: 30, mchc: 34, rdw: 13.2,
                     medication_name: 'Lisinopril', index_drug_dose: 200, drug_interactions: 'Minor',
                     concomitant_drugs_count: 5,
                     cyp2c9: 'Wild', cyp2d6: 'EM', bp_systolic: 135, bp_diastolic: 85,
@@ -3379,6 +3749,8 @@
                     age: 62, sex: 'M', ethnicity: 'Hispanic', height: 170, weight: 85, bmi: 29.4,
                     creatinine: 1.8, egfr: 55, ast_alt: 450, bilirubin: 8.5, albumin: 2.3,
                     hemoglobin: 9.8, hematocrit: 29.4, wbc_count: 11.5, platelet_count: 125, rbc_count: 3.5,
+                    neutrophils: 70, lymphocytes: 20, monocytes: 8, eosinophils: 2, basophils: 0.5,
+                    mcv: 95, mch: 32, mchc: 33, rdw: 15.5,
                     liver_disease: 1, hypertension: 1,
                     medication_name: 'Acetaminophen', index_drug_dose: 250, drug_interactions: 'Major',
                     concomitant_drugs_count: 8,
@@ -3390,6 +3762,8 @@
                     age: 68, sex: 'F', ethnicity: 'Black', height: 165, weight: 72, bmi: 26.4,
                     creatinine: 6.8, egfr: 15, ast_alt: 35, bilirubin: 1.2, albumin: 3.1,
                     hemoglobin: 7.2, hematocrit: 21.6, wbc_count: 8.5, platelet_count: 245, rbc_count: 2.8,
+                    neutrophils: 68, lymphocytes: 22, monocytes: 7, eosinophils: 2, basophils: 1,
+                    mcv: 82, mch: 26, mchc: 32, rdw: 17.8,
                     diabetes: 1, ckd: 1, cardiac_disease: 1, hypertension: 1,
                     medication_name: 'Furosemide', index_drug_dose: 350, drug_interactions: 'Moderate',
                     concomitant_drugs_count: 15,
@@ -3401,6 +3775,8 @@
                     age: 71, sex: 'M', ethnicity: 'White', height: 178, weight: 88, bmi: 27.8,
                     creatinine: 2.1, egfr: 42, ast_alt: 65, bilirubin: 1.5, albumin: 3.8,
                     hemoglobin: 11.2, hematocrit: 33.6, wbc_count: 7.8, platelet_count: 195, rbc_count: 4.1,
+                    neutrophils: 62, lymphocytes: 28, monocytes: 7, eosinophils: 2, basophils: 1,
+                    mcv: 87, mch: 29, mchc: 33, rdw: 14.2,
                     diabetes: 1, cardiac_disease: 1, hypertension: 1,
                     medication_name: 'Digoxin', index_drug_dose: 125, drug_interactions: 'Major',
                     concomitant_drugs_count: 14,
@@ -3412,6 +3788,8 @@
                     age: 82, sex: 'F', ethnicity: 'Asian', height: 155, weight: 52, bmi: 21.6,
                     creatinine: 2.5, egfr: 28, ast_alt: 85, bilirubin: 1.8, albumin: 2.9,
                     hemoglobin: 9.1, hematocrit: 27.3, wbc_count: 6.2, platelet_count: 165, rbc_count: 3.3,
+                    neutrophils: 58, lymphocytes: 32, monocytes: 8, eosinophils: 1, basophils: 1,
+                    mcv: 78, mch: 25, mchc: 32, rdw: 18.5,
                     diabetes: 1, ckd: 1, cardiac_disease: 1, hypertension: 1, respiratory_disease: 1, neurological_disease: 1,
                     medication_name: 'Warfarin', index_drug_dose: 175, drug_interactions: 'Major',
                     concomitant_drugs_count: 22,
@@ -3423,6 +3801,8 @@
                     age: 58, sex: 'F', ethnicity: 'White', height: 168, weight: 65, bmi: 23.0,
                     creatinine: 1.6, egfr: 65, ast_alt: 195, bilirubin: 2.8, albumin: 3.0,
                     hemoglobin: 8.8, hematocrit: 26.4, wbc_count: 3.2, platelet_count: 85, rbc_count: 3.1,
+                    neutrophils: 45, lymphocytes: 40, monocytes: 12, eosinophils: 2, basophils: 1,
+                    mcv: 92, mch: 31, mchc: 34, rdw: 16.8,
                     liver_disease: 1,
                     medication_name: 'Methotrexate', index_drug_dose: 450, drug_interactions: 'Major',
                     concomitant_drugs_count: 10,
@@ -3434,6 +3814,8 @@
                     age: 22, sex: 'F', ethnicity: 'Hispanic', height: 162, weight: 58, bmi: 22.1,
                     creatinine: 0.8, egfr: 105, ast_alt: 28, bilirubin: 0.6, albumin: 4.8,
                     hemoglobin: 13.8, hematocrit: 41.4, wbc_count: 6.5, platelet_count: 325, rbc_count: 4.6,
+                    neutrophils: 55, lymphocytes: 35, monocytes: 6, eosinophils: 3, basophils: 1,
+                    mcv: 88, mch: 30, mchc: 34, rdw: 12.8,
                     medication_name: 'Ibuprofen', index_drug_dose: 150, drug_interactions: 'None',
                     concomitant_drugs_count: 2,
                     cyp2c9: 'Wild', cyp2d6: 'EM', bp_systolic: 115, bp_diastolic: 72,
@@ -3525,6 +3907,8 @@
                         if (['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt',
                             'bilirubin', 'albumin', 'temperature', 'ind_value', 'atpp_value',
                             'hemoglobin', 'hematocrit', 'wbc_count', 'platelet_count', 'rbc_count',
+                            'neutrophils', 'lymphocytes', 'monocytes', 'eosinophils', 'basophils',
+                            'mcv', 'mch', 'mchc', 'rdw',
                             'index_drug_dose', 'concomitant_drugs_count',
                             'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'].includes(key)) {
                             patientData[key] = parseFloat(value);
@@ -4064,7 +4448,7 @@
             const formActions = document.querySelector('.form-actions');
             const submitBtn = document.querySelector('button[type="submit"]');
             const clearBtn = document.getElementById('clear-form');
-            
+
             if (formActions) {
                 formActions.style.display = 'flex';
                 formActions.style.visibility = 'visible';
@@ -4073,13 +4457,13 @@
             } else {
                 console.error('Form actions container not found!');
             }
-            
+
             if (submitBtn) {
                 console.log('Submit button found');
             } else {
                 console.error('Submit button not found!');
             }
-            
+
             if (clearBtn) {
                 console.log('Clear button found');
             } else {
@@ -4090,7 +4474,7 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function () {
             initializePatientInfo();
-            
+
             // Ensure buttons are visible
             setTimeout(ensureButtonsVisible, 100);
 
@@ -4287,6 +4671,267 @@
                         status: 'Low',
                         clinical_significance: 'Shortened clotting time',
                         severity: 'Low'
+                    });
+                }
+            }
+
+            // CBC interpretations
+            else if (testName === 'hemoglobin') {
+                if (sex === 'M') {
+                    if (value < 13.5) {
+                        interpretations.push({
+                            status: 'Low',
+                            clinical_significance: 'Anemia - investigate cause',
+                            severity: value < 10.0 ? 'High' : 'Moderate'
+                        });
+                    } else if (value > 17.5) {
+                        interpretations.push({
+                            status: 'High',
+                            clinical_significance: 'Polycythemia - dehydration or blood disorder',
+                            severity: 'Moderate'
+                        });
+                    }
+                } else {
+                    if (value < 12.0) {
+                        interpretations.push({
+                            status: 'Low',
+                            clinical_significance: 'Anemia - investigate cause',
+                            severity: value < 10.0 ? 'High' : 'Moderate'
+                        });
+                    } else if (value > 15.5) {
+                        interpretations.push({
+                            status: 'High',
+                            clinical_significance: 'Polycythemia - dehydration or blood disorder',
+                            severity: 'Moderate'
+                        });
+                    }
+                }
+            }
+
+            else if (testName === 'hematocrit') {
+                if (sex === 'M') {
+                    if (value < 41) {
+                        interpretations.push({
+                            status: 'Low',
+                            clinical_significance: 'Anemia or blood loss',
+                            severity: value < 30 ? 'High' : 'Moderate'
+                        });
+                    } else if (value > 50) {
+                        interpretations.push({
+                            status: 'High',
+                            clinical_significance: 'Polycythemia or dehydration',
+                            severity: 'Moderate'
+                        });
+                    }
+                } else {
+                    if (value < 36) {
+                        interpretations.push({
+                            status: 'Low',
+                            clinical_significance: 'Anemia or blood loss',
+                            severity: value < 30 ? 'High' : 'Moderate'
+                        });
+                    } else if (value > 44) {
+                        interpretations.push({
+                            status: 'High',
+                            clinical_significance: 'Polycythemia or dehydration',
+                            severity: 'Moderate'
+                        });
+                    }
+                }
+            }
+
+            else if (testName === 'wbc_count') {
+                if (value > 11.0) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Leukocytosis - infection, inflammation, or malignancy',
+                        severity: value > 20.0 ? 'High' : 'Moderate'
+                    });
+                } else if (value < 4.5) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Leukopenia - immunosuppression or bone marrow disorder',
+                        severity: value < 2.0 ? 'High' : 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'platelet_count') {
+                if (value < 150) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Thrombocytopenia - bleeding risk',
+                        severity: value < 50 ? 'High' : 'Moderate'
+                    });
+                } else if (value > 450) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Thrombocytosis - thrombosis risk',
+                        severity: value > 600 ? 'High' : 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'rbc_count') {
+                if (sex === 'M') {
+                    if (value < 4.7) {
+                        interpretations.push({
+                            status: 'Low',
+                            clinical_significance: 'Anemia or blood loss',
+                            severity: value < 3.5 ? 'High' : 'Moderate'
+                        });
+                    } else if (value > 6.1) {
+                        interpretations.push({
+                            status: 'High',
+                            clinical_significance: 'Polycythemia',
+                            severity: 'Moderate'
+                        });
+                    }
+                } else {
+                    if (value < 4.2) {
+                        interpretations.push({
+                            status: 'Low',
+                            clinical_significance: 'Anemia or blood loss',
+                            severity: value < 3.5 ? 'High' : 'Moderate'
+                        });
+                    } else if (value > 5.4) {
+                        interpretations.push({
+                            status: 'High',
+                            clinical_significance: 'Polycythemia',
+                            severity: 'Moderate'
+                        });
+                    }
+                }
+            }
+
+            else if (testName === 'neutrophils') {
+                if (value > 70) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Neutrophilia - bacterial infection or stress response',
+                        severity: value > 85 ? 'High' : 'Moderate'
+                    });
+                } else if (value < 50) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Neutropenia - increased infection risk',
+                        severity: value < 30 ? 'High' : 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'lymphocytes') {
+                if (value > 40) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Lymphocytosis - viral infection or hematologic malignancy',
+                        severity: value > 60 ? 'High' : 'Moderate'
+                    });
+                } else if (value < 20) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Lymphopenia - immunosuppression',
+                        severity: value < 10 ? 'High' : 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'monocytes') {
+                if (value > 8) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Monocytosis - chronic inflammation or infection',
+                        severity: value > 15 ? 'High' : 'Moderate'
+                    });
+                } else if (value < 2) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Monocytopenia - rare finding, monitor immune function',
+                        severity: 'Low'
+                    });
+                }
+            }
+
+            else if (testName === 'eosinophils') {
+                if (value > 4) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Eosinophilia - allergic reaction, parasites, or drug reaction',
+                        severity: value > 10 ? 'High' : 'Moderate'
+                    });
+                } else if (value < 1) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Eosinopenia - stress response or corticosteroid effect',
+                        severity: 'Low'
+                    });
+                }
+            }
+
+            else if (testName === 'basophils') {
+                if (value > 1) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Basophilia - allergic reaction or myeloproliferative disorder',
+                        severity: value > 2 ? 'High' : 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'mcv') {
+                if (value > 100) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Macrocytic anemia - B12/folate deficiency or alcohol use',
+                        severity: value > 110 ? 'High' : 'Moderate'
+                    });
+                } else if (value < 80) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Microcytic anemia - iron deficiency or thalassemia',
+                        severity: value < 70 ? 'High' : 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'mch') {
+                if (value > 32) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Elevated hemoglobin content - macrocytic anemia',
+                        severity: 'Moderate'
+                    });
+                } else if (value < 27) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Low hemoglobin content - microcytic anemia',
+                        severity: 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'mchc') {
+                if (value > 36) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Hyperchromic cells - spherocytosis or dehydration',
+                        severity: 'Moderate'
+                    });
+                } else if (value < 32) {
+                    interpretations.push({
+                        status: 'Low',
+                        clinical_significance: 'Hypochromic cells - iron deficiency anemia',
+                        severity: 'Moderate'
+                    });
+                }
+            }
+
+            else if (testName === 'rdw') {
+                if (value > 14.5) {
+                    interpretations.push({
+                        status: 'High',
+                        clinical_significance: 'Anisocytosis - mixed cell populations, nutritional deficiency',
+                        severity: value > 18 ? 'High' : 'Moderate'
                     });
                 }
             }
@@ -4552,19 +5197,19 @@
         function toggleTestCategory(categoryName) {
             const section = document.getElementById(categoryName + '-tests');
             const card = event.target.closest('.test-card');
-            
+
             if (section.style.display === 'none' || section.style.display === '') {
                 // Hide all other sections
                 const allSections = document.querySelectorAll('.test-category-section');
                 const allCards = document.querySelectorAll('.test-card');
-                
+
                 allSections.forEach(s => s.style.display = 'none');
                 allCards.forEach(c => c.classList.remove('active'));
-                
+
                 // Show selected section
                 section.style.display = 'block';
                 card.classList.add('active');
-                
+
                 // Smooth scroll to the section
                 setTimeout(() => {
                     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -5605,6 +6250,724 @@
             line-height: 1.5;
         }
 
+        /* Emergency ADR Management Styles */
+        .emergency-adr-management {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 3px solid #dc2626;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+            animation: emergencyPulse 2s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emergency-adr-management::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.1), transparent);
+            animation: emergencyShine 3s infinite;
+        }
+
+        @keyframes emergencyPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 12px 35px rgba(220, 38, 38, 0.5);
+            }
+        }
+
+        @keyframes emergencyShine {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .emergency-header {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .emergency-icon {
+            font-size: 2.5rem;
+            animation: emergencyBlink 1.5s infinite;
+        }
+
+        @keyframes emergencyBlink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        .emergency-title h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .emergency-title p {
+            margin: 5px 0 0 0;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .emergency-content {
+            padding: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .emergency-section {
+            background: #ffffff;
+            border: 2px solid #fca5a5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+        }
+
+        .emergency-section h4 {
+            color: #dc2626;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .critical-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 12px;
+        }
+
+        .critical-action-item {
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+            border-left: 4px solid #dc2626;
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .action-priority {
+            background: #dc2626;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            position: absolute;
+            top: -8px;
+            right: 10px;
+        }
+
+        .action-text {
+            font-weight: 600;
+            color: #1f2937;
+            margin-top: 8px;
+        }
+
+        .warning-signs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .warning-sign-item {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #7f1d1d;
+        }
+
+        .warning-sign-item i {
+            color: #dc2626;
+            font-size: 1.1rem;
+        }
+
+        .interventions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .intervention-item {
+            background: #ffffff;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 60px 1fr 1fr;
+            gap: 15px;
+            align-items: start;
+        }
+
+        .intervention-step {
+            background: #dc2626;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .intervention-action {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .intervention-rationale {
+            color: #6b7280;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .contact-item {
+            background: #ffffff;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .contact-type {
+            font-weight: 700;
+            color: #dc2626;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .contact-info {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .contact-when {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .patient-instructions-box {
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+            border: 2px solid #dc2626;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .patient-instructions-box::before {
+            content: '⚠️ PATIENT ALERT';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #dc2626;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .patient-warning-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .patient-warning-list li {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #7f1d1d;
+        }
+
+        .emergency-number {
+            background: #dc2626;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* Mobile Responsive for Emergency Management */
+        @media (max-width: 768px) {
+            .emergency-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .emergency-icon {
+                font-size: 2rem;
+            }
+
+            .emergency-title h3 {
+                font-size: 1.2rem;
+            }
+
+            .critical-actions-grid,
+            .warning-signs-grid,
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .intervention-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .intervention-step {
+                margin: 0 auto;
+            }
+        }
+
+        /* Clinical Decision Support Styles */
+        .clinical-decision-support {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .cds-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .cds-header h2 {
+            font-size: 1.4rem;
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .cds-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Alert System Styles */
+        .alert-system {
+            background: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .alert-header {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alert-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-alert-control {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-alert-control:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .alerts-container {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .alert-item {
+            background: #ffffff;
+            border-left: 4px solid #ef4444;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .alert-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-item.critical {
+            border-left-color: #dc2626;
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+        }
+
+        .alert-item.warning {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+        }
+
+        .alert-item.info {
+            border-left-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+        }
+
+        .alert-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1rem;
+        }
+
+        .alert-severity {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .alert-severity.critical {
+            background: #dc2626;
+            color: white;
+        }
+
+        .alert-severity.warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .alert-severity.info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .alert-message {
+            color: #4b5563;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .alert-action-btn {
+            padding: 4px 8px;
+            border: 1px solid #d1d5db;
+            background: #f9fafb;
+            color: #374151;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .alert-action-btn:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+        }
+
+        .no-alerts {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+
+        .no-alerts i {
+            font-size: 3rem;
+            color: #10b981;
+            margin-bottom: 15px;
+        }
+
+        /* Clinical Guidelines Styles */
+        .clinical-guidelines {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .guidelines-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .guidelines-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .guidelines-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .guideline-selector {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .guideline-selector option {
+            background: #1d4ed8;
+            color: white;
+        }
+
+        .btn-guideline-control {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-guideline-control:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .guidelines-container {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .guideline-item {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .guideline-item:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+        }
+
+        .guideline-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .guideline-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .guideline-source {
+            background: #3b82f6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .guideline-recommendation {
+            color: #4b5563;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .guideline-evidence {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .guideline-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .guideline-action-btn {
+            padding: 4px 8px;
+            border: 1px solid #3b82f6;
+            background: #eff6ff;
+            color: #3b82f6;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .guideline-action-btn:hover {
+            background: #dbeafe;
+        }
+
+        .no-guidelines {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+
+        .no-guidelines i {
+            font-size: 3rem;
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        /* Mobile Responsive for CDS */
+        @media (max-width: 768px) {
+            .clinical-decision-support {
+                padding: 15px;
+                margin-top: 15px;
+            }
+
+            .alert-header,
+            .guidelines-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .alert-controls,
+            .guidelines-controls {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .alerts-container,
+            .guidelines-container {
+                padding: 15px;
+                max-height: 300px;
+            }
+
+            .alert-item,
+            .guideline-item {
+                padding: 12px;
+            }
+
+            .alert-header-content,
+            .guideline-header-content {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+        }
+
         /* Enhanced Field Analysis Styles */
         .comprehensive-field-analysis {
             margin: 20px 0;
@@ -6534,194 +7897,199 @@
             }
         }
     </style>
-    
+
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src="{{ url_for('static', filename='js/detailed_analysis.js') }}"></script>
 </body>
 
-</html>  
-  <style>
-        /* Detailed Analysis Styles */
-        .detailed-analysis-placeholder {
-            text-align: center;
-            padding: 40px 20px;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 2px dashed #e5e7eb;
+</html>
+<style>
+    /* Detailed Analysis Styles */
+    .detailed-analysis-placeholder {
+        text-align: center;
+        padding: 40px 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 2px dashed #e5e7eb;
+    }
+
+    .analysis-loading {
+        text-align: center;
+        padding: 40px 20px;
+        background: white;
+        border-radius: 12px;
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e5e7eb;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
         }
-        
-        .analysis-loading {
-            text-align: center;
-            padding: 40px 20px;
-            background: white;
-            border-radius: 12px;
+
+        100% {
+            transform: rotate(360deg);
         }
-        
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #e5e7eb;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .analysis-result {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            border: 1px solid #e5e7eb;
-        }
-        
+    }
+
+    .analysis-result {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .analysis-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .analysis-header h3 {
+        color: #059669;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .analysis-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .analysis-badge.ai-powered {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .analysis-badge.fallback {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .analysis-content {
+        line-height: 1.6;
+        color: #374151;
+    }
+
+    .analysis-content h3 {
+        color: #1f2937;
+        margin: 20px 0 10px 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .analysis-content h4 {
+        color: #374151;
+        margin: 15px 0 8px 0;
+    }
+
+    .analysis-content p {
+        margin: 12px 0;
+    }
+
+    .analysis-content ul {
+        margin: 12px 0;
+        padding-left: 20px;
+    }
+
+    .analysis-content li {
+        margin: 6px 0;
+    }
+
+    .analysis-actions {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .analysis-error {
+        text-align: center;
+        padding: 40px 20px;
+        background: #fef2f2;
+        border-radius: 12px;
+        border: 1px solid #fecaca;
+    }
+
+    .error-icon {
+        font-size: 3rem;
+        color: #dc2626;
+        margin-bottom: 15px;
+    }
+
+    .analysis-error h3 {
+        color: #dc2626;
+        margin-bottom: 10px;
+    }
+
+    .analysis-error p {
+        color: #7f1d1d;
+        margin-bottom: 20px;
+    }
+
+    .error-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 2px solid #e5e7eb;
+        color: #374151;
+    }
+
+    .btn-outline:hover {
+        background: #f9fafb;
+        border-color: #d1d5db;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
         .analysis-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f1f5f9;
-        }
-        
-        .analysis-header h3 {
-            color: #059669;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .analysis-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .analysis-badge.ai-powered {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        
-        .analysis-badge.fallback {
-            background: #f3f4f6;
-            color: #374151;
-        }
-        
-        .analysis-content {
-            line-height: 1.6;
-            color: #374151;
-        }
-        
-        .analysis-content h3 {
-            color: #1f2937;
-            margin: 20px 0 10px 0;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-        
-        .analysis-content h4 {
-            color: #374151;
-            margin: 15px 0 8px 0;
-        }
-        
-        .analysis-content p {
-            margin: 12px 0;
-        }
-        
-        .analysis-content ul {
-            margin: 12px 0;
-            padding-left: 20px;
-        }
-        
-        .analysis-content li {
-            margin: 6px 0;
-        }
-        
-        .analysis-actions {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
+            flex-direction: column;
             gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .analysis-error {
             text-align: center;
-            padding: 40px 20px;
-            background: #fef2f2;
-            border-radius: 12px;
-            border: 1px solid #fecaca;
         }
-        
-        .error-icon {
-            font-size: 3rem;
-            color: #dc2626;
-            margin-bottom: 15px;
-        }
-        
-        .analysis-error h3 {
-            color: #dc2626;
-            margin-bottom: 10px;
-        }
-        
-        .analysis-error p {
-            color: #7f1d1d;
-            margin-bottom: 20px;
-        }
-        
+
+        .analysis-actions,
         .error-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
+            flex-direction: column;
         }
-        
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #e5e7eb;
-            color: #374151;
+
+        .detailed-analysis-placeholder {
+            padding: 20px 15px;
         }
-        
-        .btn-outline:hover {
-            background: #f9fafb;
-            border-color: #d1d5db;
+
+        .analysis-loading {
+            padding: 30px 15px;
         }
-        
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .analysis-header {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-            
-            .analysis-actions,
-            .error-actions {
-                flex-direction: column;
-            }
-            
-            .detailed-analysis-placeholder {
-                padding: 20px 15px;
-            }
-            
-            .analysis-loading {
-                padding: 30px 15px;
-            }
-            
-            .analysis-result {
-                padding: 20px 15px;
-            }
+
+        .analysis-result {
+            padding: 20px 15px;
         }
-    </style>
+    }
+</style>

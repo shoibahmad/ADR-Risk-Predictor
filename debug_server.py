@@ -2255,5 +2255,6 @@ if __name__ == '__main__':
         print("🔍 Debug info: http://localhost:5000/debug")
         print("💊 Health check: http://localhost:5000/health")
         print("🔥 Report test: http://localhost:5000/generate_report (GET)")
+        print("🚨 NEW FEATURES: Emergency ADR Management, Clinical Decision Support, Enhanced CBC")
         print("=" * 60)
         app.run(debug=True, host='0.0.0.0', port=5000)

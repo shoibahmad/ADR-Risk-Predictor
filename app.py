@@ -1352,6 +1352,8 @@ def generate_fallback_report(patient_data, prediction_result, patient_name, clin
 
 if __name__ == '__main__':
     import os
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))
     debug = os.environ.get('FLASK_ENV') == 'development'
+    print(f"🌐 Starting ADR Risk Predictor on http://localhost:{port}")
+    print("🔥 New features: Emergency ADR Management, Clinical Decision Support, Enhanced CBC Analysis")
     app.run(debug=debug, host='0.0.0.0', port=port)
