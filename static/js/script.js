@@ -3470,7 +3470,17 @@ function displayEnhancedResults(result) {
     }
 }
 
-// AI-Powered Detailed Analysis function - Simple and Reliable
+// Trigger detailed analysis function
+function triggerDetailedAnalysis() {
+    if (!currentPredictionResult || !currentPatientData) {
+        showNotification('Please complete a risk assessment first', 'error');
+        return;
+    }
+    
+    generateAIDetailedAnalysis(currentPredictionResult);
+}
+
+// AI-Powered Detailed Analysis function - Enhanced with all field details
 function generateAIDetailedAnalysis(result) {
     console.log('Generating AI-powered detailed analysis:', result);
 
@@ -3489,104 +3499,651 @@ function generateAIDetailedAnalysis(result) {
     aiContent.innerHTML = `
         <div class="ai-analysis-loading">
             <i class="fas fa-spinner fa-spin"></i>
-            <p>Generating detailed clinical analysis using AI...</p>
+            <p>Generating comprehensive clinical analysis using AI...</p>
         </div>
     `;
 
-    // Generate content after a short delay (like AI Clinical Report does)
+    // Generate content after a short delay
     setTimeout(() => {
-        const riskLevel = result.risk_level || 'High';
-        const predictedADR = result.predicted_adr_type || 'Hepatotoxicity';
-        const noADRProb = result.no_adr_probability || 8.51;
-
-        // Create comprehensive clinical analysis content
-        const analysisContent = `
-            <h1>Comprehensive ADR Risk Assessment</h1>
-            
-            <h2>Risk Assessment Summary</h2>
-            <p>Based on the patient's clinical profile and medication regimen, this analysis provides a comprehensive evaluation of adverse drug reaction risks.</p>
-            
-            <h2>Key Risk Factors Identified</h2>
-            <ul>
-                <li><strong>Primary Risk:</strong> ${predictedADR} with ${result.top_adr_risks ? Object.values(result.top_adr_risks)[0] : '60.06'}% probability</li>
-                <li><strong>Overall Risk Level:</strong> ${riskLevel} - Enhanced monitoring protocols required</li>
-                <li><strong>Safety Margin:</strong> ${noADRProb}% probability of no adverse reactions</li>
-            </ul>
-
-            <h2>Clinical Recommendations</h2>
-            
-            <h3>Immediate Actions Required</h3>
-            <ul>
-                <li>Implement ${riskLevel.toLowerCase()}-risk monitoring protocols immediately</li>
-                <li>Educate patient on early warning signs of ${predictedADR.toLowerCase()}</li>
-                <li>Establish baseline laboratory values for monitoring</li>
-                <li>Schedule follow-up within 1-2 weeks</li>
-            </ul>
-
-            <h3>Monitoring Protocol</h3>
-            <ul>
-                <li><strong>Laboratory Monitoring:</strong> Liver function tests every 2-4 weeks initially</li>
-                <li><strong>Clinical Assessment:</strong> Weekly evaluation for first month</li>
-                <li><strong>Patient Education:</strong> Signs and symptoms to report immediately</li>
-                <li><strong>Emergency Protocol:</strong> Clear instructions for severe reactions</li>
-            </ul>
-
-            <h3>Risk Mitigation Strategies</h3>
-            <ul>
-                <li>Consider dose reduction if clinically appropriate</li>
-                <li>Evaluate alternative therapeutic options</li>
-                <li>Implement hepatoprotective measures if indicated</li>
-                <li>Optimize concomitant medication regimen</li>
-            </ul>
-
-            <h2>Pharmacogenomic Considerations</h2>
-            <p>Based on the patient's metabolizer status, specific dosing adjustments and monitoring protocols have been incorporated into this assessment.</p>
-
-            <h2>Emergency Protocols</h2>
-            <p><strong>Warning Signs:</strong> Patients should seek immediate medical attention for jaundice, dark urine, persistent nausea, abdominal pain, or fatigue.</p>
-
-            <h2>Follow-up Recommendations</h2>
-            <ul>
-                <li><strong>1-3 Days:</strong> Initial safety check and patient counseling</li>
-                <li><strong>1-2 Weeks:</strong> First comprehensive follow-up with laboratory monitoring</li>
-                <li><strong>Monthly:</strong> Ongoing assessment and risk reassessment</li>
-            </ul>
-
-            <div class="highlight">
-                <p><strong>Clinical Vigilance:</strong> Maintain a high index of suspicion for hepatotoxicity, especially with any unexplained changes in patient status or laboratory values.</p>
-            </div>
-
-            <p><em>This high-risk profile necessitates proactive management and close clinical vigilance to prevent or mitigate severe adverse outcomes.</em></p>
-        `;
-
-        // Display the content exactly like AI Clinical Report
+        const analysisContent = generateComprehensiveAnalysis(result, currentPatientData);
         aiContent.innerHTML = analysisContent;
-
         console.log('AI detailed analysis generated successfully');
-    }, 1500); // 1.5 second delay like AI Clinical Report
+    }, 1500);
 }
 
-// Format AI report for better display
-function formatAIReport(report) {
-    if (!report) return '<p>No analysis available.</p>';
+// Generate comprehensive analysis with all entered fields
+function generateComprehensiveAnalysis(result, patientData) {
+    const riskLevel = result.risk_level || 'High';
+    const predictedADR = result.predicted_adr_type || 'Hepatotoxicity';
+    const noADRProb = result.no_adr_probability || 8.51;
+    const topRisks = result.top_adr_risks || {};
 
-    // Convert markdown-style formatting to HTML
-    let formattedReport = report
-        .replace(/## (.*)/g, '<h3 class="analysis-section-title">$1</h3>')
-        .replace(/### (.*)/g, '<h4 class="analysis-subsection-title">$1</h4>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/- (.*)/g, '<li>$1</li>')
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/\n/g, '<br>');
+    return `
+        <div class="comprehensive-analysis">
+            <h1><i class="fas fa-brain"></i> Comprehensive ADR Risk Assessment</h1>
+            
+            <!-- Patient Overview Section -->
+            <div class="analysis-section patient-overview">
+                <h2><i class="fas fa-user-md"></i> Patient Overview</h2>
+                <div class="patient-summary-grid">
+                    ${generatePatientSummaryCards(patientData)}
+                </div>
+            </div>
 
-    // Wrap in paragraphs
-    formattedReport = '<p>' + formattedReport + '</p>';
+            <!-- Risk Assessment Summary -->
+            <div class="analysis-section risk-summary">
+                <h2><i class="fas fa-exclamation-triangle"></i> Risk Assessment Summary</h2>
+                <div class="risk-overview-cards">
+                    <div class="risk-card primary-risk">
+                        <div class="risk-icon"><i class="fas fa-warning"></i></div>
+                        <div class="risk-content">
+                            <h3>Primary Risk</h3>
+                            <p class="risk-value">${predictedADR}</p>
+                            <p class="risk-probability">${topRisks[Object.keys(topRisks)[0]] || '60.06'}% probability</p>
+                        </div>
+                    </div>
+                    <div class="risk-card overall-risk">
+                        <div class="risk-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="risk-content">
+                            <h3>Overall Risk Level</h3>
+                            <p class="risk-value risk-${riskLevel.toLowerCase()}">${riskLevel}</p>
+                            <p class="risk-description">${getRiskDescription(riskLevel)}</p>
+                        </div>
+                    </div>
+                    <div class="risk-card safety-margin">
+                        <div class="risk-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="risk-content">
+                            <h3>Safety Probability</h3>
+                            <p class="risk-value safety">${noADRProb}%</p>
+                            <p class="risk-description">No adverse reactions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    // Fix list formatting
-    formattedReport = formattedReport.replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>');
+            <!-- Detailed Field Analysis -->
+            <div class="analysis-section field-analysis">
+                <h2><i class="fas fa-microscope"></i> Detailed Field Analysis</h2>
+                ${generateDetailedFieldAnalysis(patientData)}
+            </div>
 
-    return formattedReport;
+            <!-- Laboratory Values Analysis -->
+            <div class="analysis-section lab-analysis">
+                <h2><i class="fas fa-flask"></i> Laboratory Values Assessment</h2>
+                ${generateLabAnalysis(patientData)}
+            </div>
+
+            <!-- Medication Analysis -->
+            <div class="analysis-section medication-analysis">
+                <h2><i class="fas fa-pills"></i> Medication Risk Analysis</h2>
+                ${generateMedicationAnalysis(patientData)}
+            </div>
+
+            <!-- Clinical Recommendations -->
+            <div class="analysis-section recommendations">
+                <h2><i class="fas fa-clipboard-list"></i> Clinical Recommendations</h2>
+                ${generateClinicalRecommendations(riskLevel, predictedADR, patientData)}
+            </div>
+
+            <!-- Monitoring Protocol -->
+            <div class="analysis-section monitoring">
+                <h2><i class="fas fa-heartbeat"></i> Monitoring Protocol</h2>
+                ${generateMonitoringProtocol(riskLevel, patientData)}
+            </div>
+
+            <!-- Follow-up Timeline -->
+            <div class="analysis-section timeline">
+                <h2><i class="fas fa-calendar-alt"></i> Follow-up Timeline</h2>
+                ${generateFollowupTimeline(riskLevel)}
+            </div>
+        </div>
+    `;
+}
+
+// Generate patient summary cards
+function generatePatientSummaryCards(patientData) {
+    const demographics = [
+        { label: 'Age', value: patientData.age, unit: 'years', icon: 'fas fa-birthday-cake' },
+        { label: 'Sex', value: patientData.sex, icon: 'fas fa-venus-mars' },
+        { label: 'Ethnicity', value: patientData.ethnicity, icon: 'fas fa-globe' },
+        { label: 'BMI', value: patientData.bmi, unit: 'kg/m²', icon: 'fas fa-weight' }
+    ];
+
+    return demographics.map(item => `
+        <div class="summary-card">
+            <div class="summary-icon"><i class="${item.icon}"></i></div>
+            <div class="summary-content">
+                <h4>${item.label}</h4>
+                <p>${item.value || 'Not specified'} ${item.unit || ''}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Generate detailed field analysis
+function generateDetailedFieldAnalysis(patientData) {
+    const fieldCategories = {
+        'Demographics': {
+            fields: ['age', 'sex', 'ethnicity', 'height', 'weight', 'bmi'],
+            icon: 'fas fa-user',
+            color: '#3b82f6'
+        },
+        'Laboratory Values': {
+            fields: ['creatinine', 'egfr', 'ast_alt', 'bilirubin', 'albumin', 'temperature', 'ind_value', 'atpp_value'],
+            icon: 'fas fa-flask',
+            color: '#10b981'
+        },
+        'Complete Blood Count (CBC)': {
+            fields: ['hemoglobin', 'hematocrit', 'wbc_count', 'platelet_count', 'rbc_count'],
+            icon: 'fas fa-tint',
+            color: '#ef4444'
+        },
+        'Vital Signs': {
+            fields: ['bp_systolic', 'bp_diastolic', 'heart_rate'],
+            icon: 'fas fa-heartbeat',
+            color: '#f59e0b'
+        },
+        'Comorbidities': {
+            fields: ['diabetes', 'liver_disease', 'ckd', 'cardiac_disease', 'hypertension', 'respiratory_disease', 'neurological_disease', 'autoimmune_disease'],
+            icon: 'fas fa-notes-medical',
+            color: '#8b5cf6'
+        },
+        'Medications': {
+            fields: ['medication_name', 'index_drug_dose', 'concomitant_drugs_count', 'drug_interactions', 'indication'],
+            icon: 'fas fa-pills',
+            color: '#06b6d4'
+        },
+        'Pharmacogenomics': {
+            fields: ['cyp2c9', 'cyp2d6', 'cyp_inhibitors_flag', 'qt_prolonging_flag', 'hla_risk_allele_flag'],
+            icon: 'fas fa-dna',
+            color: '#ec4899'
+        },
+        'Clinical Context': {
+            fields: ['time_since_start_days', 'inpatient_flag', 'prior_adr_history'],
+            icon: 'fas fa-hospital',
+            color: '#84cc16'
+        }
+    };
+
+    let analysisHtml = '<div class="comprehensive-field-analysis">';
+    let totalFieldsAnalyzed = 0;
+    
+    Object.entries(fieldCategories).forEach(([category, config]) => {
+        const categoryFields = config.fields.filter(field => 
+            patientData[field] !== undefined && patientData[field] !== null && patientData[field] !== ''
+        );
+
+        if (categoryFields.length > 0) {
+            totalFieldsAnalyzed += categoryFields.length;
+            analysisHtml += `
+                <div class="field-category" style="border-left: 4px solid ${config.color};">
+                    <div class="category-header" style="background: linear-gradient(135deg, ${config.color}15 0%, ${config.color}05 100%);">
+                        <h3><i class="${config.icon}" style="color: ${config.color};"></i> ${category}</h3>
+                        <span class="field-count">${categoryFields.length} field${categoryFields.length > 1 ? 's' : ''} analyzed</span>
+                    </div>
+                    <div class="field-grid">
+                        ${categoryFields.map(field => generateEnhancedFieldCard(field, patientData[field], config.color)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+    });
+
+    analysisHtml += `
+        <div class="analysis-summary">
+            <div class="summary-card">
+                <i class="fas fa-chart-bar"></i>
+                <div class="summary-content">
+                    <h4>Analysis Summary</h4>
+                    <p><strong>${totalFieldsAnalyzed}</strong> clinical parameters analyzed across <strong>${Object.keys(fieldCategories).filter(cat => fieldCategories[cat].fields.some(field => patientData[field] !== undefined && patientData[field] !== null && patientData[field] !== '')).length}</strong> categories</p>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    return analysisHtml || '<p class="no-data-message">No clinical data available for detailed analysis.</p>';
+}
+
+// Generate enhanced individual field card
+function generateEnhancedFieldCard(fieldName, value, categoryColor) {
+    const fieldLabels = {
+        // Demographics
+        'age': 'Age (years)',
+        'sex': 'Sex',
+        'ethnicity': 'Ethnicity',
+        'height': 'Height (cm)',
+        'weight': 'Weight (kg)',
+        'bmi': 'BMI (kg/m²)',
+        
+        // Laboratory Values
+        'creatinine': 'Creatinine (mg/dL)',
+        'egfr': 'eGFR (mL/min/1.73m²)',
+        'ast_alt': 'AST/ALT (U/L)',
+        'bilirubin': 'Bilirubin (mg/dL)',
+        'albumin': 'Albumin (g/dL)',
+        'temperature': 'Temperature (°F)',
+        'ind_value': 'INR',
+        'atpp_value': 'aPTT (sec)',
+        
+        // CBC
+        'hemoglobin': 'Hemoglobin (g/dL)',
+        'hematocrit': 'Hematocrit (%)',
+        'wbc_count': 'WBC Count (×10³/μL)',
+        'platelet_count': 'Platelet Count (×10³/μL)',
+        'rbc_count': 'RBC Count (×10⁶/μL)',
+        
+        // Vital Signs
+        'bp_systolic': 'Systolic BP (mmHg)',
+        'bp_diastolic': 'Diastolic BP (mmHg)',
+        'heart_rate': 'Heart Rate (bpm)',
+        
+        // Comorbidities
+        'diabetes': 'Diabetes Mellitus',
+        'liver_disease': 'Liver Disease',
+        'ckd': 'Chronic Kidney Disease',
+        'cardiac_disease': 'Cardiac Disease',
+        'hypertension': 'Hypertension',
+        'respiratory_disease': 'Respiratory Disease',
+        'neurological_disease': 'Neurological Disease',
+        'autoimmune_disease': 'Autoimmune Disease',
+        
+        // Medications
+        'medication_name': 'Primary Medication',
+        'index_drug_dose': 'Drug Dose (mg)',
+        'concomitant_drugs_count': 'Concomitant Medications',
+        'drug_interactions': 'Drug Interactions',
+        'indication': 'Indication',
+        
+        // Pharmacogenomics
+        'cyp2c9': 'CYP2C9 Genotype',
+        'cyp2d6': 'CYP2D6 Genotype',
+        'cyp_inhibitors_flag': 'CYP Inhibitors',
+        'qt_prolonging_flag': 'QT Prolonging Drugs',
+        'hla_risk_allele_flag': 'HLA Risk Alleles',
+        
+        // Clinical Context
+        'time_since_start_days': 'Treatment Duration (days)',
+        'inpatient_flag': 'Inpatient Status',
+        'prior_adr_history': 'Prior ADR History'
+    };
+
+    const normalRanges = {
+        'age': '18-65 (adult)',
+        'bmi': '18.5-24.9',
+        'creatinine': '0.6-1.2',
+        'egfr': '>90',
+        'ast_alt': '10-40',
+        'bilirubin': '0.2-1.2',
+        'albumin': '3.5-5.0',
+        'hemoglobin': 'M: 13.5-17.5, F: 12.0-15.5',
+        'hematocrit': 'M: 41-50, F: 36-44',
+        'wbc_count': '4.5-11.0',
+        'platelet_count': '150-450',
+        'rbc_count': 'M: 4.7-6.1, F: 4.2-5.4',
+        'bp_systolic': '90-140',
+        'bp_diastolic': '60-90',
+        'heart_rate': '60-100',
+        'temperature': '97.0-99.5',
+        'ind_value': '0.8-1.2',
+        'atpp_value': '25-35'
+    };
+
+    // Format display value
+    let displayValue = value;
+    if (typeof value === 'number' && [0, 1].includes(value) && (fieldName.includes('disease') || fieldName.includes('flag') || fieldName.includes('history'))) {
+        displayValue = value === 1 ? 'Present' : 'Absent';
+    } else if (typeof value === 'number' && !Number.isInteger(value)) {
+        displayValue = parseFloat(value).toFixed(2);
+    }
+
+    const riskLevel = assessFieldRisk(fieldName, value);
+    const interpretation = getEnhancedFieldInterpretation(fieldName, value);
+    const normalRange = normalRanges[fieldName];
+    
+    return `
+        <div class="enhanced-field-card ${riskLevel}" style="border-top: 3px solid ${categoryColor};">
+            <div class="field-header">
+                <div class="field-title">
+                    <h4>${fieldLabels[fieldName] || fieldName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</h4>
+                    ${normalRange ? `<span class="normal-range">Normal: ${normalRange}</span>` : ''}
+                </div>
+                <span class="field-risk-badge ${riskLevel}" style="background: ${getRiskColor(riskLevel)};">
+                    ${getRiskIcon(riskLevel)} ${riskLevel.toUpperCase()}
+                </span>
+            </div>
+            <div class="field-content">
+                <div class="field-value" style="color: ${getRiskColor(riskLevel)};">
+                    ${displayValue}
+                    ${getValueTrend(fieldName, value)}
+                </div>
+                <div class="field-interpretation">
+                    ${interpretation}
+                </div>
+                ${getRiskFactorContribution(fieldName, value)}
+            </div>
+        </div>
+    `;
+}
+
+// Helper functions for enhanced field analysis
+function getRiskColor(riskLevel) {
+    const colors = {
+        'low': '#10b981',
+        'normal': '#10b981', 
+        'moderate': '#f59e0b',
+        'high': '#ef4444',
+        'critical': '#dc2626'
+    };
+    return colors[riskLevel] || '#6b7280';
+}
+
+function getRiskIcon(riskLevel) {
+    const icons = {
+        'low': '🟢',
+        'normal': '🟢',
+        'moderate': '🟡',
+        'high': '🔴',
+        'critical': '🚨'
+    };
+    return icons[riskLevel] || '⚪';
+}
+
+function getValueTrend(fieldName, value) {
+    // Add trend indicators for numeric values
+    if (typeof value === 'number') {
+        const trends = {
+            'creatinine': value > 1.5 ? ' ↗️' : value < 0.8 ? ' ↘️' : '',
+            'egfr': value < 60 ? ' ↘️' : value > 90 ? ' ↗️' : '',
+            'ast_alt': value > 50 ? ' ↗️' : '',
+            'bilirubin': value > 2.0 ? ' ↗️' : '',
+            'hemoglobin': value < 10 ? ' ↘️' : value > 16 ? ' ↗️' : '',
+            'wbc_count': value > 12 ? ' ↗️' : value < 4 ? ' ↘️' : '',
+            'platelet_count': value < 150 ? ' ↘️' : value > 450 ? ' ↗️' : '',
+            'bp_systolic': value > 140 ? ' ↗️' : value < 90 ? ' ↘️' : '',
+            'heart_rate': value > 100 ? ' ↗️' : value < 60 ? ' ↘️' : ''
+        };
+        return trends[fieldName] || '';
+    }
+    return '';
+}
+
+function getEnhancedFieldInterpretation(fieldName, value) {
+    const interpretations = {
+        'age': value > 65 ? 'Elderly patient - increased ADR risk due to age-related physiological changes' : 
+               value < 18 ? 'Pediatric considerations may apply' : 'Adult patient within standard age range',
+        
+        'bmi': value > 30 ? 'Obese - may affect drug distribution and metabolism' :
+               value > 25 ? 'Overweight - monitor for dose adjustments' :
+               value < 18.5 ? 'Underweight - may require dose modifications' : 'Normal weight range',
+        
+        'creatinine': value > 2.0 ? 'Significantly elevated - severe renal impairment, dose adjustments required' :
+                     value > 1.5 ? 'Elevated - moderate renal impairment, monitor closely' :
+                     value > 1.2 ? 'Mildly elevated - mild renal impairment' : 'Within normal range',
+        
+        'egfr': value < 30 ? 'Severe renal impairment - significant dose adjustments needed' :
+                value < 60 ? 'Moderate renal impairment - dose modifications may be required' :
+                value < 90 ? 'Mild renal impairment - monitor renal function' : 'Normal kidney function',
+        
+        'ast_alt': value > 200 ? 'Severely elevated - significant hepatic impairment' :
+                   value > 100 ? 'Markedly elevated - moderate hepatic impairment' :
+                   value > 50 ? 'Mildly elevated - monitor liver function' : 'Normal liver enzymes',
+        
+        'hemoglobin': value < 8 ? 'Severe anemia - may affect drug tolerance' :
+                      value < 10 ? 'Moderate anemia - monitor for symptoms' :
+                      value < 12 ? 'Mild anemia' : 'Normal hemoglobin levels',
+        
+        'wbc_count': value > 15 ? 'Significantly elevated - possible infection or inflammation' :
+                     value > 11 ? 'Elevated - monitor for infection' :
+                     value < 4 ? 'Low - increased infection risk' : 'Normal white cell count',
+        
+        'platelet_count': value < 100 ? 'Thrombocytopenia - bleeding risk increased' :
+                          value < 150 ? 'Low normal - monitor for bleeding' :
+                          value > 450 ? 'Elevated - thrombosis risk' : 'Normal platelet count',
+        
+        'bp_systolic': value > 180 ? 'Hypertensive crisis - immediate attention needed' :
+                       value > 140 ? 'Hypertensive - cardiovascular risk increased' :
+                       value < 90 ? 'Hypotensive - monitor for symptoms' : 'Normal blood pressure',
+        
+        'diabetes': value === 1 ? 'Present - affects drug metabolism and increases ADR risk' : 'Not present',
+        'liver_disease': value === 1 ? 'Present - significantly affects drug metabolism' : 'Not present',
+        'ckd': value === 1 ? 'Present - requires dose adjustments for renally cleared drugs' : 'Not present',
+        'cardiac_disease': value === 1 ? 'Present - increases risk of cardiovascular ADRs' : 'Not present'
+    };
+    
+    return interpretations[fieldName] || `Value: ${value} - Clinical significance being evaluated`;
+}
+
+function getRiskFactorContribution(fieldName, value) {
+    const riskContributions = {
+        'age': value > 65 ? 'High' : value > 50 ? 'Moderate' : 'Low',
+        'creatinine': value > 2.0 ? 'High' : value > 1.5 ? 'Moderate' : 'Low',
+        'ast_alt': value > 100 ? 'High' : value > 50 ? 'Moderate' : 'Low',
+        'diabetes': value === 1 ? 'Moderate' : 'Low',
+        'liver_disease': value === 1 ? 'High' : 'Low',
+        'ckd': value === 1 ? 'High' : 'Low'
+    };
+    
+    const contribution = riskContributions[fieldName];
+    if (contribution && contribution !== 'Low') {
+        return `<div class="risk-contribution ${contribution.toLowerCase()}">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>${contribution} ADR Risk Contribution</span>
+        </div>`;
+    }
+    return '';
+}
+
+// Generate laboratory analysis
+function generateLabAnalysis(patientData) {
+    const labFields = {
+        'creatinine': { label: 'Creatinine (mg/dL)', normal: '0.6-1.2' },
+        'egfr': { label: 'eGFR (mL/min/1.73m²)', normal: '>90' },
+        'ast_alt': { label: 'AST/ALT (U/L)', normal: '10-40' },
+        'bilirubin': { label: 'Bilirubin (mg/dL)', normal: '0.2-1.2' },
+        'albumin': { label: 'Albumin (g/dL)', normal: '3.5-5.0' },
+        'hemoglobin': { label: 'Hemoglobin (g/dL)', normal: 'M: 13.5-17.5, F: 12.0-15.5' },
+        'hematocrit': { label: 'Hematocrit (%)', normal: 'M: 41-50, F: 36-44' },
+        'wbc_count': { label: 'WBC Count (×10³/μL)', normal: '4.5-11.0' },
+        'platelet_count': { label: 'Platelet Count (×10³/μL)', normal: '150-450' },
+        'rbc_count': { label: 'RBC Count (×10⁶/μL)', normal: 'M: 4.7-6.1, F: 4.2-5.4' }
+    };
+
+    const enteredLabs = Object.entries(labFields).filter(([field]) => 
+        patientData[field] !== undefined && patientData[field] !== null && patientData[field] !== ''
+    );
+
+    if (enteredLabs.length === 0) {
+        return '<p>No laboratory values entered for analysis.</p>';
+    }
+
+    return `
+        <div class="lab-analysis-grid">
+            ${enteredLabs.map(([field, config]) => `
+                <div class="lab-card ${assessLabRisk(field, patientData[field])}">
+                    <div class="lab-header">
+                        <h4>${config.label}</h4>
+                        <span class="lab-normal">Normal: ${config.normal}</span>
+                    </div>
+                    <div class="lab-value-section">
+                        <div class="lab-value">${patientData[field]}</div>
+                        <div class="lab-status ${assessLabRisk(field, patientData[field])}">${getLabStatus(field, patientData[field])}</div>
+                    </div>
+                    <div class="lab-interpretation">${getLabInterpretation(field, patientData[field])}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// Generate medication analysis
+function generateMedicationAnalysis(patientData) {
+    const medicationFields = ['medication_name', 'index_drug_dose', 'concomitant_drugs_count', 'drug_interactions'];
+    const enteredMeds = medicationFields.filter(field => 
+        patientData[field] !== undefined && patientData[field] !== null && patientData[field] !== ''
+    );
+
+    if (enteredMeds.length === 0) {
+        return '<p>No medication information entered for analysis.</p>';
+    }
+
+    return `
+        <div class="medication-analysis-content">
+            ${patientData.medication_name ? `
+                <div class="med-primary">
+                    <h4><i class="fas fa-prescription-bottle-alt"></i> Primary Medication</h4>
+                    <div class="med-details">
+                        <span class="med-name">${patientData.medication_name}</span>
+                        ${patientData.index_drug_dose ? `<span class="med-dose">${patientData.index_drug_dose} mg</span>` : ''}
+                    </div>
+                </div>
+            ` : ''}
+            
+            <div class="med-metrics">
+                ${patientData.concomitant_drugs_count ? `
+                    <div class="med-metric">
+                        <div class="metric-icon"><i class="fas fa-pills"></i></div>
+                        <div class="metric-content">
+                            <h5>Concomitant Medications</h5>
+                            <p class="metric-value">${patientData.concomitant_drugs_count}</p>
+                            <p class="metric-risk ${patientData.concomitant_drugs_count > 10 ? 'high' : patientData.concomitant_drugs_count > 5 ? 'medium' : 'low'}">
+                                ${patientData.concomitant_drugs_count > 10 ? 'High polypharmacy risk' : patientData.concomitant_drugs_count > 5 ? 'Moderate polypharmacy' : 'Low medication burden'}
+                            </p>
+                        </div>
+                    </div>
+                ` : ''}
+                
+                ${patientData.drug_interactions ? `
+                    <div class="med-metric">
+                        <div class="metric-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="metric-content">
+                            <h5>Drug Interactions</h5>
+                            <p class="metric-value interaction-${patientData.drug_interactions.toLowerCase()}">${patientData.drug_interactions}</p>
+                            <p class="metric-risk ${patientData.drug_interactions.toLowerCase()}">
+                                ${getInteractionRiskDescription(patientData.drug_interactions)}
+                            </p>
+                        </div>
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
+}
+
+// Generate clinical recommendations
+function generateClinicalRecommendations(riskLevel, predictedADR, patientData) {
+    return `
+        <div class="recommendations-content">
+            <div class="recommendation-category immediate">
+                <h4><i class="fas fa-exclamation"></i> Immediate Actions</h4>
+                <ul>
+                    <li>Implement ${riskLevel.toLowerCase()}-risk monitoring protocols immediately</li>
+                    <li>Educate patient on early warning signs of ${predictedADR.toLowerCase()}</li>
+                    <li>Establish baseline laboratory values for monitoring</li>
+                    <li>Schedule follow-up within ${riskLevel === 'High' ? '1-2 days' : riskLevel === 'Medium' ? '3-7 days' : '1-2 weeks'}</li>
+                </ul>
+            </div>
+            
+            <div class="recommendation-category monitoring">
+                <h4><i class="fas fa-stethoscope"></i> Monitoring Strategy</h4>
+                <ul>
+                    <li><strong>Laboratory Monitoring:</strong> ${getLabMonitoringFrequency(riskLevel, patientData)}</li>
+                    <li><strong>Clinical Assessment:</strong> ${getClinicalMonitoringFrequency(riskLevel)}</li>
+                    <li><strong>Patient Education:</strong> Signs and symptoms to report immediately</li>
+                    <li><strong>Emergency Protocol:</strong> Clear instructions for severe reactions</li>
+                </ul>
+            </div>
+            
+            <div class="recommendation-category mitigation">
+                <h4><i class="fas fa-shield-alt"></i> Risk Mitigation</h4>
+                <ul>
+                    <li>${getDoseMitigationAdvice(patientData)}</li>
+                    <li>Evaluate alternative therapeutic options if appropriate</li>
+                    <li>${getSpecificMitigationAdvice(predictedADR)}</li>
+                    <li>Optimize concomitant medication regimen</li>
+                </ul>
+            </div>
+        </div>
+    `;
+}
+
+// Generate monitoring protocol
+function generateMonitoringProtocol(riskLevel, patientData) {
+    return `
+        <div class="monitoring-protocol">
+            <div class="protocol-timeline">
+                <div class="timeline-item immediate">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h5>Immediate (Today)</h5>
+                        <p>Patient counseling, baseline assessments, emergency contact information</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item short-term">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h5>${getShortTermTiming(riskLevel)}</h5>
+                        <p>First follow-up, laboratory monitoring, symptom assessment</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item ongoing">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h5>Ongoing</h5>
+                        <p>Regular monitoring, dose adjustments, risk reassessment</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="monitoring-parameters">
+                <h5>Key Parameters to Monitor</h5>
+                <div class="parameter-grid">
+                    ${generateMonitoringParameters(patientData)}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Generate follow-up timeline
+function generateFollowupTimeline(riskLevel) {
+    const timelines = {
+        'High': [
+            { time: '24-48 hours', action: 'Initial safety check and symptom assessment' },
+            { time: '1 week', action: 'Comprehensive follow-up with laboratory monitoring' },
+            { time: '2 weeks', action: 'Risk reassessment and dose optimization' },
+            { time: 'Monthly', action: 'Ongoing monitoring and management' }
+        ],
+        'Medium': [
+            { time: '3-7 days', action: 'Initial follow-up and patient education' },
+            { time: '2 weeks', action: 'First comprehensive assessment' },
+            { time: 'Monthly', action: 'Regular monitoring and reassessment' },
+            { time: 'Quarterly', action: 'Long-term safety evaluation' }
+        ],
+        'Low': [
+            { time: '1-2 weeks', action: 'Initial follow-up and baseline establishment' },
+            { time: 'Monthly', action: 'Routine monitoring' },
+            { time: 'Quarterly', action: 'Comprehensive reassessment' },
+            { time: 'Annually', action: 'Long-term safety review' }
+        ]
+    };
+
+    const timeline = timelines[riskLevel] || timelines['Medium'];
+    
+    return `
+        <div class="followup-timeline">
+            ${timeline.map((item, index) => `
+                <div class="timeline-step step-${index + 1}">
+                    <div class="step-marker">${index + 1}</div>
+                    <div class="step-content">
+                        <h5>${item.time}</h5>
+                        <p>${item.action}</p>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
 }
 
 // Generate simple detailed clinical analysis content
@@ -5092,4 +5649,160 @@ function initializeApp() {
     } catch (error) {
         console.error('❌ Backup initialization error:', error);
     }
+}
+// Utility functions for field analysis
+// Assess field risk level
+function assessFieldRisk(fieldName, value) {
+    const riskAssessments = {
+        'age': (val) => val > 70 ? 'high' : val > 50 ? 'medium' : 'low',
+        'bmi': (val) => val > 30 ? 'high' : val > 25 ? 'medium' : val < 18.5 ? 'medium' : 'low',
+        'bp_systolic': (val) => val > 160 ? 'high' : val > 140 ? 'medium' : 'low',
+        'bp_diastolic': (val) => val > 100 ? 'high' : val > 90 ? 'medium' : 'low',
+        'heart_rate': (val) => val > 100 || val < 60 ? 'medium' : 'low',
+        'diabetes': (val) => val === 1 ? 'medium' : 'low',
+        'liver_disease': (val) => val === 1 ? 'high' : 'low',
+        'ckd': (val) => val === 1 ? 'high' : 'low',
+        'cardiac_disease': (val) => val === 1 ? 'medium' : 'low'
+    };
+
+    return riskAssessments[fieldName] ? riskAssessments[fieldName](value) : 'low';
+}
+
+// Get field interpretation
+function getFieldInterpretation(fieldName, value) {
+    const interpretations = {
+        'age': (val) => val > 70 ? 'Advanced age increases ADR risk' : val > 50 ? 'Moderate age-related risk' : 'Low age-related risk',
+        'bmi': (val) => val > 30 ? 'Obesity may affect drug metabolism' : val > 25 ? 'Overweight - monitor dosing' : val < 18.5 ? 'Underweight - consider dose adjustment' : 'Normal BMI',
+        'bp_systolic': (val) => val > 160 ? 'Severe hypertension - high cardiovascular risk' : val > 140 ? 'Hypertension present' : 'Normal blood pressure',
+        'bp_diastolic': (val) => val > 100 ? 'Severe diastolic hypertension' : val > 90 ? 'Diastolic hypertension' : 'Normal diastolic pressure',
+        'heart_rate': (val) => val > 100 ? 'Tachycardia present' : val < 60 ? 'Bradycardia present' : 'Normal heart rate',
+        'diabetes': (val) => val === 1 ? 'Diabetes increases ADR risk and affects drug metabolism' : 'No diabetes',
+        'liver_disease': (val) => val === 1 ? 'Liver disease significantly increases hepatotoxicity risk' : 'No liver disease',
+        'ckd': (val) => val === 1 ? 'Kidney disease increases nephrotoxicity risk' : 'No kidney disease',
+        'cardiac_disease': (val) => val === 1 ? 'Cardiac disease increases cardiovascular ADR risk' : 'No cardiac disease'
+    };
+
+    return interpretations[fieldName] ? interpretations[fieldName](value) : 'Normal range';
+}
+
+// Assess laboratory risk
+function assessLabRisk(fieldName, value) {
+    const labRisks = {
+        'creatinine': (val) => val > 2.0 ? 'high' : val > 1.5 ? 'medium' : 'low',
+        'egfr': (val) => val < 30 ? 'high' : val < 60 ? 'medium' : 'low',
+        'ast_alt': (val) => val > 200 ? 'high' : val > 80 ? 'medium' : 'low',
+        'bilirubin': (val) => val > 3.0 ? 'high' : val > 1.5 ? 'medium' : 'low',
+        'albumin': (val) => val < 2.5 ? 'high' : val < 3.0 ? 'medium' : 'low',
+        'hemoglobin': (val) => val < 8.0 ? 'high' : val < 10.0 ? 'medium' : 'low',
+        'wbc_count': (val) => val > 15.0 || val < 3.0 ? 'high' : val > 12.0 || val < 4.0 ? 'medium' : 'low',
+        'platelet_count': (val) => val < 100 ? 'high' : val < 150 ? 'medium' : 'low'
+    };
+
+    return labRisks[fieldName] ? labRisks[fieldName](value) : 'low';
+}
+
+// Get lab status
+function getLabStatus(fieldName, value) {
+    const risk = assessLabRisk(fieldName, value);
+    return risk === 'high' ? 'Critical' : risk === 'medium' ? 'Abnormal' : 'Normal';
+}
+
+// Get lab interpretation
+function getLabInterpretation(fieldName, value) {
+    const interpretations = {
+        'creatinine': (val) => val > 2.0 ? 'Severe kidney impairment - high nephrotoxicity risk' : val > 1.5 ? 'Moderate kidney impairment' : 'Normal kidney function',
+        'egfr': (val) => val < 30 ? 'Severe kidney disease - dose adjustment required' : val < 60 ? 'Moderate kidney disease' : 'Normal kidney function',
+        'ast_alt': (val) => val > 200 ? 'Severe liver dysfunction - high hepatotoxicity risk' : val > 80 ? 'Elevated liver enzymes' : 'Normal liver function',
+        'bilirubin': (val) => val > 3.0 ? 'Severe hyperbilirubinemia' : val > 1.5 ? 'Elevated bilirubin' : 'Normal bilirubin',
+        'albumin': (val) => val < 2.5 ? 'Severe hypoalbuminemia - affects drug binding' : val < 3.0 ? 'Mild hypoalbuminemia' : 'Normal albumin',
+        'hemoglobin': (val) => val < 8.0 ? 'Severe anemia' : val < 10.0 ? 'Moderate anemia' : 'Normal hemoglobin',
+        'wbc_count': (val) => val > 15.0 ? 'Leukocytosis - possible infection' : val < 3.0 ? 'Leukopenia - immunosuppression risk' : 'Normal WBC count',
+        'platelet_count': (val) => val < 100 ? 'Thrombocytopenia - bleeding risk' : val < 150 ? 'Low platelets' : 'Normal platelet count'
+    };
+
+    return interpretations[fieldName] ? interpretations[fieldName](value) : 'Within normal limits';
+}
+
+// Get interaction risk description
+function getInteractionRiskDescription(interaction) {
+    const descriptions = {
+        'Major': 'Significant interaction risk - close monitoring required',
+        'Moderate': 'Moderate interaction risk - monitor for effects',
+        'Minor': 'Minor interaction risk - routine monitoring',
+        'None': 'No significant interactions identified'
+    };
+    return descriptions[interaction] || 'Unknown interaction level';
+}
+
+// Get lab monitoring frequency
+function getLabMonitoringFrequency(riskLevel, patientData) {
+    if (patientData.liver_disease === 1) return 'Liver function tests every 1-2 weeks initially';
+    if (patientData.ckd === 1) return 'Kidney function tests every 1-2 weeks initially';
+    
+    return riskLevel === 'High' ? 'Weekly laboratory monitoring initially' : 
+           riskLevel === 'Medium' ? 'Bi-weekly laboratory monitoring' : 
+           'Monthly laboratory monitoring';
+}
+
+// Get clinical monitoring frequency
+function getClinicalMonitoringFrequency(riskLevel) {
+    return riskLevel === 'High' ? 'Daily clinical assessment for first week' :
+           riskLevel === 'Medium' ? 'Weekly clinical assessment for first month' :
+           'Bi-weekly clinical assessment';
+}
+
+// Get dose mitigation advice
+function getDoseMitigationAdvice(patientData) {
+    if (patientData.liver_disease === 1) return 'Consider dose reduction due to liver impairment';
+    if (patientData.ckd === 1) return 'Dose adjustment required for kidney impairment';
+    if (patientData.age > 70) return 'Consider dose reduction for elderly patient';
+    return 'Standard dosing appropriate with monitoring';
+}
+
+// Get specific mitigation advice
+function getSpecificMitigationAdvice(predictedADR) {
+    const advice = {
+        'Hepatotoxicity': 'Implement hepatoprotective measures and avoid hepatotoxic drugs',
+        'Nephrotoxicity': 'Ensure adequate hydration and avoid nephrotoxic agents',
+        'Cardiovascular Event': 'Monitor cardiac function and blood pressure closely',
+        'Hypersensitivity': 'Have emergency medications available and educate on signs'
+    };
+    return advice[predictedADR] || 'Implement general safety measures';
+}
+
+// Get short-term timing
+function getShortTermTiming(riskLevel) {
+    return riskLevel === 'High' ? '24-48 hours' :
+           riskLevel === 'Medium' ? '3-7 days' :
+           '1-2 weeks';
+}
+
+// Generate monitoring parameters
+function generateMonitoringParameters(patientData) {
+    const parameters = [];
+    
+    if (patientData.liver_disease === 1 || patientData.ast_alt > 80) {
+        parameters.push({ name: 'Liver Function', icon: 'fas fa-liver', frequency: 'Weekly' });
+    }
+    
+    if (patientData.ckd === 1 || patientData.creatinine > 1.5) {
+        parameters.push({ name: 'Kidney Function', icon: 'fas fa-kidneys', frequency: 'Weekly' });
+    }
+    
+    if (patientData.cardiac_disease === 1) {
+        parameters.push({ name: 'Cardiac Function', icon: 'fas fa-heartbeat', frequency: 'Bi-weekly' });
+    }
+    
+    parameters.push({ name: 'Vital Signs', icon: 'fas fa-thermometer-half', frequency: 'Each visit' });
+    parameters.push({ name: 'Symptom Assessment', icon: 'fas fa-clipboard-list', frequency: 'Each visit' });
+    
+    return parameters.map(param => `
+        <div class="parameter-card">
+            <div class="param-icon"><i class="${param.icon}"></i></div>
+            <div class="param-content">
+                <h6>${param.name}</h6>
+                <p>${param.frequency}</p>
+            </div>
+        </div>
+    `).join('');
 }

@@ -5605,6 +5605,273 @@
             line-height: 1.5;
         }
 
+        /* Enhanced Field Analysis Styles */
+        .comprehensive-field-analysis {
+            margin: 20px 0;
+        }
+
+        .field-category {
+            background: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .category-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .field-count {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .enhanced-field-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .enhanced-field-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .enhanced-field-card.high {
+            border-left: 4px solid #ef4444;
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+        }
+
+        .enhanced-field-card.moderate {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+        }
+
+        .enhanced-field-card.low,
+        .enhanced-field-card.normal {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+        }
+
+        .field-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .field-title h4 {
+            margin: 0 0 4px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .normal-range {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .field-risk-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .field-risk-badge.high {
+            background: #ef4444;
+        }
+
+        .field-risk-badge.moderate {
+            background: #f59e0b;
+        }
+
+        .field-risk-badge.low,
+        .field-risk-badge.normal {
+            background: #10b981;
+        }
+
+        .field-content {
+            margin-top: 12px;
+        }
+
+        .field-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .field-interpretation {
+            font-size: 0.9rem;
+            color: #4b5563;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .risk-contribution {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .risk-contribution.high {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .risk-contribution.moderate {
+            background: #fffbeb;
+            color: #d97706;
+        }
+
+        .analysis-summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .summary-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .summary-card i {
+            font-size: 2rem;
+            color: #667eea;
+        }
+
+        .summary-content h4 {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+            color: #1e293b;
+        }
+
+        .summary-content p {
+            margin: 0;
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
+
+        .no-data-message {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* Mobile Responsive for Enhanced Field Analysis */
+        @media (max-width: 768px) {
+            .field-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 15px;
+            }
+
+            .category-header {
+                padding: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .enhanced-field-card {
+                padding: 12px;
+            }
+
+            .field-value {
+                font-size: 1.1rem;
+            }
+
+            .field-interpretation {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .field-grid {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .enhanced-field-card {
+                padding: 10px;
+            }
+
+            .field-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .field-title h4 {
+                font-size: 0.9rem;
+            }
+
+            .field-value {
+                font-size: 1rem;
+            }
+
+            .field-interpretation {
+                font-size: 0.8rem;
+            }
+
+            .analysis-summary {
+                padding: 15px;
+            }
+
+            .summary-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+
         /* AI Report Style for Detailed Analysis */
         .ai-report-content h2 {
             color: #667eea;
