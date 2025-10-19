@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Risk ADR Warning Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .demo-header h1 {
+            color: #1f2937;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .demo-header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .demo-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .demo-btn {
+            padding: 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-btn i {
+            font-size: 2rem;
+        }
+
+        .demo-btn.high-risk {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+        }
+
+        .demo-btn.medium-risk {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .demo-btn.low-risk {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+        }
+
+        .demo-btn.clear {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-results {
+            margin-top: 30px;
+            min-height: 200px;
+        }
+
+        .info-section {
+            background: #f0f4ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-section h3 {
+            color: #3730a3;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-section ul {
+            color: #4338ca;
+            line-height: 1.6;
+        }
+
+        .info-section li {
+            margin-bottom: 8px;
+        }
+
+        .warning-note {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #92400e;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1><i class="fas fa-exclamation-triangle"></i> High Risk ADR Warning Demo</h1>
+            <p>Test the high-risk ADR warning system with red faded light overlay and medical suggestions popup</p>
+        </div>
+
+        <div class="info-section">
+            <h3><i class="fas fa-info-circle"></i> What This Demo Shows</h3>
+            <ul>
+                <li><strong>Red Faded Light Overlay:</strong> A pulsing red background overlay that covers the entire
+                    screen</li>
+                <li><strong>Medical Suggestions Popup:</strong> A detailed popup with immediate medical actions and
+                    emergency protocols</li>
+                <li><strong>Warning Notifications:</strong> Audio alerts and browser notifications (if permitted)</li>
+                <li><strong>Visual Indicators:</strong> Animated warning icons and urgent messaging</li>
+                <li><strong>Print Functionality:</strong> Ability to print emergency instructions</li>
+            </ul>
+        </div>
+
+        <div class="demo-buttons">
+            <button class="demo-btn high-risk" onclick="triggerHighRiskDemo()">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>High Risk ADR</span>
+                <small>Triggers full warning system</small>
+            </button>
+
+            <button class="demo-btn medium-risk" onclick="triggerMediumRiskDemo()">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>Medium Risk ADR</span>
+                <small>Shows moderate warning</small>
+            </button>
+
+            <button class="demo-btn low-risk" onclick="triggerLowRiskDemo()">
+                <i class="fas fa-check-circle"></i>
+                <span>Low Risk ADR</span>
+                <small>Minimal warning display</small>
+            </button>
+
+            <button class="demo-btn clear" onclick="clearDemo()">
+                <i class="fas fa-times"></i>
+                <span>Clear Demo</span>
+                <small>Remove all warnings</small>
+            </button>
+        </div>
+
+        <div class="warning-note">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Note:</strong> This is a demonstration of the warning system. In a real clinical setting, these
+            warnings would appear automatically when high-risk ADR conditions are detected by the prediction model.
+        </div>
+
+        <!-- Demo results will appear here -->
+        <div id="demo-results" class="demo-results"></div>
+    </div>
+
+    <!-- Include the ADR warning JavaScript -->
+    <script src="{{ url_for('static', filename='js/adr-warning.js') }}"></script>
+    <script>
+        // Mock patient info for demo
+        window.patientInfo = {
+            name: 'John Doe (Demo Patient)',
+            id: 'DEMO001',
+            clinician: 'Dr. Demo'
+        };
+
+        // Mock current patient data for demo
+        window.currentPatientData = {
+            age: 75,
+            egfr: 25,
+            ast_alt: 150,
+            concomitant_drugs_count: 12,
+            diabetes: 1,
+            cardiac_disease: 1,
+            liver_disease: 1
+        };
+
+        function triggerHighRiskDemo() {
+            console.log('🚨 Triggering High Risk ADR Demo');
+
+            const mockResult = {
+                risk_level: 'High',
+                predicted_adr_type: 'Hepatotoxicity',
+                no_adr_probability: 15,
+                top_specific_adr_risks: {
+                    'Hepatotoxicity': 25.8,
+                    'Nephrotoxicity': 18.3,
+                    'Cardiotoxicity': 12.7
+                }
+            };
+
+            // Store for warning system
+            window.currentPredictionResult = mockResult;
+
+            // Clear previous results
+            document.getElementById('demo-results').innerHTML = '';
+
+            // Show the high-risk warning system
+            setTimeout(() => {
+                // Trigger red overlay
+                showHighRiskWarningOverlay();
+
+                // Show medical suggestions popup
+                showHighRiskMedicalSuggestionsPopup(mockResult);
+
+                // Play warning sound
+                playWarningNotification();
+
+                // Generate and display the warning in results area
+                const warningHTML = generateHighRiskADRWarning(mockResult);
+                document.getElementById('demo-results').innerHTML = warningHTML;
+
+                // Scroll to results
+                document.getElementById('demo-results').scrollIntoView({ behavior: 'smooth' });
+
+            }, 500);
+        }
+
+        function triggerMediumRiskDemo() {
+            console.log('⚠️ Triggering Medium Risk ADR Demo');
+
+            const mockResult = {
+                risk_level: 'Medium',
+                predicted_adr_type: 'Dermatologic',
+                no_adr_probability: 55,
+                top_specific_adr_risks: {
+                    'Dermatologic': 12.2,
+                    'Gastrointestinal': 8.1,
+                    'Neurologic': 6.3
+                }
+            };
+
+            // Store for warning system
+            window.currentPredictionResult = mockResult;
+
+            // Clear previous results
+            document.getElementById('demo-results').innerHTML = '';
+
+            // Show medium risk warning
+            setTimeout(() => {
+                const warningHTML = generateHighRiskADRWarning(mockResult);
+                document.getElementById('demo-results').innerHTML = warningHTML;
+
+                // Show medium risk indicator
+                const indicator = document.createElement('div');
+                indicator.className = 'medium-risk-indicator';
+                indicator.innerHTML = `
+                    <div class="medium-risk-content">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Medium Risk Detected - Enhanced Monitoring Required</span>
+                    </div>
+                `;
+                document.body.appendChild(indicator);
+
+                // Auto-remove after 8 seconds
+                setTimeout(() => {
+                    if (indicator.parentElement) {
+                        indicator.remove();
+                    }
+                }, 8000);
+
+                // Scroll to results
+                document.getElementById('demo-results').scrollIntoView({ behavior: 'smooth' });
+
+            }, 500);
+        }
+
+        function triggerLowRiskDemo() {
+            console.log('✅ Triggering Low Risk ADR Demo');
+
+            const mockResult = {
+                risk_level: 'Low',
+                predicted_adr_type: 'No ADR',
+                no_adr_probability: 85,
+                top_specific_adr_risks: {
+                    'Gastrointestinal': 3.2,
+                    'Dermatologic': 2.1,
+                    'Neurologic': 1.8
+                }
+            };
+
+            // Store for warning system
+            window.currentPredictionResult = mockResult;
+
+            // Show low risk message
+            document.getElementById('demo-results').innerHTML = `
+                <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid #22c55e; border-radius: 12px; padding: 25px; text-align: center;">
+                    <div style="color: #15803d; font-size: 3rem; margin-bottom: 15px;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 style="color: #15803d; font-size: 1.5rem; margin-bottom: 10px;">Low Risk ADR Assessment</h3>
+                    <p style="color: #166534; font-size: 1.1rem; margin-bottom: 15px;">
+                        <strong>Safety Probability: ${mockResult.no_adr_probability}%</strong>
+                    </p>
+                    <p style="color: #166534;">
+                        Standard monitoring protocols are sufficient. Continue current medication regimen with routine follow-up.
+                    </p>
+                </div>
+            `;
+
+            // Scroll to results
+            document.getElementById('demo-results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearDemo() {
+            console.log('🧹 Clearing demo');
+
+            // Clear results
+            document.getElementById('demo-results').innerHTML = '';
+
+            // Remove any overlays
+            const overlay = document.getElementById('high-risk-warning-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+
+            // Remove any popups
+            const popup = document.querySelector('.high-risk-medical-popup');
+            if (popup) {
+                popup.remove();
+            }
+
+            // Remove any indicators
+            const indicator = document.querySelector('.medium-risk-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+
+            console.log('✅ Demo cleared');
+        }
+
+        // Success message function for demo
+        window.showSuccess = function (message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-notification';
+            successDiv.innerHTML = `
+                <div class="success-content">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+
+            // Add success styles if not already added
+            if (!document.querySelector('#success-styles')) {
+                const style = document.createElement('style');
+                style.id = 'success-styles';
+                style.textContent = `
+                    .success-notification {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #d1fae5;
+                        color: #065f46;
+                        padding: 15px 20px;
+                        border-radius: 10px;
+                        border-left: 4px solid #10b981;
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                        z-index: 1001;
+                        max-width: 400px;
+                        animation: slideIn 0.3s ease;
+                    }
+                    
+                    .success-content {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+                    
+                    .success-content button {
+                        background: none;
+                        border: none;
+                        color: #065f46;
+                        cursor: pointer;
+                        padding: 5px;
+                        margin-left: auto;
+                    }
+                    
+                    @keyframes slideIn {
+                        from {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            document.body.appendChild(successDiv);
+
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                if (successDiv.parentElement) {
+                    successDiv.remove();
+                }
+            }, 4000);
+        };
+
+        // Console log for demo
+        console.log('🚨 High Risk ADR Warning Demo loaded successfully');
+        console.log('Available functions:', {
+            generateHighRiskADRWarning: typeof generateHighRiskADRWarning,
+            showHighRiskWarningOverlay: typeof showHighRiskWarningOverlay,
+            showHighRiskMedicalSuggestionsPopup: typeof showHighRiskMedicalSuggestionsPopup,
+            playWarningNotification: typeof playWarningNotification,
+            acknowledgeWarning: typeof acknowledgeWarning
+        });
+    </script>
+</body>
+
+</html>

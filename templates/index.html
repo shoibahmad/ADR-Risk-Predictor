@@ -460,6 +460,8 @@
             body {
                 font-size: 14px;
             }
+            
+
 
             .container {
                 padding: 8px;
@@ -2019,8 +2021,9 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="age">Age (years)</label>
-                            <input type="number" id="age" name="age" min="18" max="120"
-                                placeholder="Enter age (18-120)">
+                            <input type="number" id="age" name="age" min="0" max="120"
+                                placeholder="Enter age (0-120 years)" onchange="interpretAge()">
+                            <div id="age-interpretation" class="age-interpretation" style="display: none;"></div>
                         </div>
                         <div class="form-group">
                             <label for="sex">Sex</label>
@@ -2784,14 +2787,14 @@
                                 <div class="form-group">
                                     <label for="wbc_count">
                                         <i class="fas fa-shield-virus"></i>
-                                        WBC Count (×10³/μL)
+                                        WBC Count (in lakhs)
                                         <button type="button" class="lab-interpret-btn"
                                             onclick="interpretLabValue('wbc_count')">
                                             <i class="fas fa-microscope"></i> Interpret
                                         </button>
                                     </label>
                                     <input type="number" id="wbc_count" name="wbc_count" step="0.1" min="2" max="30"
-                                        placeholder="Normal: 4.5-11.0">
+                                        placeholder="Normal: 4.5-11.0 lakhs">
                                     <div id="wbc_count_interpretation" class="lab-interpretation"
                                         style="display: none;"></div>
                                 </div>
@@ -2799,14 +2802,14 @@
                                 <div class="form-group">
                                     <label for="platelet_count">
                                         <i class="fas fa-circle"></i>
-                                        Platelet Count (×10³/μL)
+                                        Platelet Count (in lakhs)
                                         <button type="button" class="lab-interpret-btn"
                                             onclick="interpretLabValue('platelet_count')">
                                             <i class="fas fa-microscope"></i> Interpret
                                         </button>
                                     </label>
                                     <input type="number" id="platelet_count" name="platelet_count" step="1" min="50"
-                                        max="600" placeholder="Normal: 150-450">
+                                        max="600" placeholder="Normal: 150-450 lakhs">
                                     <div id="platelet_count_interpretation" class="lab-interpretation"
                                         style="display: none;"></div>
                                 </div>
@@ -3277,7 +3280,11 @@
                                 style="position: relative !important; z-index: 2 !important; transition: all 0.3s ease !important;">Clear
                                 Form</span>
                         </button>
+
+
                     </div>
+
+
 
                     <!-- Quick Actions Footer -->
                     <div class="quick-actions-footer" style="
@@ -7901,6 +7908,62 @@
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src="{{ url_for('static', filename='js/detailed_analysis.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/adr-warning.js') }}"></script>
+    
+    <script>
+        // Initialize ADR warning system
+        window.addEventListener('load', function() {
+            console.log('🚨 ADR Warning System ready');
+
+            
+
+        });
+
+        // Age interpretation function for main form
+        function interpretAge() {
+            const ageInput = document.getElementById('age');
+            const interpretationDiv = document.getElementById('age-interpretation');
+            const age = parseInt(ageInput.value);
+
+            if (!age || age < 0 || age > 120) {
+                interpretationDiv.style.display = 'none';
+                return;
+            }
+
+            let interpretation = '';
+            let className = '';
+
+            if (age < 1) {
+                interpretation = '👶 Infant: Requires specialized pediatric dosing and monitoring. Higher risk of ADRs due to immature organ systems.';
+                className = 'infant';
+            } else if (age < 12) {
+                interpretation = '🧒 Child: Pediatric dosing required. Weight-based calculations essential. Monitor for developmental effects.';
+                className = 'child';
+            } else if (age < 18) {
+                interpretation = '👦 Adolescent: Transitional dosing considerations. Monitor for hormonal effects and compliance issues.';
+                className = 'adolescent';
+            } else if (age < 30) {
+                interpretation = '👨 Young Adult: Standard adult dosing. Generally lower ADR risk. Monitor for lifestyle factors.';
+                className = 'young-adult';
+            } else if (age < 50) {
+                interpretation = '👩 Adult: Standard dosing protocols. Monitor for comorbidities and drug interactions.';
+                className = 'adult';
+            } else if (age < 65) {
+                interpretation = '👨‍💼 Middle-aged: Increased monitoring for age-related changes. Consider comorbidity burden.';
+                className = 'middle-aged';
+            } else if (age < 80) {
+                interpretation = '👴 Elderly: Enhanced monitoring required. Consider dose reduction. Higher ADR risk due to physiological changes.';
+                className = 'elderly';
+            } else {
+                interpretation = '👵 Very Elderly: Intensive monitoring essential. Significant dose adjustments likely needed. Very high ADR risk.';
+                className = 'very-elderly';
+            }
+
+            interpretationDiv.innerHTML = interpretation;
+            interpretationDiv.className = `age-interpretation ${className}`;
+            interpretationDiv.style.display = 'block';
+        }
+    </script>
 </body>
 
 </html>

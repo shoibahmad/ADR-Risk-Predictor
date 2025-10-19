@@ -304,6 +304,9 @@ def predict_adr():
         no_adr_prob = probabilities.get('No ADR', 0)
         risk_level = 'Low' if no_adr_prob > 0.7 else 'Medium' if no_adr_prob > 0.4 else 'High'
         
+        # Log risk assessment for debugging
+        logger.info(f"🎯 Risk Assessment: {risk_level} (No ADR Probability: {no_adr_prob:.3f})")
+        
         # Get all ADR types (excluding 'No ADR') with their probabilities
         adr_types_only = {k: v for k, v in probabilities.items() if k != 'No ADR'}
         sorted_adr_types = dict(sorted(adr_types_only.items(), key=lambda x: x[1], reverse=True))
@@ -578,6 +581,74 @@ def get_patient_details():
         logger.error(f"📋 Traceback: {traceback.format_exc()}")
         return jsonify({'error': f'Failed to retrieve patient details: {str(e)}'}), 500
 
+@app.route('/test-warning')
+def test_warning():
+    logger.info("🧪 ADR Warning test page accessed")
+    return render_template('test_high_risk_warning.html')
+
+@app.route('/high-risk-demo')
+def high_risk_demo():
+    logger.info("🚨 High Risk ADR Demo page accessed")
+    return render_template('high_risk_demo.html')
+
+
+
+
+
+@app.route('/sample_data/<sample_type>')
+def get_sample_data(sample_type):
+    """Get sample patient data for testing"""
+    logger.info(f"Sample data requested for type: {sample_type}")
+    sample_patients = {
+        'high-risk': {
+            'name': 'High Risk Patient - Elderly with Multiple Comorbidities',
+            'age': 75, 'sex': 'M', 'ethnicity': 'White', 'height': 175, 'weight': 95, 'bmi': 31.0,
+            'creatinine': 4.5, 'egfr': 25, 'ast_alt': 285, 'bilirubin': 4.2, 'albumin': 2.1,
+            'hemoglobin': 8.5, 'hematocrit': 25.5, 'wbc_count': 12.8, 'platelet_count': 95, 'rbc_count': 3.2,
+            'diabetes': 1, 'liver_disease': 1, 'ckd': 1, 'cardiac_disease': 1, 'hypertension': 1,
+            'respiratory_disease': 0, 'neurological_disease': 0, 'autoimmune_disease': 0,
+            'medication_name': 'Warfarin', 'index_drug_dose': 400, 'drug_interactions': 'Major',
+            'concomitant_drugs_count': 18, 'indication': 'Cardiovascular',
+            'cyp2c9': 'Poor', 'cyp2d6': 'PM', 'bp_systolic': 185, 'bp_diastolic': 105,
+            'heart_rate': 115, 'time_since_start_days': 45, 'cyp_inhibitors_flag': 1,
+            'qt_prolonging_flag': 1, 'hla_risk_allele_flag': 1, 'inpatient_flag': 1,
+            'prior_adr_history': 1
+        },
+        'medium-risk': {
+            'name': 'Medium Risk Patient - Middle-aged with Diabetes',
+            'age': 55, 'sex': 'F', 'ethnicity': 'Asian', 'height': 160, 'weight': 70, 'bmi': 27.3,
+            'creatinine': 2.8, 'egfr': 45, 'ast_alt': 125, 'bilirubin': 2.1, 'albumin': 3.2,
+            'hemoglobin': 10.5, 'hematocrit': 31.5, 'wbc_count': 9.2, 'platelet_count': 185, 'rbc_count': 3.8,
+            'diabetes': 1, 'liver_disease': 0, 'ckd': 0, 'cardiac_disease': 1, 'hypertension': 1,
+            'respiratory_disease': 0, 'neurological_disease': 0, 'autoimmune_disease': 0,
+            'medication_name': 'Metformin', 'index_drug_dose': 300, 'drug_interactions': 'Moderate',
+            'concomitant_drugs_count': 12, 'indication': 'Diabetes',
+            'cyp2c9': 'Intermediate', 'cyp2d6': 'IM', 'bp_systolic': 165, 'bp_diastolic': 95,
+            'heart_rate': 88, 'time_since_start_days': 30, 'cyp_inhibitors_flag': 0,
+            'qt_prolonging_flag': 1, 'hla_risk_allele_flag': 0, 'inpatient_flag': 0,
+            'prior_adr_history': 0
+        },
+        'low-risk': {
+            'name': 'Low Risk Patient - Young Healthy Adult',
+            'age': 35, 'sex': 'M', 'ethnicity': 'White', 'height': 180, 'weight': 78, 'bmi': 24.1,
+            'creatinine': 1.1, 'egfr': 85, 'ast_alt': 45, 'bilirubin': 0.8, 'albumin': 4.5,
+            'hemoglobin': 14.2, 'hematocrit': 42.6, 'wbc_count': 6.8, 'platelet_count': 285, 'rbc_count': 4.7,
+            'diabetes': 0, 'liver_disease': 0, 'ckd': 0, 'cardiac_disease': 0, 'hypertension': 0,
+            'respiratory_disease': 0, 'neurological_disease': 0, 'autoimmune_disease': 0,
+            'medication_name': 'Lisinopril', 'index_drug_dose': 200, 'drug_interactions': 'Minor',
+            'concomitant_drugs_count': 5, 'indication': 'Hypertension',
+            'cyp2c9': 'Wild', 'cyp2d6': 'EM', 'bp_systolic': 135, 'bp_diastolic': 85,
+            'heart_rate': 72, 'time_since_start_days': 14, 'cyp_inhibitors_flag': 0,
+            'qt_prolonging_flag': 0, 'hla_risk_allele_flag': 0, 'inpatient_flag': 0,
+            'prior_adr_history': 0
+        }
+    }
+    
+    if sample_type in sample_patients:
+        return jsonify(sample_patients[sample_type])
+    else:
+        return jsonify({'error': 'Sample type not found'}), 404
+
 @app.route('/health')
 def health_check():
     logger.info("💊 Health check called")
@@ -585,7 +656,7 @@ def health_check():
         'status': 'healthy',
         'model_loaded': model is not None,
         'endpoints_available': [
-            '/', '/assessment', '/predict', '/generate_report', '/generate_detailed_analysis', '/generate_medication_analysis', '/get_patient_details', '/health', '/debug'
+            '/', '/assessment', '/predict', '/generate_report', '/generate_detailed_analysis', '/generate_medication_analysis', '/get_patient_details', '/health', '/debug', '/test-warning'
         ],
         'timestamp': datetime.now().isoformat()
     })

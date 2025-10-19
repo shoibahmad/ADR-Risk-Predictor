@@ -723,6 +723,194 @@ function updateBMIDisplay(bmi, category, categoryClass) {
                     return 'Assessment completed';
             }
         }
+        
+        // Get follow-up schedule based on risk level
+        function getFollowUpSchedule(riskLevel) {
+            switch (riskLevel) {
+                case 'high':
+                    return 'Daily for first week, then weekly for first month';
+                case 'medium':
+                    return 'Weekly for first month, then bi-weekly';
+                case 'low':
+                    return 'Bi-weekly for first month, then monthly';
+                default:
+                    return 'As clinically indicated';
+            }
+        }
+
+        // Generate risk-based suggestions
+        function generateRiskSuggestions(result, riskLevel) {
+            if (riskLevel === 'low') {
+                return ''; // No suggestions for low risk
+            }
+
+            const suggestions = getRiskBasedSuggestions(result, riskLevel);
+            const suggestionClass = riskLevel === 'high' ? 'high-risk-suggestions' : 'medium-risk-suggestions';
+            const iconClass = riskLevel === 'high' ? 'fas fa-exclamation-triangle' : 'fas fa-exclamation-circle';
+            const titleColor = riskLevel === 'high' ? '#dc2626' : '#f59e0b';
+
+            return `
+                <div class="risk-suggestions ${suggestionClass}">
+                    <h3 style="color: ${titleColor};">
+                        <i class="${iconClass}"></i> 
+                        ${riskLevel === 'high' ? 'Critical Risk Management Suggestions' : 'Enhanced Monitoring Suggestions'}
+                    </h3>
+                    <div class="suggestions-grid">
+                        ${suggestions.map(suggestion => `
+                            <div class="suggestion-card ${suggestion.priority}">
+                                <div class="suggestion-icon">
+                                    <i class="${suggestion.icon}"></i>
+                                </div>
+                                <div class="suggestion-content">
+                                    <h4>${suggestion.title}</h4>
+                                    <p>${suggestion.description}</p>
+                                    ${suggestion.action ? `<div class="suggestion-action">${suggestion.action}</div>` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get risk-based suggestions
+        function getRiskBasedSuggestions(result, riskLevel) {
+            const suggestions = [];
+            const predictedADR = result.predicted_adr_type;
+            const noAdrProb = result.no_adr_probability;
+
+            if (riskLevel === 'high') {
+                // Critical suggestions for high risk
+                suggestions.push({
+                    priority: 'critical',
+                    icon: 'fas fa-ambulance',
+                    title: 'Immediate Medical Attention',
+                    description: 'Patient requires immediate clinical evaluation and continuous monitoring.',
+                    action: 'Contact physician within 1 hour'
+                });
+
+                suggestions.push({
+                    priority: 'critical',
+                    icon: 'fas fa-pills',
+                    title: 'Medication Review',
+                    description: 'Consider immediate dose reduction or alternative therapy.',
+                    action: 'Review with clinical pharmacist'
+                });
+
+                suggestions.push({
+                    priority: 'urgent',
+                    icon: 'fas fa-vial',
+                    title: 'Laboratory Monitoring',
+                    description: 'Urgent lab work required to assess organ function.',
+                    action: 'Order CBC, CMP, LFTs within 4 hours'
+                });
+
+                // Add specific suggestions based on predicted ADR
+                if (predictedADR === 'Hepatotoxicity') {
+                    suggestions.push({
+                        priority: 'critical',
+                        icon: 'fas fa-liver',
+                        title: 'Liver Function Alert',
+                        description: 'High risk of liver damage. Monitor ALT, AST, bilirubin closely.',
+                        action: 'Consider hepatoprotective measures'
+                    });
+                } else if (predictedADR === 'Nephrotoxicity') {
+                    suggestions.push({
+                        priority: 'critical',
+                        icon: 'fas fa-kidneys',
+                        title: 'Kidney Function Alert',
+                        description: 'High risk of kidney damage. Monitor creatinine and urine output.',
+                        action: 'Ensure adequate hydration'
+                    });
+                } else if (predictedADR === 'Cardiotoxicity') {
+                    suggestions.push({
+                        priority: 'critical',
+                        icon: 'fas fa-heart',
+                        title: 'Cardiac Monitoring Alert',
+                        description: 'High risk of cardiac complications. Monitor ECG and cardiac enzymes.',
+                        action: 'Consider cardiology consultation'
+                    });
+                }
+
+            } else if (riskLevel === 'medium') {
+                // Enhanced monitoring suggestions for medium risk
+                suggestions.push({
+                    priority: 'urgent',
+                    icon: 'fas fa-eye',
+                    title: 'Enhanced Monitoring',
+                    description: 'Increase monitoring frequency and patient education.',
+                    action: 'Weekly clinical assessments'
+                });
+
+                suggestions.push({
+                    priority: 'moderate',
+                    icon: 'fas fa-chart-line',
+                    title: 'Trend Monitoring',
+                    description: 'Track symptoms and lab values for early detection of ADRs.',
+                    action: 'Maintain detailed monitoring log'
+                });
+
+                suggestions.push({
+                    priority: 'moderate',
+                    icon: 'fas fa-user-md',
+                    title: 'Patient Education',
+                    description: 'Educate patient on warning signs and when to seek help.',
+                    action: 'Provide ADR symptom checklist'
+                });
+            }
+
+            return suggestions;
+        }
+
+        // Show blinking warning overlay for high-risk cases
+        function showBlinkingWarningOverlay() {
+            // Remove any existing overlay
+            const existingOverlay = document.getElementById('high-risk-warning-overlay');
+            if (existingOverlay) {
+                existingOverlay.remove();
+            }
+
+            // Create blinking overlay
+            const overlay = document.createElement('div');
+            overlay.id = 'high-risk-warning-overlay';
+            overlay.className = 'high-risk-blinking-overlay';
+            
+            document.body.appendChild(overlay);
+
+            // Auto-remove overlay after 30 seconds or when user clicks
+            const removeOverlay = () => {
+                if (overlay.parentElement) {
+                    overlay.remove();
+                }
+            };
+
+            overlay.addEventListener('click', removeOverlay);
+            setTimeout(removeOverlay, 30000); // Remove after 30 seconds
+
+            console.log('🚨 High-risk blinking overlay activated');
+        }
+
+        // Show medium risk indicator
+        function showMediumRiskIndicator() {
+            // Create subtle indicator for medium risk
+            const indicator = document.createElement('div');
+            indicator.className = 'medium-risk-indicator';
+            indicator.innerHTML = `
+                <div class="medium-risk-content">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Medium Risk Detected - Enhanced Monitoring Required</span>
+                </div>
+            `;
+            
+            document.body.appendChild(indicator);
+
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                if (indicator.parentElement) {
+                    indicator.remove();
+                }
+            }, 10000);
+        }
 
         // Show loading overlay
         function showLoading() {
@@ -1195,8 +1383,8 @@ function updateBMIDisplay(bmi, category, categoryClass) {
             }
         }
 
-        // Enhanced results display with patient info
-        function displayResults(result) {
+        // REMOVED: Duplicate displayResults function - using the main one at end of file
+        function displayResults_DUPLICATE_1(result) {
             console.log('Displaying results:', result);
 
             if (!resultsContent || !resultsContainer) {
@@ -1299,12 +1487,52 @@ function updateBMIDisplay(bmi, category, categoryClass) {
             ` : ''}
         </div>
         ` : ''}
+        
+        <div class="clinical-management-plan">
+            <h3><i class="fas fa-clipboard-check"></i> Clinical Management Plan</h3>
+            <div class="management-grid">
+                <div class="management-section">
+                    <h4><i class="fas fa-heartbeat"></i> Monitoring Parameters</h4>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Vital signs</li>
+                        <li><i class="fas fa-check-circle"></i> Clinical symptoms</li>
+                        <li><i class="fas fa-check-circle"></i> Laboratory parameters</li>
+                    </ul>
+                </div>
+                <div class="management-section">
+                    <h4><i class="fas fa-tasks"></i> Clinical Actions</h4>
+                    <ul>
+                        <li><i class="fas fa-arrow-right"></i> Regular clinical assessment</li>
+                        <li><i class="fas fa-arrow-right"></i> Patient symptom monitoring</li>
+                    </ul>
+                </div>
+                <div class="management-section">
+                    <h4><i class="fas fa-calendar-alt"></i> Follow-up Schedule</h4>
+                    <p><i class="fas fa-clock"></i> ${getFollowUpSchedule(riskLevel)}</p>
+                </div>
+            </div>
+        </div>
+        
+        ${generateRiskSuggestions(result, riskLevel)}
+        
+        ${generateHighRiskADRWarning(result)}
     `;
 
             resultsContainer.style.display = 'block';
 
             // Show Clinical Decision Support
             showClinicalDecisionSupport(result, currentPatientData);
+
+            // Play warning notification and show blinking overlay for high-risk cases
+            if (result.risk_level && result.risk_level.toLowerCase() === 'high') {
+                setTimeout(() => {
+                    playWarningNotification();
+                    showBlinkingWarningOverlay();
+                }, 500);
+            } else if (result.risk_level && result.risk_level.toLowerCase() === 'medium') {
+                // Show subtle warning for medium risk
+                showMediumRiskIndicator();
+            }
 
             // Generate AI-powered detailed analysis
             generateAIDetailedAnalysis(result);
@@ -2092,8 +2320,8 @@ function updateBMIDisplay(bmi, category, categoryClass) {
         // Update viewport height on resize
         window.addEventListener('resize', fixMobileViewportHeight);
         fixMobileViewportHeight();// 
-        // Display Results Function
-        function displayResults(result) {
+        // REMOVED: Duplicate displayResults function - using the main one at end of file
+        function displayResults_DUPLICATE_2(result) {
             console.log('Displaying results:', result);
 
             const resultsContainer = document.getElementById('results-container');
@@ -5344,7 +5572,7 @@ function getSpecialistForADR(predictedADR) {
         'Hypersensitivity': 'Allergy/Immunology'
     };
     
-    return specialists[predictedADR] || 'Internal Medicine';
+    return specialists[predictedADR] || 'General Medicine';
 }
 
 function getPatientWarningInstructions(predictedADR) {
@@ -6042,8 +6270,8 @@ function downloadReport() {
     showInfo('PDF download feature coming soon!');
 }
 
-// Display results function
-function displayResults(result) {
+// REMOVED: Duplicate displayResults function - using the main one below
+function displayResults_DUPLICATE_3(result) {
     console.log('Displaying results:', result);
 
     const resultsContainer = document.getElementById('results-container');
@@ -6761,6 +6989,90 @@ function displayResults(result) {
         console.error('❌ resultsContent is null, cannot set innerHTML');
     }
 
+    // Check for high-risk ADR and trigger warning system
+    const riskLevel = result.risk_level ? result.risk_level.toLowerCase() : 'unknown';
+    console.log('🎯 Risk level detected:', riskLevel, 'from result:', result.risk_level);
+    
+    if (riskLevel === 'high') {
+        console.log('🚨 HIGH RISK ADR DETECTED - Triggering warning system');
+        console.log('🔍 Available functions:', {
+            showHighRiskWarningOverlay: typeof showHighRiskWarningOverlay,
+            showHighRiskMedicalSuggestionsPopup: typeof showHighRiskMedicalSuggestionsPopup,
+            playWarningNotification: typeof playWarningNotification
+        });
+        
+        // Store current prediction result for warning system
+        window.currentPredictionResult = result;
+        
+        // Add visual indicator to page title for debugging
+        document.title = '🚨 HIGH RISK ADR DETECTED - ' + document.title;
+        
+        // Add emergency banner to page for debugging
+        const emergencyBanner = document.createElement('div');
+        emergencyBanner.id = 'emergency-banner';
+        emergencyBanner.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            z-index: 10000;
+            animation: emergencyFlash 1s ease-in-out infinite alternate;
+        `;
+        emergencyBanner.innerHTML = '🚨 HIGH RISK ADR DETECTED - IMMEDIATE MEDICAL ATTENTION REQUIRED 🚨';
+        document.body.insertBefore(emergencyBanner, document.body.firstChild);
+        
+        // Add CSS animation for emergency banner
+        if (!document.querySelector('#emergency-banner-styles')) {
+            const style = document.createElement('style');
+            style.id = 'emergency-banner-styles';
+            style.textContent = `
+                @keyframes emergencyFlash {
+                    0% { opacity: 1; }
+                    100% { opacity: 0.7; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Trigger high-risk warning overlay and medical suggestions popup
+        setTimeout(() => {
+            console.log('⏰ Timeout triggered - calling warning functions');
+            
+            try {
+                if (typeof showHighRiskWarningOverlay === 'function') {
+                    console.log('📞 Calling showHighRiskWarningOverlay()');
+                    showHighRiskWarningOverlay();
+                } else {
+                    console.error('❌ showHighRiskWarningOverlay function not found');
+                    alert('HIGH RISK ADR DETECTED!\n\nThe popup system is not working properly.\nPlease contact your system administrator.\n\nRisk Level: ' + result.risk_level + '\nADR Type: ' + result.predicted_adr_type);
+                }
+                
+                if (typeof showHighRiskMedicalSuggestionsPopup === 'function') {
+                    console.log('📞 Calling showHighRiskMedicalSuggestionsPopup()');
+                    showHighRiskMedicalSuggestionsPopup(result);
+                } else {
+                    console.error('❌ showHighRiskMedicalSuggestionsPopup function not found');
+                }
+                
+                if (typeof playWarningNotification === 'function') {
+                    console.log('📞 Calling playWarningNotification()');
+                    playWarningNotification();
+                } else {
+                    console.error('❌ playWarningNotification function not found');
+                }
+            } catch (error) {
+                console.error('❌ Error calling warning functions:', error);
+                alert('HIGH RISK ADR DETECTED!\n\nError: ' + error.message + '\n\nRisk Level: ' + result.risk_level + '\nADR Type: ' + result.predicted_adr_type);
+            }
+        }, 1500); // Delay to allow results to render first
+    }
+
     // Trigger detailed clinical analysis
     console.log('🤖 Triggering detailed analysis in 1 second...');
     setTimeout(() => {
@@ -7126,7 +7438,7 @@ function generateMonitoringParameters(patientData) {
     `).join('');
 }
 // 
-Generate High Risk ADR Warning
+// Generate High Risk ADR Warning
 function generateHighRiskADRWarning(result) {
     const riskLevel = result.risk_level.toLowerCase();
     const predictedADR = result.predicted_adr_type;

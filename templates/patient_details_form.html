@@ -190,6 +190,70 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
 
+        /* Age Interpretation Styles */
+        .age-interpretation {
+            margin-top: 8px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-left: 4px solid;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .age-interpretation.infant {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .age-interpretation.child {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .age-interpretation.adolescent {
+            background: #e0e7ff;
+            border-color: #6366f1;
+            color: #4338ca;
+        }
+
+        .age-interpretation.young-adult {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #047857;
+        }
+
+        .age-interpretation.adult {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #047857;
+        }
+
+        .age-interpretation.middle-aged {
+            background: #fed7aa;
+            border-color: #f97316;
+            color: #c2410c;
+        }
+
+        .age-interpretation.elderly {
+            background: #fecaca;
+            border-color: #ef4444;
+            color: #dc2626;
+        }
+
+        .age-interpretation.very-elderly {
+            background: #fde2e8;
+            border-color: #ec4899;
+            color: #be185d;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .container {
@@ -275,15 +339,20 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="date-of-birth">
-                            <i class="fas fa-calendar"></i>
-                            Date of Birth
+                        <label for="age">
+                            <i class="fas fa-birthday-cake"></i>
+                            Age (years) *
                         </label>
                         <input 
-                            type="date" 
-                            id="date-of-birth" 
-                            name="date-of-birth"
+                            type="number" 
+                            id="age" 
+                            name="age" 
+                            min="0" 
+                            max="120" 
+                            placeholder="Enter age (0-120 years)"
+                            required
                         >
+                        <div id="age-interpretation" class="age-interpretation" style="display: none;"></div>
                     </div>
 
                     <div class="form-group">
@@ -359,15 +428,68 @@
     </div>
 
     <script>
+        // Age interpretation function
+        function interpretAge() {
+            const ageInput = document.getElementById('age');
+            const interpretationDiv = document.getElementById('age-interpretation');
+            const age = parseInt(ageInput.value);
+
+            if (!age || age < 0 || age > 120) {
+                interpretationDiv.style.display = 'none';
+                return;
+            }
+
+            let interpretation = '';
+            let className = '';
+
+            if (age < 1) {
+                interpretation = '👶 Infant: Requires specialized pediatric dosing and monitoring. Higher risk of ADRs due to immature organ systems.';
+                className = 'infant';
+            } else if (age < 12) {
+                interpretation = '🧒 Child: Pediatric dosing required. Weight-based calculations essential. Monitor for developmental effects.';
+                className = 'child';
+            } else if (age < 18) {
+                interpretation = '👦 Adolescent: Transitional dosing considerations. Monitor for hormonal effects and compliance issues.';
+                className = 'adolescent';
+            } else if (age < 30) {
+                interpretation = '👨 Young Adult: Standard adult dosing. Generally lower ADR risk. Monitor for lifestyle factors.';
+                className = 'young-adult';
+            } else if (age < 50) {
+                interpretation = '👩 Adult: Standard dosing protocols. Monitor for comorbidities and drug interactions.';
+                className = 'adult';
+            } else if (age < 65) {
+                interpretation = '👨‍💼 Middle-aged: Increased monitoring for age-related changes. Consider comorbidity burden.';
+                className = 'middle-aged';
+            } else if (age < 80) {
+                interpretation = '👴 Elderly: Enhanced monitoring required. Consider dose reduction. Higher ADR risk due to physiological changes.';
+                className = 'elderly';
+            } else {
+                interpretation = '👵 Very Elderly: Intensive monitoring essential. Significant dose adjustments likely needed. Very high ADR risk.';
+                className = 'very-elderly';
+            }
+
+            interpretationDiv.innerHTML = interpretation;
+            interpretationDiv.className = `age-interpretation ${className}`;
+            interpretationDiv.style.display = 'block';
+        }
+
         // Load existing patient info if available
         document.addEventListener('DOMContentLoaded', function() {
             const patientName = sessionStorage.getItem('patientName');
             const patientId = sessionStorage.getItem('patientId');
             const clinicianName = sessionStorage.getItem('clinicianName');
+            const age = sessionStorage.getItem('age');
 
             if (patientName) document.getElementById('patient-name').value = patientName;
             if (patientId) document.getElementById('patient-id').value = patientId;
             if (clinicianName) document.getElementById('clinician-name').value = clinicianName;
+            if (age) {
+                document.getElementById('age').value = age;
+                interpretAge();
+            }
+
+            // Add age input listener
+            document.getElementById('age').addEventListener('input', interpretAge);
         });
 
         // Form submission handler
@@ -377,13 +499,18 @@
             const patientName = document.getElementById('patient-name').value.trim();
             const patientId = document.getElementById('patient-id').value.trim();
             const clinicianName = document.getElementById('clinician-name').value.trim();
-            const dateOfBirth = document.getElementById('date-of-birth').value;
+            const age = document.getElementById('age').value;
             const gender = document.getElementById('gender').value;
             const department = document.getElementById('department').value;
             const clinicalNotes = document.getElementById('clinical-notes').value.trim();
             
-            if (!patientName || !clinicianName) {
-                alert('Please fill in all required fields (Patient Name and Clinician Name).');
+            if (!patientName || !clinicianName || !age) {
+                alert('Please fill in all required fields (Patient Name, Clinician Name, and Age).');
+                return;
+            }
+            
+            if (age < 0 || age > 120) {
+                alert('Please enter a valid age between 0 and 120 years.');
                 return;
             }
             
@@ -391,7 +518,7 @@
             sessionStorage.setItem('patientName', patientName);
             sessionStorage.setItem('patientId', patientId || 'N/A');
             sessionStorage.setItem('clinicianName', clinicianName);
-            sessionStorage.setItem('dateOfBirth', dateOfBirth);
+            sessionStorage.setItem('age', age);
             sessionStorage.setItem('gender', gender);
             sessionStorage.setItem('department', department);
             sessionStorage.setItem('clinicalNotes', clinicalNotes);

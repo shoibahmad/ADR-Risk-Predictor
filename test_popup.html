@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test High Risk ADR Popup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        body {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-btn {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f0f4ff;
+            border: 1px solid #c7d2fe;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1><i class="fas fa-exclamation-triangle"></i> High Risk ADR Popup Test</h1>
+            <p>Click the button below to test the high-risk ADR warning system</p>
+        </div>
+        
+        <button class="test-btn" onclick="testHighRiskSystem()">
+            <i class="fas fa-exclamation-triangle"></i>
+            Test High Risk Warning
+        </button>
+        
+        <div id="status" class="status">
+            <strong>Status:</strong> Ready to test
+        </div>
+    </div>
+
+    <!-- Include the ADR warning JavaScript -->
+    <script src="static/js/adr-warning.js"></script>
+    <script>
+        // Mock patient info for testing
+        window.patientInfo = {
+            name: 'Test Patient',
+            id: 'TEST001',
+            clinician: 'Dr. Test'
+        };
+
+        // Mock current patient data for testing
+        window.currentPatientData = {
+            age: 75,
+            egfr: 25,
+            ast_alt: 150,
+            concomitant_drugs_count: 12,
+            diabetes: 1,
+            cardiac_disease: 1,
+            liver_disease: 1
+        };
+
+        function testHighRiskSystem() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '<strong>Status:</strong> Testing high-risk warning system...';
+            
+            console.log('🧪 Testing high-risk ADR warning system');
+            
+            // Check if functions are available
+            const functionStatus = {
+                generateHighRiskADRWarning: typeof generateHighRiskADRWarning,
+                showHighRiskWarningOverlay: typeof showHighRiskWarningOverlay,
+                showHighRiskMedicalSuggestionsPopup: typeof showHighRiskMedicalSuggestionsPopup,
+                playWarningNotification: typeof playWarningNotification
+            };
+            
+            console.log('🔍 Function availability:', functionStatus);
+            statusDiv.innerHTML = `<strong>Status:</strong> Function availability: ${JSON.stringify(functionStatus, null, 2)}`;
+            
+            // Mock high-risk result
+            const mockResult = {
+                risk_level: 'High',
+                predicted_adr_type: 'Hepatotoxicity',
+                no_adr_probability: 15,
+                top_specific_adr_risks: {
+                    'Hepatotoxicity': 25.8,
+                    'Nephrotoxicity': 18.3,
+                    'Cardiotoxicity': 12.7
+                }
+            };
+            
+            // Test the functions directly
+            setTimeout(() => {
+                try {
+                    if (typeof showHighRiskWarningOverlay === 'function') {
+                        console.log('📞 Calling showHighRiskWarningOverlay()');
+                        showHighRiskWarningOverlay();
+                        statusDiv.innerHTML += '<br>✅ Red overlay triggered';
+                    } else {
+                        statusDiv.innerHTML += '<br>❌ showHighRiskWarningOverlay not found';
+                    }
+                    
+                    if (typeof showHighRiskMedicalSuggestionsPopup === 'function') {
+                        console.log('📞 Calling showHighRiskMedicalSuggestionsPopup()');
+                        showHighRiskMedicalSuggestionsPopup(mockResult);
+                        statusDiv.innerHTML += '<br>✅ Medical popup triggered';
+                    } else {
+                        statusDiv.innerHTML += '<br>❌ showHighRiskMedicalSuggestionsPopup not found';
+                    }
+                    
+                    if (typeof playWarningNotification === 'function') {
+                        console.log('📞 Calling playWarningNotification()');
+                        playWarningNotification();
+                        statusDiv.innerHTML += '<br>✅ Warning sound triggered';
+                    } else {
+                        statusDiv.innerHTML += '<br>❌ playWarningNotification not found';
+                    }
+                    
+                    statusDiv.innerHTML += '<br><strong>Test completed!</strong>';
+                    
+                } catch (error) {
+                    console.error('❌ Error during test:', error);
+                    statusDiv.innerHTML += `<br>❌ Error: ${error.message}`;
+                }
+            }, 500);
+        }
+
+        // Success message function for testing
+        window.showSuccess = function (message) {
+            console.log('✅ Success:', message);
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #d1fae5;
+                color: #065f46;
+                padding: 15px 20px;
+                border-radius: 10px;
+                border-left: 4px solid #10b981;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                z-index: 1001;
+                max-width: 400px;
+            `;
+            successDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: #065f46; cursor: pointer; padding: 5px; margin-left: auto;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                if (successDiv.parentElement) {
+                    successDiv.remove();
+                }
+            }, 4000);
+        };
+
+        // Log when page loads
+        console.log('🚨 High Risk ADR Test Page loaded');
+        console.log('Available functions on load:', {
+            generateHighRiskADRWarning: typeof generateHighRiskADRWarning,
+            showHighRiskWarningOverlay: typeof showHighRiskWarningOverlay,
+            showHighRiskMedicalSuggestionsPopup: typeof showHighRiskMedicalSuggestionsPopup,
+            playWarningNotification: typeof playWarningNotification
+        });
+    </script>
+</body>
+</html>
