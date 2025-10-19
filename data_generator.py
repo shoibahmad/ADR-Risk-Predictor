@@ -55,44 +55,44 @@ def generate_synthetic_data(num_patients=200000):
     cardiac_indices = np.where(np.array(data['cardiac_disease']) == 1)[0]
     heart_rate_base[cardiac_indices] += np.random.uniform(5, 15, size=len(cardiac_indices))
             
-    data['bp_systolic'] = np.clip(bp_systolic_base, 90, 180).astype(int)
-    data['bp_diastolic'] = np.random.normal(loc=75, scale=8, size=num_patients).astype(int)
-    data['heart_rate'] = np.clip(heart_rate_base, 50, 120).astype(int)
+    data['bp_systolic'] = np.clip(bp_systolic_base, 80, 220).astype(int)
+    data['bp_diastolic'] = np.clip(np.random.normal(loc=80, scale=12, size=num_patients), 50, 130).astype(int)
+    data['heart_rate'] = np.clip(heart_rate_base, 40, 150).astype(int)
 
     # --- 3. Labs (Strongly influenced by Comorbidities) ---
     
     # LABS: Creatinine/eGFR (Strongly influenced by CKD and Age)
-    creatinine_base = np.random.normal(loc=1.0, scale=0.2, size=num_patients)
+    creatinine_base = np.random.normal(loc=1.2, scale=0.3, size=num_patients)
     
     # Find indices for CKD patients and old patients
     ckd_indices = np.where(np.array(data['ckd']) == 1)[0]
     old_indices = np.where(data['age'] > 70)[0]
     
     # Apply high creatinine for CKD
-    creatinine_base[ckd_indices] += np.random.uniform(0.5, 2.0, size=len(ckd_indices))
+    creatinine_base[ckd_indices] += np.random.uniform(1.0, 4.0, size=len(ckd_indices))
     # Apply slight elevation for older patients (careful not to double-count those with CKD)
     only_old_indices = np.setdiff1d(old_indices, ckd_indices)
-    creatinine_base[only_old_indices] += np.random.uniform(0.1, 0.5, size=len(only_old_indices))
+    creatinine_base[only_old_indices] += np.random.uniform(0.2, 1.0, size=len(only_old_indices))
             
-    data['creatinine'] = np.clip(creatinine_base, 0.5, 6.0).round(2)
+    data['creatinine'] = np.clip(creatinine_base, 0.5, 12.0).round(2)
     # Recalculate eGFR based on new creatinine (Cockcroft-Gault-like simplification)
     data['egfr'] = 141 * (data['creatinine'] / 0.9)**(-1.2) * (0.993)**data['age'] 
 
     # LABS: Liver Function (Influenced by Liver Disease)
-    ast_alt_base = np.random.normal(loc=25, scale=10, size=num_patients)
-    bilirubin_base = np.random.normal(loc=0.5, scale=0.2, size=num_patients)
-    albumin_base = np.random.normal(loc=4.2, scale=0.3, size=num_patients)
+    ast_alt_base = np.random.normal(loc=35, scale=15, size=num_patients)
+    bilirubin_base = np.random.normal(loc=0.8, scale=0.4, size=num_patients)
+    albumin_base = np.random.normal(loc=4.5, scale=0.5, size=num_patients)
 
     liver_indices = np.where(data['liver_disease'] == 1)[0]
     
     # Apply high LFTs/low albumin for liver disease
-    ast_alt_base[liver_indices] += np.random.uniform(50, 300, size=len(liver_indices))
-    bilirubin_base[liver_indices] += np.random.uniform(1.0, 3.0, size=len(liver_indices))
-    albumin_base[liver_indices] -= np.random.uniform(0.5, 1.5, size=len(liver_indices))
+    ast_alt_base[liver_indices] += np.random.uniform(100, 800, size=len(liver_indices))
+    bilirubin_base[liver_indices] += np.random.uniform(2.0, 8.0, size=len(liver_indices))
+    albumin_base[liver_indices] -= np.random.uniform(1.0, 3.0, size=len(liver_indices))
 
-    data['ast_alt'] = np.clip(ast_alt_base, 10, 500).astype(int)
-    data['bilirubin'] = np.clip(bilirubin_base, 0.2, 5.0).round(2)
-    data['albumin'] = np.clip(albumin_base, 2.0, 600.0).round(2)
+    data['ast_alt'] = np.clip(ast_alt_base, 15, 1200).astype(int)
+    data['bilirubin'] = np.clip(bilirubin_base, 0.2, 15.0).round(2)
+    data['albumin'] = np.clip(albumin_base, 1.5, 800.0).round(2)
 
     # --- NEW: Additional Clinical Parameters ---
     # Temperature (influenced by infection/inflammation)
@@ -117,9 +117,43 @@ def generate_synthetic_data(num_patients=200000):
     atpp_base[heparin_indices] += np.random.uniform(10, 40, size=len(heparin_indices))
     data['atpp_value'] = np.clip(atpp_base, 20, 120).round(1)
 
+    # --- CBC (Complete Blood Count) Parameters ---
+    # Hemoglobin (g/dL) - influenced by age, gender, and chronic diseases
+    hemoglobin_base = np.where(data['sex'] == 'M', 
+                              np.random.normal(loc=15.0, scale=2.0, size=num_patients),
+                              np.random.normal(loc=13.5, scale=1.8, size=num_patients))
+    
+    # Lower hemoglobin for chronic diseases
+    chronic_indices = np.where((np.array(data['ckd']) == 1) | (np.array(data['cardiac_disease']) == 1))[0]
+    hemoglobin_base[chronic_indices] -= np.random.uniform(1.0, 4.0, size=len(chronic_indices))
+    data['hemoglobin'] = np.clip(hemoglobin_base, 6.0, 20.0).round(1)
+
+    # Hematocrit (%) - typically 3x hemoglobin
+    hematocrit_base = data['hemoglobin'] * 3 + np.random.normal(0, 2, size=num_patients)
+    data['hematocrit'] = np.clip(hematocrit_base, 18.0, 60.0).round(1)
+
+    # White Blood Cell Count (WBC) - thousands/μL
+    wbc_base = np.random.normal(loc=7.5, scale=2.5, size=num_patients)
+    # Higher WBC for infections/inflammation
+    infection_indices = np.random.choice(range(num_patients), size=int(num_patients * 0.1), replace=False)
+    wbc_base[infection_indices] += np.random.uniform(5.0, 15.0, size=len(infection_indices))
+    data['wbc_count'] = np.clip(wbc_base, 2.0, 30.0).round(1)
+
+    # Platelet Count - thousands/μL
+    platelet_base = np.random.normal(loc=275, scale=75, size=num_patients)
+    # Lower platelets for liver disease or certain medications
+    platelet_base[liver_indices] -= np.random.uniform(50, 150, size=len(liver_indices))
+    data['platelet_count'] = np.clip(platelet_base, 50, 600).astype(int)
+
+    # Red Blood Cell Count (RBC) - millions/μL
+    rbc_base = np.where(data['sex'] == 'M',
+                       np.random.normal(loc=5.0, scale=0.6, size=num_patients),
+                       np.random.normal(loc=4.5, scale=0.5, size=num_patients))
+    data['rbc_count'] = np.clip(rbc_base, 3.0, 7.0).round(2)
+
     # --- 4. Medications & Genomics (Kept similar to previous version) ---
-    data['index_drug_dose'] = np.random.choice([50, 100, 150, 200], num_patients, p=[0.2, 0.3, 0.3, 0.2])
-    data['concomitant_drugs_count'] = np.random.randint(1, 15, num_patients)
+    data['index_drug_dose'] = np.random.choice([25, 50, 100, 150, 200, 300, 400, 500], num_patients, p=[0.1, 0.15, 0.2, 0.2, 0.15, 0.1, 0.05, 0.05])
+    data['concomitant_drugs_count'] = np.random.randint(1, 25, num_patients)
     data['cyp_inhibitors_flag'] = np.random.choice([0, 1], num_patients, p=[0.7, 0.3])
     data['qt_prolonging_flag'] = np.random.choice([0, 1], num_patients, p=[0.85, 0.15])
 
@@ -213,6 +247,7 @@ def generate_synthetic_data(num_patients=200000):
         'age', 'sex', 'weight_kg', 'bmi', 'ethnicity',
         'creatinine', 'egfr', 'ast_alt', 'bilirubin', 'albumin',
         'temperature', 'ind_value', 'atpp_value',  # NEW COLUMNS
+        'hemoglobin', 'hematocrit', 'wbc_count', 'platelet_count', 'rbc_count',  # CBC COLUMNS
         'diabetes', 'liver_disease', 'ckd', 'cardiac_disease',
         'index_drug_dose', 'concomitant_drugs_count', 'cyp_inhibitors_flag', 'qt_prolonging_flag',
         'cyp2c9', 'cyp2d6', 'hla_risk_allele_flag',

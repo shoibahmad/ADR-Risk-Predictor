@@ -2000,7 +2000,6 @@ function updateBMIDisplay(bmi, category, categoryClass) {
                 showError(message);
             }
         }
-
         // Enhanced success handling for mobile
         function showMobileSuccess(message) {
             // Show success with haptic feedback if available

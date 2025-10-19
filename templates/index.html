@@ -150,6 +150,50 @@
             box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
         }
 
+        .sample-selector optgroup {
+            font-weight: 700;
+            color: #374151;
+            background: #f8fafc;
+            padding: 8px 0;
+        }
+
+        .sample-selector option {
+            padding: 8px 12px;
+            color: #1f2937;
+            background: white;
+        }
+
+        .sample-selector option:hover {
+            background: #f0f4ff;
+        }
+
+        /* Sample indication styling */
+        .sample-indication {
+            text-align: center;
+            margin: 20px 0 10px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .sample-indication-title {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .sample-indication-subtitle {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
         /* Form Sections */
         .form-section {
             background: #ffffff;
@@ -510,6 +554,20 @@
                 padding: 12px;
             }
 
+            .sample-indication {
+                margin: 15px 0 8px 0;
+                padding: 12px;
+            }
+
+            .sample-indication-title {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+
+            .sample-indication-subtitle {
+                font-size: 0.8rem;
+            }
+
             .form-actions {
                 flex-direction: column;
                 gap: 10px;
@@ -804,6 +862,21 @@
                 padding: 10px;
                 font-size: 0.85rem;
                 border-radius: 6px;
+            }
+
+            .sample-indication {
+                margin: 12px 0 6px 0;
+                padding: 10px;
+                border-radius: 8px;
+            }
+
+            .sample-indication-title {
+                font-size: 0.85rem;
+                margin-bottom: 5px;
+            }
+
+            .sample-indication-subtitle {
+                font-size: 0.75rem;
             }
 
             .btn {
@@ -1896,6 +1969,17 @@
                 </h1>
                 <p class="form-subtitle">Enter patient information to assess ADR risk</p>
 
+                <!-- Sample Patient Indication -->
+                <div class="sample-indication">
+                    <p class="sample-indication-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Quick Start: Load Sample Patient Data
+                    </p>
+                    <p class="sample-indication-subtitle">
+                        Select a sample patient from the dropdown below to automatically populate the form with realistic clinical data
+                    </p>
+                </div>
+
                 <div class="sample-controls">
                     <button type="button" id="info-button" class="btn-sample"
                         style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
@@ -1904,9 +1988,21 @@
                     </button>
                     <select id="sample-data-selector" class="sample-selector">
                         <option value="">Choose sample patient...</option>
-                        <option value="high-risk">High Risk Patient</option>
-                        <option value="medium-risk">Medium Risk Patient</option>
-                        <option value="low-risk">Low Risk Patient</option>
+                        <optgroup label="Risk Categories">
+                            <option value="high-risk">🔴 High Risk - Elderly with Multiple Comorbidities</option>
+                            <option value="medium-risk">🟡 Medium Risk - Middle-aged with Diabetes</option>
+                            <option value="low-risk">🟢 Low Risk - Young Healthy Adult</option>
+                        </optgroup>
+                        <optgroup label="Specific Conditions">
+                            <option value="liver-disease">🟠 Liver Disease - Hepatic Impairment</option>
+                            <option value="kidney-disease">🔵 Kidney Disease - Chronic Renal Failure</option>
+                            <option value="cardiac-patient">❤️ Cardiac Patient - Heart Failure with Arrhythmia</option>
+                            <option value="cancer-patient">🎗️ Cancer Patient - Chemotherapy Treatment</option>
+                        </optgroup>
+                        <optgroup label="Special Populations">
+                            <option value="elderly-frail">👵 Elderly Frail - Multiple Medications</option>
+                            <option value="pediatric-equivalent">👶 Young Adult - Minimal Risk Profile</option>
+                        </optgroup>
                     </select>
                 </div>
             </div>
@@ -1980,7 +2076,7 @@
                                     <i class="fas fa-microscope"></i> Interpret
                                 </button>
                             </label>
-                            <input type="number" id="creatinine" name="creatinine" step="0.01" min="0.5" max="10"
+                            <input type="number" id="creatinine" name="creatinine" step="0.01" min="0.5" max="15"
                                 placeholder="Normal: 0.6-1.2">
                             <div id="creatinine_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
@@ -2005,7 +2101,7 @@
                                     </button>
                                 </div>
                             </label>
-                            <input type="number" id="ast_alt" name="ast_alt" min="5" max="1000"
+                            <input type="number" id="ast_alt" name="ast_alt" min="5" max="1200"
                                 placeholder="Normal: 10-40">
                             <div id="ast_alt_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
@@ -2017,7 +2113,7 @@
                                     <i class="fas fa-microscope"></i> Interpret
                                 </button>
                             </label>
-                            <input type="number" id="bilirubin" name="bilirubin" step="0.01" min="0.1" max="10"
+                            <input type="number" id="bilirubin" name="bilirubin" step="0.01" min="0.1" max="15"
                                 placeholder="Normal: 0.2-1.2">
                             <div id="bilirubin_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
@@ -2028,7 +2124,7 @@
                                     <i class="fas fa-microscope"></i> Interpret
                                 </button>
                             </label>
-                            <input type="number" id="albumin" name="albumin" step="0.01" min="1" max="600"
+                            <input type="number" id="albumin" name="albumin" step="0.01" min="1" max="800"
                                 placeholder="Normal: 3.5-5.0">
                             <div id="albumin_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
@@ -2071,6 +2167,72 @@
                             <input type="number" id="atpp_value" name="atpp_value" step="0.1" min="20" max="120"
                                 placeholder="Normal: 25-35">
                             <div id="atpp_value_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
+                        
+                        <!-- CBC (Complete Blood Count) Fields -->
+                        <div class="form-group">
+                            <label for="hemoglobin">
+                                <i class="fas fa-tint"></i>
+                                Hemoglobin (g/dL)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('hemoglobin')">
+                                    <i class="fas fa-tint"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="hemoglobin" name="hemoglobin" step="0.1" min="6" max="200"
+                                placeholder="Normal: M: 13.5-17.5, F: 12.0-15.5">
+                            <div id="hemoglobin_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="hematocrit">
+                                <i class="fas fa-percentage"></i>
+                                Hematocrit (%)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('hematocrit')">
+                                    <i class="fas fa-percentage"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="hematocrit" name="hematocrit" step="0.1" min="18" max="60"
+                                placeholder="Normal: M: 41-50, F: 36-44">
+                            <div id="hematocrit_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="wbc_count">
+                                <i class="fas fa-shield-virus"></i>
+                                WBC Count (×10³/μL)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('wbc_count')">
+                                    <i class="fas fa-shield-virus"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="wbc_count" name="wbc_count" step="0.1" min="2" max="30"
+                                placeholder="Normal: 4.5-11.0">
+                            <div id="wbc_count_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="platelet_count">
+                                <i class="fas fa-circle"></i>
+                                Platelet Count (×10³/μL)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('platelet_count')">
+                                    <i class="fas fa-circle"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="platelet_count" name="platelet_count" step="1" min="50" max="600"
+                                placeholder="Normal: 150-450">
+                            <div id="platelet_count_interpretation" class="lab-interpretation" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="rbc_count">
+                                <i class="fas fa-circle-notch"></i>
+                                RBC Count (×10⁶/μL)
+                                <button type="button" class="lab-interpret-btn" onclick="interpretLabValue('rbc_count')">
+                                    <i class="fas fa-circle-notch"></i> Interpret
+                                </button>
+                            </label>
+                            <input type="number" id="rbc_count" name="rbc_count" step="0.01" min="3" max="7"
+                                placeholder="Normal: M: 4.7-6.1, F: 4.2-5.4">
+                            <div id="rbc_count_interpretation" class="lab-interpretation" style="display: none;"></div>
                         </div>
                     </div>
 
@@ -2155,14 +2317,7 @@
                                 <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">ANA, RF, Anti-CCP, ESR, CRP</p>
                             </div>
 
-                            <!-- Complete Blood Count Card -->
-                            <div class="test-card" onclick="toggleTestCategory('cbc')" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3) !important; border: none !important;">
-                                <div class="test-card-icon" style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
-                                    <i class="fas fa-microscope" style="color: white !important; font-size: 20px !important;"></i>
-                                </div>
-                                <h6 style="color: white !important; font-size: 1rem !important; font-weight: 600 !important; margin: 0 0 6px 0 !important; line-height: 1.3 !important;">Complete Blood Count</h6>
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.8rem !important; margin: 0 !important; line-height: 1.4 !important;">Hb, Hct, RBC, WBC, Platelets</p>
-                            </div>
+
                         </div>
 
                         <!-- 1. Diabetes Mellitus Tests -->
@@ -2518,68 +2673,7 @@
                             </div>
                         </div>
 
-                        <!-- 9. Complete Blood Count (CBC) -->
-                        <div id="cbc-tests" class="test-category-section" style="display: none;">
-                            <h5><i class="fas fa-microscope"></i> Complete Blood Count (CBC)</h5>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="hemoglobin">Hemoglobin (Hb) (g/dL)</label>
-                                    <input type="number" id="hemoglobin" name="hemoglobin" step="0.1" min="5" max="20" placeholder="Normal: 12-16 (F), 14-18 (M)">
-                                </div>
-                                <div class="form-group">
-                                    <label for="hematocrit">Hematocrit (Hct) (%)</label>
-                                    <input type="number" id="hematocrit" name="hematocrit" step="0.1" min="15" max="60" placeholder="Normal: 36-46 (F), 41-50 (M)">
-                                </div>
-                                <div class="form-group">
-                                    <label for="rbc_count">RBC Count (×10⁶/μL)</label>
-                                    <input type="number" id="rbc_count" name="rbc_count" step="0.01" min="2" max="7" placeholder="Normal: 4.2-5.4 (F), 4.7-6.1 (M)">
-                                </div>
-                                <div class="form-group">
-                                    <label for="wbc_count">WBC Count (×10³/μL)</label>
-                                    <input type="number" id="wbc_count" name="wbc_count" step="0.1" min="1" max="50" placeholder="Normal: 4.5-11.0">
-                                </div>
-                                <div class="form-group">
-                                    <label for="neutrophils">Neutrophils (%)</label>
-                                    <input type="number" id="neutrophils" name="neutrophils" step="0.1" min="0" max="100" placeholder="Normal: 50-70">
-                                </div>
-                                <div class="form-group">
-                                    <label for="lymphocytes">Lymphocytes (%)</label>
-                                    <input type="number" id="lymphocytes" name="lymphocytes" step="0.1" min="0" max="100" placeholder="Normal: 20-40">
-                                </div>
-                                <div class="form-group">
-                                    <label for="monocytes">Monocytes (%)</label>
-                                    <input type="number" id="monocytes" name="monocytes" step="0.1" min="0" max="20" placeholder="Normal: 2-8">
-                                </div>
-                                <div class="form-group">
-                                    <label for="eosinophils">Eosinophils (%)</label>
-                                    <input type="number" id="eosinophils" name="eosinophils" step="0.1" min="0" max="20" placeholder="Normal: 1-4">
-                                </div>
-                                <div class="form-group">
-                                    <label for="basophils">Basophils (%)</label>
-                                    <input type="number" id="basophils" name="basophils" step="0.1" min="0" max="5" placeholder="Normal: 0.5-1">
-                                </div>
-                                <div class="form-group">
-                                    <label for="platelet_count">Platelet Count (×10³/μL)</label>
-                                    <input type="number" id="platelet_count" name="platelet_count" step="1" min="50" max="1000" placeholder="Normal: 150-450">
-                                </div>
-                                <div class="form-group">
-                                    <label for="mcv">Mean Corpuscular Volume (MCV) (fL)</label>
-                                    <input type="number" id="mcv" name="mcv" step="0.1" min="60" max="120" placeholder="Normal: 80-100">
-                                </div>
-                                <div class="form-group">
-                                    <label for="mch">Mean Corpuscular Hemoglobin (MCH) (pg)</label>
-                                    <input type="number" id="mch" name="mch" step="0.1" min="20" max="40" placeholder="Normal: 27-32">
-                                </div>
-                                <div class="form-group">
-                                    <label for="mchc">MCHC (g/dL)</label>
-                                    <input type="number" id="mchc" name="mchc" step="0.1" min="25" max="40" placeholder="Normal: 32-36">
-                                </div>
-                                <div class="form-group">
-                                    <label for="rdw">Red Cell Distribution Width (RDW) (%)</label>
-                                    <input type="number" id="rdw" name="rdw" step="0.1" min="10" max="25" placeholder="Normal: 11.5-14.5">
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
 
@@ -2645,7 +2739,7 @@
                         <div class="form-group">
                             <label for="concomitant_drugs_count">Concomitant Drugs Count</label>
                             <input type="number" id="concomitant_drugs_count" name="concomitant_drugs_count" min="0"
-                                max="20" placeholder="Number of other medications (0-20)">
+                                max="30" placeholder="Number of other medications (0-30)">
                         </div>
                         <div class="form-group concomitant-drugs-group" style="grid-column: 1 / -1;">
                             <label>Concomitant Drug Names</label>
@@ -3181,7 +3275,9 @@
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error(`Server error: ${errorText}`);
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    console.error(`Failed URL: ${url}`);
+                    console.error(`Response headers:`, response.headers);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText || errorText}`);
                 }
 
                 const sampleData = await response.json();
@@ -3233,9 +3329,10 @@
                         calculateBMI();
                     }
 
-                    showNotification(`Fallback sample data loaded: ${fallbackData.name}`, 'success');
+                    showNotification(`Sample data loaded (offline mode): ${fallbackData.name}`, 'success');
                 } else {
-                    showNotification(`Failed to load sample data: ${error.message}`, 'error');
+                    console.error(`No fallback data available for sample type: ${sampleType}`);
+                    showNotification(`Sample patient type "${sampleType}" not available. Please try another option.`, 'error');
                 }
             } finally {
                 hideLoading();
@@ -3246,33 +3343,101 @@
         function getFallbackSampleData(sampleType) {
             const fallbackSamples = {
                 'high-risk': {
-                    name: 'High Risk Patient',
-                    age: 75, sex: 'M', ethnicity: 'White', height: 175, weight: 95,
-                    creatinine: 2.1, egfr: 35, ast_alt: 95, bilirubin: 1.8, albumin: 2.8,
+                    name: 'High Risk Patient - Elderly with Multiple Comorbidities',
+                    age: 75, sex: 'M', ethnicity: 'White', height: 175, weight: 95, bmi: 31.0,
+                    creatinine: 4.5, egfr: 25, ast_alt: 285, bilirubin: 4.2, albumin: 2.1,
+                    hemoglobin: 8.5, hematocrit: 25.5, wbc_count: 12.8, platelet_count: 95, rbc_count: 3.2,
                     diabetes: 1, liver_disease: 1, ckd: 1, cardiac_disease: 1, hypertension: 1,
-                    medication_name: 'Warfarin', index_drug_dose: 200, drug_interactions: 'Major',
-                    concomitant_drugs_count: 12,
-                    cyp2c9: 'Poor', cyp2d6: 'PM', bp_systolic: 165, bp_diastolic: 95,
-                    heart_rate: 95, time_since_start_days: 45
+                    medication_name: 'Warfarin', index_drug_dose: 400, drug_interactions: 'Major',
+                    concomitant_drugs_count: 18,
+                    cyp2c9: 'Poor', cyp2d6: 'PM', bp_systolic: 185, bp_diastolic: 105,
+                    heart_rate: 115, time_since_start_days: 45
                 },
                 'medium-risk': {
-                    name: 'Medium Risk Patient',
-                    age: 55, sex: 'F', ethnicity: 'Asian', height: 160, weight: 70,
-                    creatinine: 1.3, egfr: 65, ast_alt: 45, bilirubin: 0.8, albumin: 3.5,
+                    name: 'Medium Risk Patient - Middle-aged with Diabetes',
+                    age: 55, sex: 'F', ethnicity: 'Asian', height: 160, weight: 70, bmi: 27.3,
+                    creatinine: 2.8, egfr: 45, ast_alt: 125, bilirubin: 2.1, albumin: 3.2,
+                    hemoglobin: 10.5, hematocrit: 31.5, wbc_count: 9.2, platelet_count: 185, rbc_count: 3.8,
                     diabetes: 1, cardiac_disease: 1, hypertension: 1,
-                    medication_name: 'Metformin', index_drug_dose: 150, drug_interactions: 'Moderate',
-                    concomitant_drugs_count: 6,
-                    cyp2c9: 'Intermediate', cyp2d6: 'IM', bp_systolic: 140, bp_diastolic: 85,
-                    heart_rate: 78, time_since_start_days: 30
+                    medication_name: 'Metformin', index_drug_dose: 300, drug_interactions: 'Moderate',
+                    concomitant_drugs_count: 12,
+                    cyp2c9: 'Intermediate', cyp2d6: 'IM', bp_systolic: 165, bp_diastolic: 95,
+                    heart_rate: 88, time_since_start_days: 30
                 },
                 'low-risk': {
-                    name: 'Low Risk Patient',
-                    age: 35, sex: 'M', ethnicity: 'White', height: 180, weight: 78,
-                    creatinine: 0.9, egfr: 95, ast_alt: 25, bilirubin: 0.5, albumin: 4.2,
-                    medication_name: 'Lisinopril', index_drug_dose: 100, drug_interactions: 'Minor',
+                    name: 'Low Risk Patient - Young Healthy Adult',
+                    age: 35, sex: 'M', ethnicity: 'White', height: 180, weight: 78, bmi: 24.1,
+                    creatinine: 1.1, egfr: 85, ast_alt: 45, bilirubin: 0.8, albumin: 4.5,
+                    hemoglobin: 14.2, hematocrit: 42.6, wbc_count: 6.8, platelet_count: 285, rbc_count: 4.7,
+                    medication_name: 'Lisinopril', index_drug_dose: 200, drug_interactions: 'Minor',
+                    concomitant_drugs_count: 5,
+                    cyp2c9: 'Wild', cyp2d6: 'EM', bp_systolic: 135, bp_diastolic: 85,
+                    heart_rate: 72, time_since_start_days: 14
+                },
+                'liver-disease': {
+                    name: 'Liver Disease Patient - Hepatic Impairment',
+                    age: 62, sex: 'M', ethnicity: 'Hispanic', height: 170, weight: 85, bmi: 29.4,
+                    creatinine: 1.8, egfr: 55, ast_alt: 450, bilirubin: 8.5, albumin: 2.3,
+                    hemoglobin: 9.8, hematocrit: 29.4, wbc_count: 11.5, platelet_count: 125, rbc_count: 3.5,
+                    liver_disease: 1, hypertension: 1,
+                    medication_name: 'Acetaminophen', index_drug_dose: 250, drug_interactions: 'Major',
+                    concomitant_drugs_count: 8,
+                    cyp2c9: 'Poor', cyp2d6: 'IM', bp_systolic: 145, bp_diastolic: 88,
+                    heart_rate: 82, time_since_start_days: 21
+                },
+                'kidney-disease': {
+                    name: 'Kidney Disease Patient - Chronic Renal Failure',
+                    age: 68, sex: 'F', ethnicity: 'Black', height: 165, weight: 72, bmi: 26.4,
+                    creatinine: 6.8, egfr: 15, ast_alt: 35, bilirubin: 1.2, albumin: 3.1,
+                    hemoglobin: 7.2, hematocrit: 21.6, wbc_count: 8.5, platelet_count: 245, rbc_count: 2.8,
+                    diabetes: 1, ckd: 1, cardiac_disease: 1, hypertension: 1,
+                    medication_name: 'Furosemide', index_drug_dose: 350, drug_interactions: 'Moderate',
+                    concomitant_drugs_count: 15,
+                    cyp2c9: 'Intermediate', cyp2d6: 'PM', bp_systolic: 175, bp_diastolic: 98,
+                    heart_rate: 95, time_since_start_days: 60
+                },
+                'cardiac-patient': {
+                    name: 'Cardiac Patient - Heart Failure with Arrhythmia',
+                    age: 71, sex: 'M', ethnicity: 'White', height: 178, weight: 88, bmi: 27.8,
+                    creatinine: 2.1, egfr: 42, ast_alt: 65, bilirubin: 1.5, albumin: 3.8,
+                    hemoglobin: 11.2, hematocrit: 33.6, wbc_count: 7.8, platelet_count: 195, rbc_count: 4.1,
+                    diabetes: 1, cardiac_disease: 1, hypertension: 1,
+                    medication_name: 'Digoxin', index_drug_dose: 125, drug_interactions: 'Major',
+                    concomitant_drugs_count: 14,
+                    cyp2c9: 'Wild', cyp2d6: 'IM', bp_systolic: 155, bp_diastolic: 92,
+                    heart_rate: 105, time_since_start_days: 35
+                },
+                'elderly-frail': {
+                    name: 'Elderly Frail Patient - Multiple Medications',
+                    age: 82, sex: 'F', ethnicity: 'Asian', height: 155, weight: 52, bmi: 21.6,
+                    creatinine: 2.5, egfr: 28, ast_alt: 85, bilirubin: 1.8, albumin: 2.9,
+                    hemoglobin: 9.1, hematocrit: 27.3, wbc_count: 6.2, platelet_count: 165, rbc_count: 3.3,
+                    diabetes: 1, ckd: 1, cardiac_disease: 1, hypertension: 1, respiratory_disease: 1, neurological_disease: 1,
+                    medication_name: 'Warfarin', index_drug_dose: 175, drug_interactions: 'Major',
+                    concomitant_drugs_count: 22,
+                    cyp2c9: 'Poor', cyp2d6: 'PM', bp_systolic: 165, bp_diastolic: 85,
+                    heart_rate: 88, time_since_start_days: 90
+                },
+                'cancer-patient': {
+                    name: 'Cancer Patient - Chemotherapy Treatment',
+                    age: 58, sex: 'F', ethnicity: 'White', height: 168, weight: 65, bmi: 23.0,
+                    creatinine: 1.6, egfr: 65, ast_alt: 195, bilirubin: 2.8, albumin: 3.0,
+                    hemoglobin: 8.8, hematocrit: 26.4, wbc_count: 3.2, platelet_count: 85, rbc_count: 3.1,
+                    liver_disease: 1,
+                    medication_name: 'Methotrexate', index_drug_dose: 450, drug_interactions: 'Major',
+                    concomitant_drugs_count: 10,
+                    cyp2c9: 'Intermediate', cyp2d6: 'EM', bp_systolic: 125, bp_diastolic: 78,
+                    heart_rate: 92, time_since_start_days: 28
+                },
+                'pediatric-equivalent': {
+                    name: 'Young Adult Patient - Minimal Risk Profile',
+                    age: 22, sex: 'F', ethnicity: 'Hispanic', height: 162, weight: 58, bmi: 22.1,
+                    creatinine: 0.8, egfr: 105, ast_alt: 28, bilirubin: 0.6, albumin: 4.8,
+                    hemoglobin: 13.8, hematocrit: 41.4, wbc_count: 6.5, platelet_count: 325, rbc_count: 4.6,
+                    medication_name: 'Ibuprofen', index_drug_dose: 150, drug_interactions: 'None',
                     concomitant_drugs_count: 2,
-                    cyp2c9: 'Wild', cyp2d6: 'EM', bp_systolic: 120, bp_diastolic: 75,
-                    heart_rate: 68, time_since_start_days: 14
+                    cyp2c9: 'Wild', cyp2d6: 'EM', bp_systolic: 115, bp_diastolic: 72,
+                    heart_rate: 68, time_since_start_days: 7
                 }
             };
 
@@ -3359,6 +3524,7 @@
                         // Convert numeric fields
                         if (['age', 'height', 'weight', 'bmi', 'creatinine', 'egfr', 'ast_alt',
                             'bilirubin', 'albumin', 'temperature', 'ind_value', 'atpp_value',
+                            'hemoglobin', 'hematocrit', 'wbc_count', 'platelet_count', 'rbc_count',
                             'index_drug_dose', 'concomitant_drugs_count',
                             'bp_systolic', 'bp_diastolic', 'heart_rate', 'time_since_start_days'].includes(key)) {
                             patientData[key] = parseFloat(value);
