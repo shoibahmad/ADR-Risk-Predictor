@@ -4028,13 +4028,18 @@
                 // Update loading text for final processing
                 document.getElementById('loading-text').textContent = 'Finalizing assessment results...';
 
-                // *** ADD 3-SECOND DELAY BEFORE SHOWING RESULTS ***
-                // Update loading text during delay
+                // *** ADD 6-SECOND DELAY BEFORE SHOWING RESULTS ***
+                // This provides users with adequate time to anticipate results and creates
+                // a more professional assessment experience with detailed progress updates
+                // Update loading text during delay with more detailed messages
                 document.getElementById('loading-text').textContent = 'Analyzing drug interactions and calculating comprehensive risk...';
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await new Promise(resolve => setTimeout(resolve, 2000));
                 
-                document.getElementById('loading-text').textContent = 'Generating personalized recommendations...';
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                document.getElementById('loading-text').textContent = 'Evaluating pharmacogenomic factors and patient-specific risks...';
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                document.getElementById('loading-text').textContent = 'Generating personalized recommendations and clinical insights...';
+                await new Promise(resolve => setTimeout(resolve, 2000));
 
                 // Store current data
                 currentPatientData = patientData;

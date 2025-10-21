@@ -1,7 +1,7 @@
 # External Drugs Implementation - ADR Risk Predictor
 
 ## Overview
-This document outlines the comprehensive implementation of external drug analysis functionality in the ADR Risk Predictor system. The changes ensure that all medications (primary + external) are properly considered in ADR risk assessment with a 3-second delay before showing results.
+This document outlines the comprehensive implementation of external drug analysis functionality in the ADR Risk Predictor system. The changes ensure that all medications (primary + external) are properly considered in ADR risk assessment with a 6-second delay before showing results.
 
 ## Key Changes Made
 
@@ -11,7 +11,7 @@ This document outlines the comprehensive implementation of external drug analysi
 - **Comprehensive Drug Collection**: Modified the form submission to collect all external drugs from the concomitant drug inputs
 - **Drug Risk Analysis**: Added logic to analyze high-risk drugs, QT-prolonging drugs, CYP inhibitors, and bleeding risk medications
 - **Real-time Feedback**: Enhanced `updateDrugCount()` function to show which external drugs will be analyzed
-- **3-Second Delay**: Added progressive loading messages with a 3-second delay before showing results
+- **6-Second Delay**: Added progressive loading messages with a 6-second delay before showing results
 
 #### New Display Components
 - **Comprehensive Drug Analysis Section**: Added `generateComprehensiveDrugAnalysis()` function to display:
@@ -23,11 +23,12 @@ This document outlines the comprehensive implementation of external drug analysi
   - Risk flags (QT prolongation, CYP inhibition, bleeding risk, narrow therapeutic index)
 
 #### Enhanced User Experience
-- **Progressive Loading**: Updated loading text during the 3-second delay:
+- **Progressive Loading**: Updated loading text during the 6-second delay:
   1. "Analyzing all medications and patient data..."
   2. "Running ADR risk prediction model..."
-  3. "Analyzing drug interactions and calculating comprehensive risk..."
-  4. "Generating personalized recommendations..."
+  3. "Analyzing drug interactions and calculating comprehensive risk..." (2 seconds)
+  4. "Evaluating pharmacogenomic factors and patient-specific risks..." (2 seconds)
+  5. "Generating personalized recommendations and clinical insights..." (2 seconds)
 - **Visual Feedback**: Added real-time feedback showing which external drugs will be analyzed
 
 ### 2. Backend Enhancements (app.py)
@@ -104,7 +105,7 @@ This document outlines the comprehensive implementation of external drug analysi
 - **Risk Stratification**: Enhanced risk scoring based on complete medication profile
 
 ### 2. Enhanced User Experience
-- **3-Second Delay**: Provides time for users to anticipate results
+- **6-Second Delay**: Provides adequate time for users to anticipate results and creates a more professional assessment experience
 - **Progressive Loading**: Clear feedback during processing
 - **Visual Feedback**: Real-time indication of which drugs are being analyzed
 
@@ -124,7 +125,7 @@ This document outlines the comprehensive implementation of external drug analysi
 1. **Enter Primary Medication**: Fill in the main medication name and dose
 2. **Add External Drugs**: Use "Add Another Drug" button to include all other medications
 3. **Submit Assessment**: Click "Predict ADR Risk" to start comprehensive analysis
-4. **Review Results**: Wait for 3-second processing, then review comprehensive drug analysis
+4. **Review Results**: Wait for 6-second processing with detailed progress updates, then review comprehensive drug analysis
 
 ### For Developers
 1. **API Integration**: Use `/predict` endpoint with `external_drugs_list` and `all_medications` fields
