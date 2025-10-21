@@ -3896,6 +3896,9 @@
 
             try {
                 showLoading();
+                
+                // Update loading text to show processing
+                document.getElementById('loading-text').textContent = 'Analyzing all medications and patient data...';
 
                 // Collect form data
                 const formData = new FormData(e.target);
@@ -3927,6 +3930,33 @@
                     }
                 }
 
+                // *** ENHANCED: Collect all external/concomitant drugs ***
+                const externalDrugs = [];
+                const concomitantInputs = document.querySelectorAll('.concomitant-drug-input');
+                concomitantInputs.forEach((input, index) => {
+                    if (input.value.trim() !== '') {
+                        externalDrugs.push({
+                            name: input.value.trim(),
+                            index: index + 1
+                        });
+                    }
+                });
+
+                // Add external drugs to patient data for comprehensive analysis
+                patientData.external_drugs = externalDrugs;
+                patientData.external_drugs_list = externalDrugs.map(drug => drug.name);
+                
+                // Create comprehensive medication list including primary + external drugs
+                const allMedications = [];
+                if (patientData.medication_name && patientData.medication_name.trim() !== '') {
+                    allMedications.push(patientData.medication_name.trim());
+                }
+                allMedications.push(...patientData.external_drugs_list);
+                patientData.all_medications = allMedications;
+
+                // Update concomitant drug count to reflect actual external drugs
+                patientData.concomitant_drugs_count = externalDrugs.length;
+
                 // Set default values for unchecked checkboxes
                 const checkboxFields = ['diabetes', 'liver_disease', 'ckd', 'cardiac_disease', 'hypertension',
                     'respiratory_disease', 'neurological_disease', 'autoimmune_disease',
@@ -3939,12 +3969,44 @@
                     }
                 });
 
+                // *** ENHANCED: Adjust risk factors based on external drugs ***
+                // Increase risk if multiple high-risk drugs are present
+                const highRiskDrugs = ['warfarin', 'digoxin', 'lithium', 'phenytoin', 'carbamazepine', 'methotrexate'];
+                const qtProlongingDrugs = ['amiodarone', 'sotalol', 'quinidine', 'haloperidol', 'ondansetron'];
+                const cypInhibitors = ['fluconazole', 'ketoconazole', 'erythromycin', 'clarithromycin', 'grapefruit'];
+
+                let hasHighRiskDrug = false;
+                let hasQTProlongingDrug = false;
+                let hasCYPInhibitor = false;
+
+                allMedications.forEach(med => {
+                    const medLower = med.toLowerCase();
+                    if (highRiskDrugs.some(drug => medLower.includes(drug))) {
+                        hasHighRiskDrug = true;
+                    }
+                    if (qtProlongingDrugs.some(drug => medLower.includes(drug))) {
+                        hasQTProlongingDrug = true;
+                        patientData.qt_prolonging_flag = 1;
+                    }
+                    if (cypInhibitors.some(drug => medLower.includes(drug))) {
+                        hasCYPInhibitor = true;
+                        patientData.cyp_inhibitors_flag = 1;
+                    }
+                });
+
+                // Adjust polypharmacy and interaction flags based on comprehensive drug analysis
+                patientData.polypharmacy_flag = allMedications.length > 5 ? 1 : 0;
+                patientData.high_risk_drug_flag = hasHighRiskDrug ? 1 : 0;
+
                 // Calculate derived fields required by the model
-                patientData.polypharmacy_flag = patientData.concomitant_drugs_count > 5 ? 1 : 0;
                 patientData.cumulative_dose_mg = patientData.index_drug_dose * patientData.time_since_start_days;
                 patientData.dose_density_mg_day = patientData.cumulative_dose_mg / patientData.time_since_start_days;
 
-                console.log('Sending patient data:', patientData);
+                console.log('Sending comprehensive patient data:', patientData);
+                console.log('All medications being analyzed:', allMedications);
+
+                // Update loading text
+                document.getElementById('loading-text').textContent = 'Running ADR risk prediction model...';
 
                 // Make prediction request
                 const response = await fetch('/predict', {
@@ -3963,6 +4025,17 @@
                 const result = await response.json();
                 console.log('Prediction result:', result);
 
+                // Update loading text for final processing
+                document.getElementById('loading-text').textContent = 'Finalizing assessment results...';
+
+                // *** ADD 3-SECOND DELAY BEFORE SHOWING RESULTS ***
+                // Update loading text during delay
+                document.getElementById('loading-text').textContent = 'Analyzing drug interactions and calculating comprehensive risk...';
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                document.getElementById('loading-text').textContent = 'Generating personalized recommendations...';
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
                 // Store current data
                 currentPatientData = patientData;
                 currentPredictionResult = result;
@@ -3973,13 +4046,15 @@
                 // Automatically generate AI report
                 generateAIReport();
 
-                showNotification('ADR risk assessment completed successfully!', 'success');
+                showNotification('ADR risk assessment completed successfully! All medications analyzed.', 'success');
 
             } catch (error) {
                 console.error('Error:', error);
                 showNotification(`Failed to assess ADR risk: ${error.message}`, 'error');
             } finally {
                 hideLoading();
+                // Reset loading text
+                document.getElementById('loading-text').textContent = 'Processing assessment...';
             }
         });
 
@@ -4193,6 +4268,135 @@
             `;
         }
 
+        // Generate comprehensive drug analysis display
+        function generateComprehensiveDrugAnalysis(result) {
+            const drugAnalysis = result.comprehensive_drug_analysis;
+            
+            if (!drugAnalysis || !drugAnalysis.all_medications_analyzed || drugAnalysis.all_medications_analyzed.length === 0) {
+                return '';
+            }
+
+            const getRiskColor = (score) => {
+                if (score >= 6) return { color: '#ef4444', bg: '#fef2f2', border: '#fecaca', level: 'HIGH' };
+                if (score >= 3) return { color: '#f59e0b', bg: '#fffbeb', border: '#fed7aa', level: 'MODERATE' };
+                return { color: '#10b981', bg: '#f0fdf4', border: '#bbf7d0', level: 'LOW' };
+            };
+
+            const riskStyle = getRiskColor(drugAnalysis.interaction_risk_score || 0);
+
+            return `
+                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #0ea5e9; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 20px 0; color: #0c4a6e; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-pills" style="color: #0ea5e9;"></i>
+                        Comprehensive Drug Analysis
+                        <span style="background: ${riskStyle.bg}; color: ${riskStyle.color}; padding: 4px 12px; border-radius: 16px; font-size: 0.8rem; font-weight: 700; margin-left: auto;">
+                            ${riskStyle.level} INTERACTION RISK
+                        </span>
+                    </h4>
+                    
+                    <!-- Medication Summary -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div style="background: white; padding: 16px; border-radius: 10px; border: 2px solid #e0f2fe; text-align: center;">
+                            <div style="color: #0ea5e9; font-size: 2rem; font-weight: 700; margin-bottom: 5px;">
+                                ${drugAnalysis.total_medication_count || 0}
+                            </div>
+                            <div style="color: #374151; font-size: 0.9rem; font-weight: 600;">Total Medications</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 16px; border-radius: 10px; border: 2px solid ${drugAnalysis.high_risk_drug_count > 0 ? '#fecaca' : '#e0f2fe'}; text-align: center;">
+                            <div style="color: ${drugAnalysis.high_risk_drug_count > 0 ? '#ef4444' : '#0ea5e9'}; font-size: 2rem; font-weight: 700; margin-bottom: 5px;">
+                                ${drugAnalysis.high_risk_drug_count || 0}
+                            </div>
+                            <div style="color: #374151; font-size: 0.9rem; font-weight: 600;">High-Risk Drugs</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 16px; border-radius: 10px; border: 2px solid ${riskStyle.border}; text-align: center;">
+                            <div style="color: ${riskStyle.color}; font-size: 2rem; font-weight: 700; margin-bottom: 5px;">
+                                ${drugAnalysis.interaction_risk_score || 0}
+                            </div>
+                            <div style="color: #374151; font-size: 0.9rem; font-weight: 600;">Interaction Score</div>
+                        </div>
+                    </div>
+
+                    <!-- All Medications List -->
+                    <div style="background: white; padding: 16px; border-radius: 10px; border: 1px solid #e5e7eb; margin-bottom: 15px;">
+                        <h5 style="margin: 0 0 12px 0; color: #374151; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-list" style="color: #0ea5e9;"></i>
+                            All Medications Being Analyzed
+                        </h5>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            ${drugAnalysis.all_medications_analyzed.map((med, index) => `
+                                <span style="background: ${index === 0 ? '#dbeafe' : '#f3f4f6'}; color: ${index === 0 ? '#1e40af' : '#374151'}; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; border: 1px solid ${index === 0 ? '#93c5fd' : '#d1d5db'};">
+                                    ${index === 0 ? '🎯 ' : ''}${med}
+                                </span>
+                            `).join('')}
+                        </div>
+                        ${drugAnalysis.external_drugs_count > 0 ? `
+                            <div style="margin-top: 10px; padding: 8px 12px; background: #f0f9ff; border-radius: 6px; border-left: 3px solid #0ea5e9;">
+                                <i class="fas fa-info-circle" style="color: #0ea5e9; margin-right: 6px;"></i>
+                                <span style="color: #0c4a6e; font-size: 0.85rem; font-weight: 500;">
+                                    ${drugAnalysis.external_drugs_count} external medication(s) included in analysis
+                                </span>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Risk Flags -->
+                    ${drugAnalysis.detected_drug_risks && drugAnalysis.detected_drug_risks.length > 0 ? `
+                        <div style="background: #fef2f2; padding: 16px; border-radius: 10px; border: 1px solid #fecaca; margin-bottom: 15px;">
+                            <h5 style="margin: 0 0 12px 0; color: #dc2626; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-exclamation-triangle" style="color: #dc2626;"></i>
+                                Detected Drug Risks
+                            </h5>
+                            <ul style="margin: 0; padding-left: 20px; color: #7f1d1d;">
+                                ${drugAnalysis.detected_drug_risks.map(risk => `
+                                    <li style="margin-bottom: 6px; font-size: 0.9rem;">${risk}</li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    <!-- Risk Factor Summary -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+                        ${drugAnalysis.qt_prolonging_flag ? `
+                            <div style="background: #fef2f2; padding: 12px; border-radius: 8px; border-left: 3px solid #ef4444; text-align: center;">
+                                <i class="fas fa-heartbeat" style="color: #ef4444; font-size: 1.2rem; margin-bottom: 5px;"></i>
+                                <div style="color: #dc2626; font-size: 0.8rem; font-weight: 600;">QT Prolongation Risk</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${drugAnalysis.cyp_inhibitors_flag ? `
+                            <div style="background: #fef2f2; padding: 12px; border-radius: 8px; border-left: 3px solid #f59e0b; text-align: center;">
+                                <i class="fas fa-dna" style="color: #f59e0b; font-size: 1.2rem; margin-bottom: 5px;"></i>
+                                <div style="color: #d97706; font-size: 0.8rem; font-weight: 600;">CYP Inhibition</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${drugAnalysis.bleeding_risk_flag ? `
+                            <div style="background: #fef2f2; padding: 12px; border-radius: 8px; border-left: 3px solid #dc2626; text-align: center;">
+                                <i class="fas fa-tint" style="color: #dc2626; font-size: 1.2rem; margin-bottom: 5px;"></i>
+                                <div style="color: #dc2626; font-size: 0.8rem; font-weight: 600;">Bleeding Risk</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${drugAnalysis.narrow_therapeutic_flag ? `
+                            <div style="background: #fef2f2; padding: 12px; border-radius: 8px; border-left: 3px solid #7c2d12; text-align: center;">
+                                <i class="fas fa-balance-scale" style="color: #7c2d12; font-size: 1.2rem; margin-bottom: 5px;"></i>
+                                <div style="color: #7c2d12; font-size: 0.8rem; font-weight: 600;">Narrow Therapeutic Index</div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Final Interaction Severity -->
+                    <div style="background: ${riskStyle.bg}; padding: 12px 16px; border-radius: 8px; border: 1px solid ${riskStyle.border}; margin-top: 15px; text-align: center;">
+                        <span style="color: ${riskStyle.color}; font-weight: 700; font-size: 1rem;">
+                            Final Drug Interaction Severity: ${drugAnalysis.final_drug_interaction_severity || 'Minor'}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
         // Generate medication suggestions based on risk assessment
         function generateMedicationSuggestions(result) {
             const currentMedication = currentPatientData.medication_name || 'Current medication';
@@ -4387,6 +4591,8 @@
                         
                         ${generateSpecificADRTypes(result)}
                         
+                        ${generateComprehensiveDrugAnalysis(result)}
+                        
                         ${generateMedicationSuggestions(result)}
                         ${generateClinicalSuggestions(result)}
                     </div>
@@ -4537,14 +4743,47 @@
             const container = document.getElementById('concomitant-drugs-container');
             const inputs = container.querySelectorAll('.concomitant-drug-input');
             let count = 0;
+            let drugNames = [];
 
             inputs.forEach(input => {
                 if (input.value.trim() !== '') {
                     count++;
+                    drugNames.push(input.value.trim());
                 }
             });
 
             document.getElementById('concomitant_drugs_count').value = count;
+            
+            // Show feedback about external drugs
+            const feedbackElement = document.getElementById('external-drugs-feedback');
+            if (feedbackElement) {
+                feedbackElement.remove();
+            }
+            
+            if (count > 0) {
+                const feedback = document.createElement('div');
+                feedback.id = 'external-drugs-feedback';
+                feedback.style.cssText = `
+                    margin-top: 10px; 
+                    padding: 12px; 
+                    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); 
+                    border-radius: 8px; 
+                    border-left: 4px solid #0ea5e9;
+                    font-size: 0.9rem;
+                `;
+                feedback.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <i class="fas fa-pills" style="color: #0ea5e9;"></i>
+                        <span style="color: #0c4a6e; font-weight: 600;">
+                            ${count} external medication${count > 1 ? 's' : ''} will be analyzed for ADR risk
+                        </span>
+                    </div>
+                    <div style="color: #0369a1; font-size: 0.85rem;">
+                        All medications: ${drugNames.join(', ')}
+                    </div>
+                `;
+                container.appendChild(feedback);
+            }
         }
 
         // Auto-update drug count when typing

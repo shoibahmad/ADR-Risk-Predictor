@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test External Drugs Functionality</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .external-drugs {
+            border: 2px solid #e0f2fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            background: #f0f9ff;
+        }
+        .drug-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .drug-input input {
+            flex: 1;
+        }
+        .add-drug-btn, .remove-drug-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .add-drug-btn {
+            background: #10b981;
+            color: white;
+        }
+        .remove-drug-btn {
+            background: #ef4444;
+            color: white;
+        }
+        .submit-btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        .error {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+            color: #dc2626;
+        }
+        .success {
+            background: #f0fdf4;
+            border-left-color: #10b981;
+            color: #047857;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test External Drugs Functionality</h1>
+        <p>This page tests whether external drugs are properly included in ADR risk assessment.</p>
+        
+        <form id="test-form">
+            <div class="form-group">
+                <label for="medication_name">Primary Medication:</label>
+                <input type="text" id="medication_name" name="medication_name" value="Warfarin" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="index_drug_dose">Primary Drug Dose (mg):</label>
+                <input type="number" id="index_drug_dose" name="index_drug_dose" value="5" required>
+            </div>
+            
+            <div class="external-drugs">
+                <h3>External/Concomitant Medications</h3>
+                <p>Add external medications to test if they affect ADR risk calculation:</p>
+                
+                <div id="external-drugs-container">
+                    <div class="drug-input">
+                        <input type="text" placeholder="Enter drug name (e.g., Aspirin 81mg)" class="external-drug-input">
+                        <button type="button" class="remove-drug-btn" onclick="removeDrug(this)">Remove</button>
+                    </div>
+                </div>
+                
+                <button type="button" class="add-drug-btn" onclick="addDrug()">Add Another Drug</button>
+                
+                <div id="drug-feedback" style="margin-top: 10px; font-size: 14px; color: #0369a1;"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" value="65" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="sex">Sex:</label>
+                <select id="sex" name="sex" required>
+                    <option value="M" selected>Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="cardiac_disease">Cardiac Disease:</label>
+                <select id="cardiac_disease" name="cardiac_disease">
+                    <option value="0">No</option>
+                    <option value="1" selected>Yes</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-btn">Test ADR Prediction</button>
+        </form>
+        
+        <div id="results" class="results" style="display: none;">
+            <h3>Results</h3>
+            <div id="results-content"></div>
+        </div>
+    </div>
+
+    <script>
+        let drugCount = 1;
+
+        function addDrug() {
+            const container = document.getElementById('external-drugs-container');
+            const drugInput = document.createElement('div');
+            drugInput.className = 'drug-input';
+            drugInput.innerHTML = `
+                <input type="text" placeholder="Enter drug name (e.g., Metoprolol 50mg)" class="external-drug-input">
+                <button type="button" class="remove-drug-btn" onclick="removeDrug(this)">Remove</button>
+            `;
+            container.appendChild(drugInput);
+            drugCount++;
+            updateDrugFeedback();
+        }
+
+        function removeDrug(button) {
+            const container = document.getElementById('external-drugs-container');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+                drugCount--;
+                updateDrugFeedback();
+            }
+        }
+
+        function updateDrugFeedback() {
+            const inputs = document.querySelectorAll('.external-drug-input');
+            const drugs = [];
+            inputs.forEach(input => {
+                if (input.value.trim()) {
+                    drugs.push(input.value.trim());
+                }
+            });
+            
+            const feedback = document.getElementById('drug-feedback');
+            if (drugs.length > 0) {
+                feedback.innerHTML = `<strong>${drugs.length} external drug(s) will be analyzed:</strong><br>${drugs.join(', ')}`;
+            } else {
+                feedback.innerHTML = 'No external drugs added. Only primary medication will be analyzed.';
+            }
+        }
+
+        // Add event listeners to update feedback
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('external-drug-input')) {
+                updateDrugFeedback();
+            }
+        });
+
+        // Form submission
+        document.getElementById('test-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const resultsDiv = document.getElementById('results');
+            const resultsContent = document.getElementById('results-content');
+            
+            // Show loading
+            resultsDiv.style.display = 'block';
+            resultsDiv.className = 'results';
+            resultsContent.innerHTML = '<div class="loading">🔄 Processing ADR prediction with external drugs...</div>';
+            
+            try {
+                // Collect form data
+                const formData = new FormData(e.target);
+                const data = {};
+                
+                for (let [key, value] of formData.entries()) {
+                    if (key === 'cardiac_disease' || key === 'age' || key === 'index_drug_dose') {
+                        data[key] = parseInt(value);
+                    } else {
+                        data[key] = value;
+                    }
+                }
+                
+                // Collect external drugs
+                const externalDrugs = [];
+                const inputs = document.querySelectorAll('.external-drug-input');
+                inputs.forEach((input, index) => {
+                    if (input.value.trim()) {
+                        externalDrugs.push({
+                            name: input.value.trim(),
+                            index: index + 1
+                        });
+                    }
+                });
+                
+                // Add external drug data
+                data.external_drugs = externalDrugs;
+                data.external_drugs_list = externalDrugs.map(drug => drug.name);
+                data.all_medications = [data.medication_name, ...data.external_drugs_list];
+                data.concomitant_drugs_count = externalDrugs.length;
+                
+                // Add default values
+                data.weight = 80;
+                data.height = 175;
+                data.bmi = 26.1;
+                data.creatinine = 1.2;
+                data.egfr = 75;
+                data.ast_alt = 35;
+                data.diabetes = 0;
+                data.liver_disease = 0;
+                data.ckd = 0;
+                data.hypertension = 1;
+                data.cyp2c9 = 'Wild';
+                data.cyp2d6 = 'EM';
+                data.bp_systolic = 145;
+                data.bp_diastolic = 90;
+                data.heart_rate = 72;
+                
+                console.log('Sending data:', data);
+                
+                // Make prediction request
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('Result:', result);
+                
+                // Display results
+                resultsDiv.className = 'results success';
+                
+                const drugAnalysis = result.comprehensive_drug_analysis || {};
+                
+                resultsContent.innerHTML = `
+                    <h4>✅ ADR Prediction Results</h4>
+                    <p><strong>Risk Level:</strong> ${result.risk_level}</p>
+                    <p><strong>Predicted ADR:</strong> ${result.predicted_adr_type}</p>
+                    <p><strong>No ADR Probability:</strong> ${result.no_adr_probability}%</p>
+                    
+                    <h4>📊 Comprehensive Drug Analysis</h4>
+                    <p><strong>Total Medications Analyzed:</strong> ${drugAnalysis.all_medications_analyzed ? drugAnalysis.all_medications_analyzed.length : 0}</p>
+                    <p><strong>External Drugs Count:</strong> ${drugAnalysis.external_drugs_count || 0}</p>
+                    <p><strong>Interaction Risk Score:</strong> ${drugAnalysis.interaction_risk_score || 0}/10</p>
+                    <p><strong>High-Risk Drug Count:</strong> ${drugAnalysis.high_risk_drug_count || 0}</p>
+                    <p><strong>Final Interaction Severity:</strong> ${drugAnalysis.final_drug_interaction_severity || 'Minor'}</p>
+                    
+                    ${drugAnalysis.all_medications_analyzed ? `
+                        <h4>💊 All Medications Analyzed</h4>
+                        <ul>
+                            ${drugAnalysis.all_medications_analyzed.map(med => `<li>${med}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                    
+                    ${drugAnalysis.detected_drug_risks && drugAnalysis.detected_drug_risks.length > 0 ? `
+                        <h4>⚠️ Detected Drug Risks</h4>
+                        <ul>
+                            ${drugAnalysis.detected_drug_risks.map(risk => `<li>${risk}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                    
+                    <h4>🔍 Risk Flags</h4>
+                    <p><strong>QT Prolongation:</strong> ${drugAnalysis.qt_prolonging_flag ? '⚠️ Detected' : '✅ None'}</p>
+                    <p><strong>CYP Inhibition:</strong> ${drugAnalysis.cyp_inhibitors_flag ? '⚠️ Detected' : '✅ None'}</p>
+                    <p><strong>Bleeding Risk:</strong> ${drugAnalysis.bleeding_risk_flag ? '⚠️ Detected' : '✅ None'}</p>
+                    <p><strong>Narrow Therapeutic Index:</strong> ${drugAnalysis.narrow_therapeutic_flag ? '⚠️ Detected' : '✅ None'}</p>
+                `;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.className = 'results error';
+                resultsContent.innerHTML = `
+                    <h4>❌ Error</h4>
+                    <p>Failed to get ADR prediction: ${error.message}</p>
+                    <p>Make sure the Flask server is running on localhost:5000</p>
+                `;
+            }
+        });
+
+        // Initialize
+        updateDrugFeedback();
+    </script>
+</body>
+</html>

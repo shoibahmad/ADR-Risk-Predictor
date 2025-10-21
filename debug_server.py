@@ -31,6 +31,717 @@ except Exception as e:
     model = None
     preprocessor = None
 
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# 🧬 ADVANCED PHARMACOGENOMICS & PRECISION MEDICINE MODULE
+# ═══════════════════════════════════════════════════════════════════════════════════════
+
+class AdvancedPharmacogenomics:
+    """Advanced pharmacogenomic analysis and personalized dosing algorithms"""
+    
+    def __init__(self):
+        # CYP Enzyme Activity Scores
+        self.cyp_activity_scores = {
+            'CYP2C9': {'Poor': 0.1, 'Intermediate': 0.5, 'Wild': 1.0, 'Rapid': 1.5},
+            'CYP2D6': {'PM': 0.0, 'IM': 0.5, 'EM': 1.0, 'UM': 2.0},
+            'CYP3A4': {'Poor': 0.2, 'Intermediate': 0.6, 'Normal': 1.0, 'Rapid': 1.8},
+            'CYP1A2': {'Slow': 0.3, 'Intermediate': 0.7, 'Normal': 1.0, 'Rapid': 1.6},
+            'CYP2B6': {'Poor': 0.1, 'Intermediate': 0.4, 'Normal': 1.0, 'Rapid': 1.7},
+            'CYP2C19': {'PM': 0.0, 'IM': 0.3, 'EM': 1.0, 'RM': 1.5, 'UM': 2.5}
+        }
+        
+        # Transporter Activity Profiles
+        self.transporter_profiles = {
+            'SLCO1B1': {
+                '*1/*1': {'activity': 1.0, 'risk': 'Low'},
+                '*5/*5': {'activity': 0.2, 'risk': 'High'},
+                '*15/*15': {'activity': 0.3, 'risk': 'High'},
+                '*1/*5': {'activity': 0.6, 'risk': 'Intermediate'},
+                '*1/*15': {'activity': 0.65, 'risk': 'Intermediate'}
+            },
+            'ABCB1': {
+                'CC': {'activity': 1.0, 'risk': 'Low'},
+                'CT': {'activity': 0.7, 'risk': 'Intermediate'},
+                'TT': {'activity': 0.4, 'risk': 'High'}
+            },
+            'ABCG2': {
+                'Wild/Wild': {'activity': 1.0, 'risk': 'Low'},
+                'Wild/Variant': {'activity': 0.6, 'risk': 'Intermediate'},
+                'Variant/Variant': {'activity': 0.3, 'risk': 'High'}
+            }
+        }
+        
+        # HLA Risk Alleles for Hypersensitivity Reactions
+        self.hla_drug_associations = {
+            'HLA-B*5701': {
+                'drugs': ['Abacavir', 'Flucloxacillin'],
+                'reaction': 'Severe Hypersensitivity Syndrome',
+                'risk_level': 'Critical'
+            },
+            'HLA-B*5801': {
+                'drugs': ['Allopurinol', 'Carbamazepine'],
+                'reaction': 'Stevens-Johnson Syndrome/TEN',
+                'risk_level': 'Critical'
+            },
+            'HLA-A*3101': {
+                'drugs': ['Carbamazepine', 'Phenytoin'],
+                'reaction': 'Severe Cutaneous Reactions',
+                'risk_level': 'High'
+            },
+            'HLA-DRB1*0701': {
+                'drugs': ['Lapatinib'],
+                'reaction': 'Drug-Induced Liver Injury',
+                'risk_level': 'High'
+            },
+            'HLA-DQA1*0201': {
+                'drugs': ['Terbinafine'],
+                'reaction': 'Hepatotoxicity',
+                'risk_level': 'Moderate'
+            }
+        }
+
+    def analyze_expanded_cyp_profile(self, patient_data):
+        """Comprehensive CYP enzyme analysis"""
+        cyp_analysis = {
+            'CYP2C9': patient_data.get('cyp2c9', 'Wild'),
+            'CYP2D6': patient_data.get('cyp2d6', 'EM'),
+            'CYP3A4': patient_data.get('cyp3a4', 'Normal'),
+            'CYP1A2': patient_data.get('cyp1a2', 'Normal'),
+            'CYP2B6': patient_data.get('cyp2b6', 'Normal'),
+            'CYP2C19': patient_data.get('cyp2c19', 'EM')
+        }
+        
+        detailed_analysis = {}
+        overall_metabolism_score = 0
+        
+        for enzyme, genotype in cyp_analysis.items():
+            activity_score = self.cyp_activity_scores[enzyme].get(genotype, 1.0)
+            
+            # Determine risk level
+            if activity_score <= 0.2:
+                risk_level = 'Critical'
+                clinical_impact = 'Severe impairment - major dose reduction required'
+            elif activity_score <= 0.5:
+                risk_level = 'High'
+                clinical_impact = 'Moderate impairment - dose reduction recommended'
+            elif activity_score >= 1.5:
+                risk_level = 'Moderate'
+                clinical_impact = 'Enhanced metabolism - dose increase may be needed'
+            else:
+                risk_level = 'Low'
+                clinical_impact = 'Normal metabolism expected'
+            
+            detailed_analysis[enzyme] = {
+                'genotype': genotype,
+                'activity_score': activity_score,
+                'risk_level': risk_level,
+                'clinical_impact': clinical_impact,
+                'affected_drugs': self.get_cyp_substrate_drugs(enzyme)
+            }
+            
+            overall_metabolism_score += activity_score
+        
+        # Calculate composite metabolism score
+        composite_score = overall_metabolism_score / len(cyp_analysis)
+        
+        return {
+            'individual_enzymes': detailed_analysis,
+            'composite_metabolism_score': composite_score,
+            'overall_risk_assessment': self.assess_overall_cyp_risk(composite_score),
+            'clinical_recommendations': self.generate_cyp_recommendations(detailed_analysis)
+        }
+
+    def analyze_transporter_genetics(self, patient_data):
+        """Comprehensive drug transporter genetic analysis"""
+        transporter_data = {
+            'SLCO1B1': patient_data.get('slco1b1_genotype', '*1/*1'),
+            'ABCB1': patient_data.get('abcb1_genotype', 'CC'),
+            'ABCG2': patient_data.get('abcg2_genotype', 'Wild/Wild')
+        }
+        
+        transporter_analysis = {}
+        
+        for transporter, genotype in transporter_data.items():
+            profile = self.transporter_profiles[transporter].get(genotype, {'activity': 1.0, 'risk': 'Unknown'})
+            
+            transporter_analysis[transporter] = {
+                'genotype': genotype,
+                'activity_level': profile['activity'],
+                'risk_category': profile['risk'],
+                'clinical_implications': self.get_transporter_implications(transporter, profile),
+                'affected_drugs': self.get_transporter_substrate_drugs(transporter)
+            }
+        
+        return {
+            'transporter_profiles': transporter_analysis,
+            'drug_disposition_risk': self.calculate_disposition_risk(transporter_analysis),
+            'monitoring_recommendations': self.generate_transporter_monitoring(transporter_analysis)
+        }
+
+    def analyze_hla_hypersensitivity_risk(self, patient_data, medication_name):
+        """Detailed HLA typing analysis for hypersensitivity risk"""
+        hla_alleles = {
+            'HLA-A': patient_data.get('hla_a_typing', []),
+            'HLA-B': patient_data.get('hla_b_typing', []),
+            'HLA-DRB1': patient_data.get('hla_drb1_typing', [])
+        }
+        
+        risk_assessment = {
+            'high_risk_alleles_present': [],
+            'drug_specific_risks': [],
+            'overall_hypersensitivity_risk': 'Low',
+            'clinical_recommendations': []
+        }
+        
+        # Check for high-risk HLA alleles
+        all_patient_alleles = []
+        for locus, alleles in hla_alleles.items():
+            if isinstance(alleles, list):
+                all_patient_alleles.extend(alleles)
+            elif alleles:
+                all_patient_alleles.append(alleles)
+        
+        for risk_allele, risk_data in self.hla_drug_associations.items():
+            if risk_allele in all_patient_alleles:
+                risk_assessment['high_risk_alleles_present'].append({
+                    'allele': risk_allele,
+                    'associated_drugs': risk_data['drugs'],
+                    'reaction_type': risk_data['reaction'],
+                    'risk_level': risk_data['risk_level']
+                })
+                
+                # Check if current medication is associated with this allele
+                if medication_name in risk_data['drugs']:
+                    risk_assessment['drug_specific_risks'].append({
+                        'medication': medication_name,
+                        'hla_allele': risk_allele,
+                        'reaction_risk': risk_data['reaction'],
+                        'recommendation': 'CONTRAINDICATED - Alternative therapy required'
+                    })
+                    risk_assessment['overall_hypersensitivity_risk'] = 'Critical'
+        
+        # Generate clinical recommendations
+        if risk_assessment['high_risk_alleles_present']:
+            risk_assessment['clinical_recommendations'] = self.generate_hla_recommendations(
+                risk_assessment['high_risk_alleles_present'], medication_name
+            )
+        
+        return risk_assessment
+
+    def calculate_personalized_dosing(self, patient_data, medication_name, standard_dose):
+        """Advanced personalized dosing algorithms"""
+        
+        # Get patient factors
+        age = patient_data.get('age', 50)
+        weight = patient_data.get('weight', 70)
+        creatinine = patient_data.get('creatinine', 1.0)
+        egfr = patient_data.get('egfr', 90)
+        ast_alt = patient_data.get('ast_alt', 30)
+        
+        # CYP enzyme analysis
+        cyp_analysis = self.analyze_expanded_cyp_profile(patient_data)
+        
+        # Base dose adjustment factors
+        dose_adjustments = {
+            'age_factor': self.calculate_age_adjustment(age),
+            'weight_factor': self.calculate_weight_adjustment(weight),
+            'renal_factor': self.calculate_renal_adjustment(egfr, creatinine),
+            'hepatic_factor': self.calculate_hepatic_adjustment(ast_alt),
+            'genetic_factor': self.calculate_genetic_adjustment(cyp_analysis, medication_name)
+        }
+        
+        # Calculate composite dose adjustment
+        composite_factor = 1.0
+        for factor_name, factor_value in dose_adjustments.items():
+            composite_factor *= factor_value
+        
+        # Apply safety constraints
+        min_dose_factor = 0.1  # Never reduce below 10% of standard dose
+        max_dose_factor = 2.0  # Never exceed 200% of standard dose
+        
+        final_dose_factor = max(min_dose_factor, min(max_dose_factor, composite_factor))
+        recommended_dose = standard_dose * final_dose_factor
+        
+        return {
+            'standard_dose': standard_dose,
+            'recommended_dose': round(recommended_dose, 1),
+            'dose_adjustment_factor': round(final_dose_factor, 2),
+            'individual_adjustments': dose_adjustments,
+            'dosing_rationale': self.generate_dosing_rationale(dose_adjustments, medication_name),
+            'monitoring_requirements': self.generate_dosing_monitoring(final_dose_factor, medication_name),
+            'tdm_recommendations': self.generate_tdm_recommendations(medication_name, final_dose_factor)
+        }
+
+    # Helper methods for pharmacogenomic analysis
+    def get_cyp_substrate_drugs(self, enzyme):
+        """Get list of drugs metabolized by specific CYP enzyme"""
+        cyp_substrates = {
+            'CYP2C9': ['Warfarin', 'Phenytoin', 'Tolbutamide', 'S-Warfarin', 'Losartan'],
+            'CYP2D6': ['Codeine', 'Tramadol', 'Metoprolol', 'Paroxetine', 'Risperidone'],
+            'CYP3A4': ['Simvastatin', 'Midazolam', 'Cyclosporine', 'Tacrolimus', 'Nifedipine'],
+            'CYP1A2': ['Caffeine', 'Theophylline', 'Clozapine', 'Olanzapine', 'Tizanidine'],
+            'CYP2B6': ['Bupropion', 'Efavirenz', 'Cyclophosphamide', 'Ketamine'],
+            'CYP2C19': ['Omeprazole', 'Clopidogrel', 'Escitalopram', 'Diazepam', 'Phenytoin']
+        }
+        return cyp_substrates.get(enzyme, [])
+
+    def get_transporter_substrate_drugs(self, transporter):
+        """Get drugs affected by specific transporters"""
+        transporter_substrates = {
+            'SLCO1B1': ['Simvastatin', 'Atorvastatin', 'Rosuvastatin', 'Metformin', 'Repaglinide'],
+            'ABCB1': ['Digoxin', 'Dabigatran', 'Fexofenadine', 'Loperamide', 'Cyclosporine'],
+            'ABCG2': ['Rosuvastatin', 'Sulfasalazine', 'Methotrexate', 'Topotecan', 'Imatinib']
+        }
+        return transporter_substrates.get(transporter, [])
+
+    def calculate_age_adjustment(self, age):
+        """Calculate age-based dose adjustment factor"""
+        if age < 18:
+            return 0.7  # Pediatric reduction
+        elif age >= 65:
+            return 0.8  # Geriatric reduction
+        else:
+            return 1.0  # Adult standard
+
+    def calculate_weight_adjustment(self, weight):
+        """Calculate weight-based dose adjustment factor"""
+        if weight < 50:
+            return 0.8
+        elif weight > 100:
+            return 1.2
+        else:
+            return 1.0
+
+    def calculate_renal_adjustment(self, egfr, creatinine):
+        """Calculate renal function-based dose adjustment"""
+        if egfr < 30:
+            return 0.5  # Severe CKD
+        elif egfr < 60:
+            return 0.7  # Moderate CKD
+        elif egfr < 90:
+            return 0.9  # Mild CKD
+        else:
+            return 1.0  # Normal function
+
+    def calculate_hepatic_adjustment(self, ast_alt):
+        """Calculate hepatic function-based dose adjustment"""
+        if ast_alt > 200:
+            return 0.5  # Severe hepatic impairment
+        elif ast_alt > 100:
+            return 0.7  # Moderate hepatic impairment
+        elif ast_alt > 60:
+            return 0.9  # Mild hepatic impairment
+        else:
+            return 1.0  # Normal function
+
+    def calculate_genetic_adjustment(self, cyp_analysis, medication_name):
+        """Calculate genetic-based dose adjustment factor"""
+        # This would be medication-specific based on primary metabolizing enzyme
+        composite_score = cyp_analysis.get('composite_metabolism_score', 1.0)
+        
+        if composite_score < 0.3:
+            return 0.5  # Poor metabolizer
+        elif composite_score < 0.7:
+            return 0.75  # Intermediate metabolizer
+        elif composite_score > 1.5:
+            return 1.25  # Rapid metabolizer
+        else:
+            return 1.0  # Normal metabolizer
+
+    def generate_dosing_rationale(self, adjustments, medication_name):
+        """Generate clinical rationale for dose adjustments"""
+        rationale = []
+        for factor, value in adjustments.items():
+            if value != 1.0:
+                if value < 1.0:
+                    rationale.append(f"{factor.replace('_', ' ').title()}: {int((1-value)*100)}% dose reduction recommended")
+                else:
+                    rationale.append(f"{factor.replace('_', ' ').title()}: {int((value-1)*100)}% dose increase recommended")
+        
+        return rationale if rationale else ["Standard dosing appropriate for this patient profile"]
+
+    def generate_dosing_monitoring(self, dose_factor, medication_name):
+        """Generate dosing-specific monitoring recommendations"""
+        if dose_factor < 0.7:
+            return {
+                'intensity': 'Enhanced',
+                'rationale': 'Significant dose reduction requires careful monitoring',
+                'frequency': 'Weekly for first month, then bi-weekly'
+            }
+        elif dose_factor > 1.3:
+            return {
+                'intensity': 'Enhanced',
+                'rationale': 'Dose increase requires monitoring for efficacy and toxicity',
+                'frequency': 'Weekly for first month, then bi-weekly'
+            }
+        else:
+            return {
+                'intensity': 'Standard',
+                'rationale': 'Standard dosing - routine monitoring appropriate',
+                'frequency': 'Monthly'
+            }
+
+    def generate_tdm_recommendations(self, medication_name, dose_factor):
+        """Generate therapeutic drug monitoring recommendations"""
+        if dose_factor < 0.7 or dose_factor > 1.3:
+            return {
+                'recommended': True,
+                'timing': 'Steady-state (5 half-lives after dose change)',
+                'frequency': 'Weekly initially, then monthly',
+                'target_levels': 'Refer to institutional guidelines'
+            }
+        else:
+            return {
+                'recommended': False,
+                'rationale': 'Standard dosing - routine monitoring sufficient'
+            }
+
+    def assess_overall_cyp_risk(self, composite_score):
+        """Assess overall CYP-related risk"""
+        if composite_score <= 0.3:
+            return 'Critical - Severe metabolic impairment'
+        elif composite_score <= 0.6:
+            return 'High - Significant metabolic impairment'
+        elif composite_score >= 1.5:
+            return 'Moderate - Enhanced metabolism'
+        else:
+            return 'Low - Normal metabolism expected'
+
+    def generate_cyp_recommendations(self, cyp_analysis):
+        """Generate CYP-specific clinical recommendations"""
+        recommendations = []
+        
+        for enzyme, data in cyp_analysis.items():
+            if data['risk_level'] == 'Critical':
+                recommendations.append(f"{enzyme}: Consider alternative medication or 50-75% dose reduction")
+            elif data['risk_level'] == 'High':
+                recommendations.append(f"{enzyme}: 25-50% dose reduction with enhanced monitoring")
+            elif data['risk_level'] == 'Moderate':
+                recommendations.append(f"{enzyme}: Consider dose adjustment and monitoring")
+        
+        return recommendations if recommendations else ["Standard CYP-related protocols appropriate"]
+
+    def get_transporter_implications(self, transporter, profile):
+        """Get clinical implications for transporter genetics"""
+        implications_map = {
+            'SLCO1B1': {
+                'High': 'Increased risk of statin-induced myopathy - consider dose reduction',
+                'Intermediate': 'Moderate risk - enhanced monitoring recommended',
+                'Low': 'Standard statin therapy appropriate'
+            },
+            'ABCB1': {
+                'High': 'Increased drug exposure - consider dose reduction for P-gp substrates',
+                'Intermediate': 'Moderate exposure increase - monitor for toxicity',
+                'Low': 'Standard dosing for P-gp substrates'
+            },
+            'ABCG2': {
+                'High': 'Increased drug exposure - dose reduction may be needed',
+                'Intermediate': 'Monitor for increased drug effects',
+                'Low': 'Standard protocols appropriate'
+            }
+        }
+        
+        return implications_map.get(transporter, {}).get(profile['risk'], 'Standard protocols')
+
+    def calculate_disposition_risk(self, transporter_analysis):
+        """Calculate overall drug disposition risk"""
+        high_risk_count = sum(1 for t in transporter_analysis.values() if t['risk_category'] == 'High')
+        intermediate_risk_count = sum(1 for t in transporter_analysis.values() if t['risk_category'] == 'Intermediate')
+        
+        if high_risk_count >= 2:
+            return 'High - Multiple transporter impairments'
+        elif high_risk_count >= 1 or intermediate_risk_count >= 2:
+            return 'Moderate - Some transporter impairments'
+        else:
+            return 'Low - Normal drug disposition expected'
+
+    def generate_transporter_monitoring(self, transporter_analysis):
+        """Generate transporter-specific monitoring recommendations"""
+        recommendations = []
+        
+        for transporter, data in transporter_analysis.items():
+            if data['risk_category'] == 'High':
+                recommendations.append(f"{transporter}: Intensive monitoring for substrate drugs")
+            elif data['risk_category'] == 'Intermediate':
+                recommendations.append(f"{transporter}: Enhanced monitoring recommended")
+        
+        return recommendations if recommendations else ["Standard monitoring protocols"]
+
+    def generate_hla_recommendations(self, high_risk_alleles, medication_name):
+        """Generate HLA-specific clinical recommendations"""
+        recommendations = []
+        
+        for allele_data in high_risk_alleles:
+            if medication_name in allele_data['associated_drugs']:
+                recommendations.append(f"CONTRAINDICATION: {medication_name} is contraindicated due to {allele_data['allele']}")
+                recommendations.append(f"Alternative therapy required - consult clinical pharmacist")
+            else:
+                recommendations.append(f"Caution with {', '.join(allele_data['associated_drugs'])} due to {allele_data['allele']}")
+        
+        return recommendations
+
+# Initialize the advanced pharmacogenomics module
+advanced_pgx = AdvancedPharmacogenomics()
+
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# 🎯 PRECISION MEDICINE SUMMARY FUNCTIONS
+# ═══════════════════════════════════════════════════════════════════════════════════════
+
+def calculate_overall_genetic_risk(cyp_analysis, transporter_analysis, hla_analysis):
+    """Calculate overall genetic risk score"""
+    risk_score = 0
+    risk_factors = []
+    
+    # CYP enzyme risk assessment
+    for enzyme, data in cyp_analysis.get('individual_enzymes', {}).items():
+        if data['risk_level'] == 'Critical':
+            risk_score += 3
+            risk_factors.append(f"{enzyme}: Critical impairment")
+        elif data['risk_level'] == 'High':
+            risk_score += 2
+            risk_factors.append(f"{enzyme}: High risk")
+        elif data['risk_level'] == 'Moderate':
+            risk_score += 1
+            risk_factors.append(f"{enzyme}: Moderate risk")
+    
+    # Transporter risk assessment
+    for transporter, data in transporter_analysis.get('transporter_profiles', {}).items():
+        if data['risk_category'] == 'High':
+            risk_score += 2
+            risk_factors.append(f"{transporter}: High transport risk")
+        elif data['risk_category'] == 'Intermediate':
+            risk_score += 1
+            risk_factors.append(f"{transporter}: Intermediate transport risk")
+    
+    # HLA risk assessment
+    if hla_analysis.get('overall_hypersensitivity_risk') == 'Critical':
+        risk_score += 5
+        risk_factors.append("HLA: Critical hypersensitivity risk")
+    elif hla_analysis.get('high_risk_alleles_present'):
+        risk_score += 2
+        risk_factors.append("HLA: High-risk alleles present")
+    
+    # Determine overall risk category
+    if risk_score >= 8:
+        overall_risk = 'Critical'
+    elif risk_score >= 5:
+        overall_risk = 'High'
+    elif risk_score >= 2:
+        overall_risk = 'Moderate'
+    else:
+        overall_risk = 'Low'
+    
+    return {
+        'risk_score': risk_score,
+        'risk_category': overall_risk,
+        'contributing_factors': risk_factors,
+        'clinical_significance': get_genetic_risk_significance(overall_risk)
+    }
+
+def assess_dosing_complexity(personalized_dosing):
+    """Assess complexity of personalized dosing requirements"""
+    dose_factor = personalized_dosing.get('dose_adjustment_factor', 1.0)
+    adjustments = personalized_dosing.get('individual_adjustments', {})
+    
+    complexity_score = 0
+    complexity_factors = []
+    
+    # Major dose adjustments increase complexity
+    if dose_factor <= 0.5:
+        complexity_score += 3
+        complexity_factors.append("Major dose reduction required")
+    elif dose_factor <= 0.7:
+        complexity_score += 2
+        complexity_factors.append("Moderate dose reduction required")
+    elif dose_factor >= 1.5:
+        complexity_score += 2
+        complexity_factors.append("Dose increase required")
+    
+    # Multiple adjustment factors increase complexity
+    significant_adjustments = sum(1 for adj in adjustments.values() if adj != 1.0)
+    complexity_score += significant_adjustments
+    
+    # TDM requirements increase complexity
+    if personalized_dosing.get('tdm_recommendations', {}).get('recommended'):
+        complexity_score += 2
+        complexity_factors.append("Therapeutic drug monitoring required")
+    
+    # Determine complexity level
+    if complexity_score >= 6:
+        complexity_level = 'High'
+    elif complexity_score >= 3:
+        complexity_level = 'Moderate'
+    else:
+        complexity_level = 'Low'
+    
+    return {
+        'complexity_score': complexity_score,
+        'complexity_level': complexity_level,
+        'contributing_factors': complexity_factors,
+        'clinical_implications': get_dosing_complexity_implications(complexity_level)
+    }
+
+def determine_monitoring_intensity(cyp_analysis, transporter_analysis, personalized_dosing):
+    """Determine required monitoring intensity"""
+    monitoring_score = 0
+    monitoring_requirements = []
+    
+    # CYP-based monitoring needs
+    composite_score = cyp_analysis.get('composite_metabolism_score', 1.0)
+    if composite_score <= 0.3:
+        monitoring_score += 3
+        monitoring_requirements.append("Intensive CYP-related monitoring")
+    elif composite_score <= 0.7 or composite_score >= 1.5:
+        monitoring_score += 2
+        monitoring_requirements.append("Enhanced CYP-related monitoring")
+    
+    # Transporter-based monitoring
+    high_risk_transporters = sum(1 for t in transporter_analysis.get('transporter_profiles', {}).values() 
+                                if t['risk_category'] == 'High')
+    monitoring_score += high_risk_transporters
+    if high_risk_transporters > 0:
+        monitoring_requirements.append("Transporter-related monitoring required")
+    
+    # Dose adjustment monitoring
+    dose_factor = personalized_dosing.get('dose_adjustment_factor', 1.0)
+    if dose_factor <= 0.6 or dose_factor >= 1.4:
+        monitoring_score += 2
+        monitoring_requirements.append("Dose adjustment monitoring")
+    
+    # Determine monitoring intensity
+    if monitoring_score >= 6:
+        intensity = 'Intensive'
+        frequency = 'Daily to weekly'
+    elif monitoring_score >= 3:
+        intensity = 'Enhanced'
+        frequency = 'Weekly to bi-weekly'
+    else:
+        intensity = 'Standard'
+        frequency = 'Monthly'
+    
+    return {
+        'monitoring_score': monitoring_score,
+        'intensity_level': intensity,
+        'recommended_frequency': frequency,
+        'specific_requirements': monitoring_requirements,
+        'clinical_protocols': get_monitoring_protocols(intensity)
+    }
+
+def assess_clinical_actionability(cyp_analysis, hla_analysis, personalized_dosing):
+    """Assess clinical actionability of pharmacogenomic findings"""
+    actionability_score = 0
+    actionable_findings = []
+    
+    # High-impact CYP findings
+    for enzyme, data in cyp_analysis.get('individual_enzymes', {}).items():
+        if data['risk_level'] in ['Critical', 'High']:
+            actionability_score += 2
+            actionable_findings.append(f"{enzyme}: {data['clinical_impact']}")
+    
+    # Critical HLA findings
+    if hla_analysis.get('drug_specific_risks'):
+        actionability_score += 5
+        actionable_findings.append("HLA: Drug contraindication identified")
+    elif hla_analysis.get('high_risk_alleles_present'):
+        actionability_score += 2
+        actionable_findings.append("HLA: High-risk alleles require monitoring")
+    
+    # Significant dose adjustments
+    dose_factor = personalized_dosing.get('dose_adjustment_factor', 1.0)
+    if dose_factor <= 0.6 or dose_factor >= 1.4:
+        actionability_score += 2
+        actionable_findings.append(f"Dosing: {int(abs(1-dose_factor)*100)}% adjustment recommended")
+    
+    # Determine actionability level
+    if actionability_score >= 7:
+        actionability = 'Critical'
+        urgency = 'Immediate action required'
+    elif actionability_score >= 4:
+        actionability = 'High'
+        urgency = 'Action recommended within 24 hours'
+    elif actionability_score >= 2:
+        actionability = 'Moderate'
+        urgency = 'Consider action within 1 week'
+    else:
+        actionability = 'Low'
+        urgency = 'Standard care protocols'
+    
+    return {
+        'actionability_score': actionability_score,
+        'actionability_level': actionability,
+        'urgency_level': urgency,
+        'actionable_findings': actionable_findings,
+        'implementation_priority': get_implementation_priority(actionability)
+    }
+
+def get_genetic_risk_significance(risk_level):
+    """Get clinical significance of genetic risk level"""
+    significance_map = {
+        'Critical': 'Genetic factors pose severe ADR risk - immediate intervention required',
+        'High': 'Significant genetic risk factors identified - enhanced monitoring needed',
+        'Moderate': 'Some genetic risk factors present - consider precautions',
+        'Low': 'Minimal genetic risk factors - standard protocols appropriate'
+    }
+    return significance_map.get(risk_level, 'Unknown risk significance')
+
+def get_dosing_complexity_implications(complexity_level):
+    """Get clinical implications of dosing complexity"""
+    implications_map = {
+        'High': 'Complex dosing regimen requires specialist consultation and intensive monitoring',
+        'Moderate': 'Moderate dosing adjustments needed with enhanced follow-up',
+        'Low': 'Standard dosing protocols with routine monitoring appropriate'
+    }
+    return implications_map.get(complexity_level, 'Unknown complexity implications')
+
+def get_monitoring_protocols(intensity):
+    """Get specific monitoring protocols based on intensity"""
+    protocols_map = {
+        'Intensive': [
+            'Daily clinical assessment for first week',
+            'Laboratory monitoring every 2-3 days initially',
+            'Vital signs monitoring every 4-6 hours',
+            'Immediate availability of antidotes/interventions'
+        ],
+        'Enhanced': [
+            'Clinical assessment 2-3 times per week initially',
+            'Laboratory monitoring weekly for first month',
+            'Vital signs monitoring daily',
+            'Patient education on warning signs'
+        ],
+        'Standard': [
+            'Routine clinical follow-up',
+            'Standard laboratory monitoring intervals',
+            'Patient self-monitoring as appropriate',
+            'Standard safety protocols'
+        ]
+    }
+    return protocols_map.get(intensity, ['Standard monitoring protocols'])
+
+def get_implementation_priority(actionability):
+    """Get implementation priority for pharmacogenomic findings"""
+    priority_map = {
+        'Critical': {
+            'timeline': 'Immediate (within hours)',
+            'actions': ['Stop current medication if contraindicated', 'Implement alternative therapy', 'Intensive monitoring'],
+            'stakeholders': ['Prescribing physician', 'Clinical pharmacist', 'Nursing staff', 'Patient/family']
+        },
+        'High': {
+            'timeline': '24-48 hours',
+            'actions': ['Adjust dosing regimen', 'Enhance monitoring protocols', 'Patient education'],
+            'stakeholders': ['Prescribing physician', 'Clinical pharmacist', 'Patient']
+        },
+        'Moderate': {
+            'timeline': '1 week',
+            'actions': ['Consider dosing modifications', 'Implement precautionary monitoring', 'Document findings'],
+            'stakeholders': ['Prescribing physician', 'Patient']
+        },
+        'Low': {
+            'timeline': 'Next routine visit',
+            'actions': ['Document findings', 'Continue standard protocols'],
+            'stakeholders': ['Healthcare team']
+        }
+    }
+    return priority_map.get(actionability, {'timeline': 'As appropriate', 'actions': ['Standard care'], 'stakeholders': ['Healthcare team']})
+
 @app.route('/')
 def index():
     logger.info("📱 Loading page accessed")
@@ -306,6 +1017,26 @@ def predict_adr():
         adr_types_only = {k: v for k, v in probabilities.items() if k != 'No ADR'}
         sorted_adr_types = dict(sorted(adr_types_only.items(), key=lambda x: x[1], reverse=True))
         
+        # 🧬 ADVANCED PHARMACOGENOMICS ANALYSIS
+        medication_name = data.get('medication_name', 'Unknown')
+        standard_dose = data.get('index_drug_dose', 200)
+        
+        logger.info("🧬 Performing advanced pharmacogenomics analysis...")
+        
+        # Comprehensive CYP enzyme analysis
+        cyp_analysis = advanced_pgx.analyze_expanded_cyp_profile(data)
+        
+        # Transporter genetics analysis
+        transporter_analysis = advanced_pgx.analyze_transporter_genetics(data)
+        
+        # HLA hypersensitivity risk assessment
+        hla_analysis = advanced_pgx.analyze_hla_hypersensitivity_risk(data, medication_name)
+        
+        # Personalized dosing recommendations
+        personalized_dosing = advanced_pgx.calculate_personalized_dosing(data, medication_name, standard_dose)
+        
+        logger.info("✅ Advanced pharmacogenomics analysis completed")
+        
         result = {
             'predicted_adr_type': prediction,
             'risk_level': risk_level,
@@ -313,6 +1044,21 @@ def predict_adr():
             'top_adr_risks': {k: round(v * 100, 2) for k, v in list(sorted_probabilities.items())[:5]},
             'all_adr_types': {k: round(v * 100, 2) for k, v in sorted_adr_types.items()},
             'top_specific_adr_risks': {k: round(v * 100, 2) for k, v in list(sorted_adr_types.items())[:3]},
+            
+            # 🧬 ADVANCED PHARMACOGENOMICS & PRECISION MEDICINE RESULTS
+            'advanced_pharmacogenomics': {
+                'expanded_cyp_analysis': cyp_analysis,
+                'transporter_genetics': transporter_analysis,
+                'hla_hypersensitivity_risk': hla_analysis,
+                'personalized_dosing': personalized_dosing,
+                'precision_medicine_summary': {
+                    'overall_genetic_risk': calculate_overall_genetic_risk(cyp_analysis, transporter_analysis, hla_analysis),
+                    'dosing_complexity': assess_dosing_complexity(personalized_dosing),
+                    'monitoring_intensity': determine_monitoring_intensity(cyp_analysis, transporter_analysis, personalized_dosing),
+                    'clinical_actionability': assess_clinical_actionability(cyp_analysis, hla_analysis, personalized_dosing)
+                }
+            },
+            
             'timestamp': datetime.now().isoformat()
         }
         

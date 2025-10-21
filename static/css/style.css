@@ -1019,17 +1019,427 @@ Two Column Results Layout */
     }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════════════════
+   🎨 ENHANCED GEMINI ANALYSIS & REPORT STYLING
+   ═══════════════════════════════════════════════════════════════════════════════════════ */
+
 /* Enhanced Report Content */
 .report-content {
-    max-height: 600px;
+    max-height: 700px;
     overflow-y: auto;
-    background: white;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 16px;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.7;
+    color: #2d3748;
+    position: relative;
 }
 
 .report-content:not(:has(.report-placeholder)) {
-    padding: 25px;
+    padding: 35px;
+}
+
+/* Custom Scrollbar for Report Content */
+.report-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.report-content::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.report-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+}
+
+.report-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+/* Enhanced Typography for Gemini Analysis */
+.report-content h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1a202c;
+    margin: 30px 0 20px 0;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.report-content h1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+.report-content h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 25px 0 15px 0;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border-left: 5px solid #667eea;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.report-content h2::before {
+    content: '📊';
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.report-content h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin: 20px 0 12px 0;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #f0fff4 0%, #f7fafc 100%);
+    border-left: 4px solid #48bb78;
+    border-radius: 6px;
+    position: relative;
+}
+
+.report-content h3::before {
+    content: '🔍';
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+.report-content h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 18px 0 10px 0;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-left: 3px solid #a0aec0;
+    border-radius: 4px;
+}
+
+/* Enhanced Paragraph Styling */
+.report-content p {
+    margin: 15px 0;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #4a5568;
+    text-align: justify;
+    padding: 0 5px;
+}
+
+/* Enhanced List Styling */
+.report-content ul,
+.report-content ol {
+    margin: 20px 0;
+    padding-left: 30px;
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 15px 15px 15px 40px;
+    border-left: 3px solid #e2e8f0;
+}
+
+.report-content li {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #4a5568;
+    position: relative;
+    padding-left: 10px;
+}
+
+.report-content ul li::before {
+    content: '▸';
+    color: #667eea;
+    font-weight: bold;
+    position: absolute;
+    left: -15px;
+    top: 0;
+}
+
+.report-content ol li {
+    counter-increment: list-counter;
+}
+
+.report-content ol {
+    counter-reset: list-counter;
+}
+
+.report-content ol li::before {
+    content: counter(list-counter) '.';
+    color: #667eea;
+    font-weight: bold;
+    position: absolute;
+    left: -25px;
+    top: 0;
+}
+
+/* Enhanced Text Formatting */
+.report-content strong {
+    color: #2d3748;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fef5e7 0%, #fed7aa 100%);
+    padding: 2px 6px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.report-content em {
+    color: #667eea;
+    font-style: italic;
+    font-weight: 500;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Special Styling for Medical Terms and Emojis */
+.report-content h1:has-text("🧬"),
+.report-content h2:has-text("🧬"),
+.report-content h3:has-text("🧬") {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.report-content h2:has-text("⚠️"),
+.report-content h3:has-text("⚠️") {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.report-content h2:has-text("🚨"),
+.report-content h3:has-text("🚨") {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+/* Enhanced Code and Technical Content */
+.report-content code {
+    background: #f1f5f9;
+    color: #1e293b;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.9rem;
+    border: 1px solid #e2e8f0;
+}
+
+/* Enhanced Blockquotes for Important Information */
+.report-content blockquote {
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 100%);
+    border-left: 5px solid #8b5cf6;
+    border-radius: 8px;
+    font-style: italic;
+    color: #5b21b6;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);
+}
+
+/* Special Styling for Risk Levels */
+.report-content .risk-high,
+.report-content [class*="high-risk"],
+.report-content [class*="critical"] {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border: 2px solid #ef4444;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+}
+
+.report-content .risk-medium,
+.report-content [class*="medium-risk"],
+.report-content [class*="moderate"] {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+}
+
+.report-content .risk-low,
+.report-content [class*="low-risk"] {
+    background: linear-gradient(135deg, #f0fff4 0%, #dcfce7 100%);
+    border: 2px solid #22c55e;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
+}
+
+/* Enhanced Tables for Data Presentation */
+.report-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.report-content th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.report-content td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+.report-content tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.report-content tr:hover {
+    background: #f1f5f9;
+    transition: background-color 0.2s ease;
+}
+
+/* Special Styling for Medical Sections */
+.report-content .medical-section {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 2px solid #0ea5e9;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(14, 165, 233, 0.15);
+}
+
+.report-content .pharmacogenomic-section {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px solid #16a34a;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(22, 163, 74, 0.15);
+}
+
+.report-content .dosing-section {
+    background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+    border: 2px solid #eab308;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(234, 179, 8, 0.15);
+}
+
+/* Enhanced Responsive Design for Reports */
+@media (max-width: 768px) {
+    .report-content {
+        padding: 20px;
+        max-height: 500px;
+        font-size: 0.9rem;
+    }
+
+    .report-content h1 {
+        font-size: 1.4rem;
+        padding: 12px 15px;
+    }
+
+    .report-content h2 {
+        font-size: 1.2rem;
+        padding: 10px 12px;
+    }
+
+    .report-content h3 {
+        font-size: 1.1rem;
+        padding: 8px 10px;
+    }
+
+    .report-content ul,
+    .report-content ol {
+        padding: 12px 12px 12px 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .report-content {
+        padding: 15px;
+        max-height: 400px;
+        font-size: 0.85rem;
+    }
+
+    .report-content h1 {
+        font-size: 1.2rem;
+        padding: 10px 12px;
+    }
+
+    .report-content h2 {
+        font-size: 1.1rem;
+        padding: 8px 10px;
+    }
+
+    .report-content h3 {
+        font-size: 1rem;
+        padding: 6px 8px;
+    }
+}
+
+/* Print Styles for Reports */
+@media print {
+    .report-content {
+        max-height: none;
+        overflow: visible;
+        box-shadow: none;
+        border: 1px solid #000;
+        background: white;
+        padding: 20px;
+    }
+
+    .report-content h1,
+    .report-content h2,
+    .report-content h3 {
+        background: none !important;
+        color: #000 !important;
+        box-shadow: none !important;
+    }
+
+    .report-content h1 {
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+    }
+
+    .report-content h2 {
+        border-left: 4px solid #000;
+        padding-left: 15px;
+    }
 }
 
 /* Loading State for Report */
@@ -1501,12 +1911,15 @@ Range Hints and BMI Styles */
 }
 
 @keyframes warningIconPulse {
-    0%, 100% { 
-        transform: scale(1); 
+
+    0%,
+    100% {
+        transform: scale(1);
         filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.5));
     }
-    50% { 
-        transform: scale(1.1); 
+
+    50% {
+        transform: scale(1.1);
         filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.8));
     }
 }
@@ -1542,8 +1955,15 @@ Range Hints and BMI Styles */
 }
 
 @keyframes urgencyPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 /* Warning Actions */
@@ -2050,6 +2470,7 @@ Range Hints and BMI Styles */
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -2058,13 +2479,14 @@ Range Hints and BMI Styles */
 
 /* Enhanced Accessibility */
 @media (prefers-reduced-motion: reduce) {
+
     .high-risk-blinking-overlay,
     .high-risk-adr-warning,
     .warning-icon,
     .urgency-badge {
         animation: none !important;
     }
-    
+
     * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
@@ -4912,7 +5334,9 @@ isk ADR Warning Styles */
 .btn-share-warning:active {
     transform: translateY(0);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}/* Cl
+}
+
+/* Cl
 inical Management Plan Styles */
 .clinical-management-plan {
     background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
@@ -5006,21 +5430,21 @@ inical Management Plan Styles */
         padding: 20px;
         margin: 20px 0;
     }
-    
+
     .management-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-    
+
     .management-section {
         padding: 15px;
     }
-    
+
     .clinical-management-plan h3 {
         font-size: 1.2rem;
         margin-bottom: 15px;
     }
-    
+
     .management-section h4 {
         font-size: 1rem;
         margin-bottom: 12px;
@@ -5032,32 +5456,34 @@ inical Management Plan Styles */
         padding: 15px;
         margin: 15px 0;
     }
-    
+
     .management-section {
         padding: 12px;
     }
-    
+
     .clinical-management-plan h3 {
         font-size: 1.1rem;
         flex-direction: column;
         gap: 8px;
         text-align: center;
     }
-    
+
     .management-section h4 {
         font-size: 0.95rem;
         flex-direction: column;
         gap: 5px;
         text-align: center;
     }
-    
+
     .management-section li,
     .management-section p {
         font-size: 0.9rem;
         justify-content: center;
         text-align: center;
     }
-}/* Enha
+}
+
+/* Enha
 nced Responsive Design for All Components */
 
 /* Tablet Responsive (768px - 1024px) */
@@ -5066,24 +5492,24 @@ nced Responsive Design for All Components */
         max-width: 95%;
         padding: 15px;
     }
-    
+
     .form-container {
         padding: 25px;
     }
-    
+
     .form-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
     }
-    
+
     .results-container {
         padding: 20px;
     }
-    
+
     .high-risk-adr-warning {
         margin: 25px 0;
     }
-    
+
     .clinical-management-plan {
         padding: 20px;
     }
@@ -5096,37 +5522,37 @@ nced Responsive Design for All Components */
         gap: 15px;
         padding: 15px;
     }
-    
+
     .form-section {
         padding: 20px;
         margin-bottom: 20px;
     }
-    
+
     .form-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-    
+
     .checkbox-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
-    
+
     .risk-summary {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-    
+
     .adr-risk-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
-    
+
     .emergency-grid {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-    
+
     .management-grid {
         grid-template-columns: 1fr;
         gap: 15px;
@@ -5139,137 +5565,137 @@ nced Responsive Design for All Components */
         font-size: 14px;
         line-height: 1.5;
     }
-    
+
     .container {
         padding: 10px;
     }
-    
+
     .header-card {
         grid-template-columns: 1fr;
         gap: 10px;
         padding: 12px;
         margin-bottom: 20px;
     }
-    
+
     .header-item {
         padding: 10px;
         gap: 8px;
     }
-    
+
     .header-label {
         font-size: 0.75rem;
     }
-    
+
     .header-value {
         font-size: 0.9rem;
     }
-    
+
     .form-container {
         padding: 15px;
         margin-bottom: 20px;
     }
-    
+
     .form-title {
         font-size: 1.4rem;
         margin-bottom: 8px;
     }
-    
+
     .form-subtitle {
         font-size: 0.95rem;
     }
-    
+
     .form-section {
         padding: 15px;
         margin-bottom: 15px;
     }
-    
+
     .section-header h3 {
         font-size: 1.1rem;
     }
-    
+
     .form-group {
         margin-bottom: 15px;
     }
-    
+
     .form-group label {
         font-size: 0.9rem;
         margin-bottom: 6px;
     }
-    
+
     .form-group input,
     .form-group select {
         padding: 12px;
         font-size: 0.9rem;
     }
-    
+
     .checkbox-grid {
         grid-template-columns: 1fr;
         gap: 10px;
     }
-    
+
     .checkbox-group {
         padding: 12px;
         gap: 8px;
     }
-    
+
     .btn {
         padding: 12px 20px;
         font-size: 0.9rem;
         width: 100%;
         margin-bottom: 10px;
     }
-    
+
     .sample-controls {
         flex-direction: column;
         gap: 10px;
         margin-top: 15px;
     }
-    
+
     .sample-selector {
         width: 100%;
         padding: 12px;
         font-size: 0.9rem;
     }
-    
+
     /* Results Mobile Optimization */
     .results-container {
         padding: 12px;
         margin-top: 15px;
     }
-    
+
     .results-header h2 {
         font-size: 1.3rem;
     }
-    
+
     .risk-summary {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-    
+
     .risk-card {
         padding: 15px;
         text-align: center;
     }
-    
+
     .risk-value {
         font-size: 1.8rem;
     }
-    
+
     .prediction-details {
         padding: 15px;
     }
-    
+
     .prediction-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 5px;
         margin-bottom: 12px;
     }
-    
+
     .top-risks {
         padding: 15px;
     }
-    
+
     .risk-item {
         flex-direction: column;
         align-items: center;
@@ -5277,44 +5703,44 @@ nced Responsive Design for All Components */
         gap: 5px;
         padding: 12px;
     }
-    
+
     .specific-adr-risks {
         padding: 15px;
     }
-    
+
     .adr-types-grid {
         grid-template-columns: 1fr;
         gap: 10px;
     }
-    
+
     .adr-type-card {
         padding: 15px;
         text-align: center;
     }
-    
+
     /* ADR Warning Mobile */
     .high-risk-adr-warning {
         margin: 15px 0;
     }
-    
+
     .warning-header {
         padding: 12px 15px;
         flex-direction: column;
         text-align: center;
         gap: 12px;
     }
-    
+
     .warning-title h3 {
         font-size: 1.1rem;
     }
-    
+
     .warning-actions {
         width: 100%;
         justify-content: center;
         flex-wrap: wrap;
         gap: 8px;
     }
-    
+
     .btn-acknowledge,
     .btn-print-warning,
     .btn-share-warning {
@@ -5323,63 +5749,63 @@ nced Responsive Design for All Components */
         padding: 8px 12px;
         font-size: 0.85rem;
     }
-    
+
     .warning-content {
         padding: 15px;
     }
-    
+
     .risk-summary-alert {
         grid-template-columns: 1fr;
         gap: 10px;
         padding: 12px;
     }
-    
+
     .adr-risk-grid {
         grid-template-columns: 1fr;
         gap: 10px;
     }
-    
+
     .recommendations-grid {
         gap: 10px;
     }
-    
+
     .recommendation-item {
         padding: 12px;
         flex-direction: column;
         text-align: center;
         gap: 10px;
     }
-    
+
     .emergency-grid {
         grid-template-columns: 1fr;
         gap: 10px;
     }
-    
+
     .emergency-item {
         flex-direction: column;
         text-align: center;
         gap: 8px;
         padding: 12px;
     }
-    
+
     .monitoring-timeline {
         padding-left: 20px;
     }
-    
+
     .timeline-marker {
         left: -27px;
     }
-    
+
     .timeline-item {
         padding: 12px 15px;
     }
-    
+
     /* Clinical Management Plan Mobile */
     .clinical-management-plan {
         padding: 12px;
         margin: 15px 0;
     }
-    
+
     .clinical-management-plan h3 {
         font-size: 1.1rem;
         margin-bottom: 12px;
@@ -5387,23 +5813,23 @@ nced Responsive Design for All Components */
         gap: 6px;
         text-align: center;
     }
-    
+
     .management-grid {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-    
+
     .management-section {
         padding: 12px;
     }
-    
+
     .management-section h4 {
         font-size: 0.95rem;
         margin-bottom: 10px;
         justify-content: center;
         text-align: center;
     }
-    
+
     .management-section li,
     .management-section p {
         font-size: 0.85rem;
@@ -5417,72 +5843,72 @@ nced Responsive Design for All Components */
     body {
         font-size: 13px;
     }
-    
+
     .container {
         padding: 8px;
     }
-    
+
     .header-card {
         padding: 10px;
         gap: 8px;
     }
-    
+
     .form-container {
         padding: 12px;
     }
-    
+
     .form-title {
         font-size: 1.2rem;
     }
-    
+
     .form-section {
         padding: 12px;
     }
-    
+
     .section-header h3 {
         font-size: 1rem;
     }
-    
+
     .form-group input,
     .form-group select {
         padding: 10px;
         font-size: 0.85rem;
     }
-    
+
     .btn {
         padding: 10px 16px;
         font-size: 0.85rem;
     }
-    
+
     .results-container {
         padding: 10px;
     }
-    
+
     .risk-value {
         font-size: 1.5rem;
     }
-    
+
     .high-risk-adr-warning {
         margin: 12px 0;
     }
-    
+
     .warning-header {
         padding: 10px 12px;
     }
-    
+
     .warning-title h3 {
         font-size: 1rem;
     }
-    
+
     .warning-content {
         padding: 12px;
     }
-    
+
     .clinical-management-plan {
         padding: 10px;
         margin: 12px 0;
     }
-    
+
     .management-section {
         padding: 10px;
     }
@@ -5496,13 +5922,13 @@ nced Responsive Design for All Components */
         font-size: 12pt;
         line-height: 1.4;
     }
-    
+
     .container {
         max-width: none !important;
         padding: 0 !important;
         margin: 0 !important;
     }
-    
+
     .header-card,
     .form-container,
     .results-container,
@@ -5516,42 +5942,47 @@ nced Responsive Design for All Components */
         margin: 10pt 0 !important;
         padding: 10pt !important;
     }
-    
+
     .warning-header {
         background: #f5f5f5 !important;
         color: #000 !important;
     }
-    
+
     .warning-actions,
     .btn,
     .sample-controls {
         display: none !important;
     }
-    
+
     .warning-icon {
         animation: none !important;
     }
-    
-    h1, h2, h3, h4 {
+
+    h1,
+    h2,
+    h3,
+    h4 {
         color: #000 !important;
         page-break-after: avoid;
     }
-    
+
     .grid,
     .management-grid,
     .adr-risk-grid,
     .emergency-grid {
         display: block !important;
     }
-    
-    .grid > *,
-    .management-grid > *,
-    .adr-risk-grid > *,
-    .emergency-grid > * {
+
+    .grid>*,
+    .management-grid>*,
+    .adr-risk-grid>*,
+    .emergency-grid>* {
         margin-bottom: 10pt !important;
         break-inside: avoid;
     }
-}/* Age
+}
+
+/* Age
  Interpretation Styles for Main Form */
 .age-interpretation {
     margin-top: 8px;
@@ -5612,8 +6043,15 @@ nced Responsive Design for All Components */
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive Age Interpretation */
@@ -5630,7 +6068,9 @@ nced Responsive Design for All Components */
         padding: 8px;
         text-align: center;
     }
-}/* Ri
+}
+
+/* Ri
 sk Suggestions Styles */
 .risk-suggestions {
     margin: 30px 0;
@@ -5653,8 +6093,13 @@ sk Suggestions Styles */
 }
 
 @keyframes highRiskPulse {
-    0% { box-shadow: 0 8px 25px rgba(220, 38, 38, 0.2); }
-    100% { box-shadow: 0 12px 35px rgba(220, 38, 38, 0.4); }
+    0% {
+        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.2);
+    }
+
+    100% {
+        box-shadow: 0 12px 35px rgba(220, 38, 38, 0.4);
+    }
 }
 
 .risk-suggestions h3 {
@@ -5792,11 +6237,14 @@ sk Suggestions Styles */
 }
 
 @keyframes blinkingRedOverlay {
-    0%, 100% { 
+
+    0%,
+    100% {
         background: rgba(220, 38, 38, 0.05);
         opacity: 0.3;
     }
-    50% { 
+
+    50% {
         background: rgba(220, 38, 38, 0.15);
         opacity: 0.7;
     }
@@ -5823,8 +6271,17 @@ sk Suggestions Styles */
 }
 
 @keyframes fadeInOut {
-    0%, 70%, 100% { opacity: 0; }
-    10%, 60% { opacity: 1; }
+
+    0%,
+    70%,
+    100% {
+        opacity: 0;
+    }
+
+    10%,
+    60% {
+        opacity: 1;
+    }
 }
 
 /* Medium Risk Indicator */
@@ -5854,6 +6311,7 @@ sk Suggestions Styles */
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -5861,11 +6319,14 @@ sk Suggestions Styles */
 }
 
 @keyframes pulseOrange {
-    0%, 100% { 
+
+    0%,
+    100% {
         box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
         transform: scale(1);
     }
-    50% { 
+
+    50% {
         box-shadow: 0 12px 35px rgba(245, 158, 11, 0.5);
         transform: scale(1.02);
     }
@@ -5877,7 +6338,7 @@ sk Suggestions Styles */
         margin: 20px 0;
         padding: 20px;
     }
-    
+
     .risk-suggestions h3 {
         font-size: 1.2rem;
         margin-bottom: 15px;
@@ -5885,55 +6346,55 @@ sk Suggestions Styles */
         gap: 8px;
         text-align: center;
     }
-    
+
     .suggestions-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-    
+
     .suggestion-card {
         padding: 15px;
         flex-direction: column;
         text-align: center;
         gap: 12px;
     }
-    
+
     .suggestion-icon {
         align-self: center;
         width: 45px;
         height: 45px;
         font-size: 1.1rem;
     }
-    
+
     .suggestion-content h4 {
         font-size: 1rem;
         margin-bottom: 6px;
     }
-    
+
     .suggestion-content p {
         font-size: 0.9rem;
         margin-bottom: 8px;
     }
-    
+
     .suggestion-action {
         padding: 6px 10px;
         font-size: 0.85rem;
         text-align: center;
     }
-    
+
     .high-risk-blinking-overlay::before {
         top: 10px;
         right: 10px;
         padding: 6px 12px;
         font-size: 0.75rem;
     }
-    
+
     .medium-risk-indicator {
         top: 10px;
         right: 10px;
         padding: 12px 16px;
     }
-    
+
     .medium-risk-content {
         font-size: 0.85rem;
         gap: 8px;
@@ -5945,50 +6406,51 @@ sk Suggestions Styles */
         margin: 15px 0;
         padding: 15px;
     }
-    
+
     .risk-suggestions h3 {
         font-size: 1.1rem;
         margin-bottom: 12px;
     }
-    
+
     .suggestions-grid {
         gap: 12px;
     }
-    
+
     .suggestion-card {
         padding: 12px;
         gap: 10px;
     }
-    
+
     .suggestion-icon {
         width: 40px;
         height: 40px;
         font-size: 1rem;
     }
-    
+
     .suggestion-content h4 {
         font-size: 0.95rem;
     }
-    
+
     .suggestion-content p {
         font-size: 0.85rem;
     }
-    
+
     .suggestion-action {
         padding: 5px 8px;
         font-size: 0.8rem;
     }
-    
+
     .high-risk-blinking-overlay::before {
-        display: none; /* Hide on very small screens */
+        display: none;
+        /* Hide on very small screens */
     }
-    
+
     .medium-risk-indicator {
         top: 5px;
         right: 5px;
         padding: 10px 12px;
     }
-    
+
     .medium-risk-content {
         font-size: 0.8rem;
         flex-direction: column;
@@ -6007,18 +6469,18 @@ sk Suggestions Styles */
         break-inside: avoid;
         page-break-inside: avoid;
     }
-    
+
     .suggestion-card {
         background: white !important;
         border: 1px solid #666 !important;
         break-inside: avoid;
     }
-    
+
     .suggestion-icon {
         background: #666 !important;
         color: white !important;
     }
-    
+
     .high-risk-blinking-overlay,
     .medium-risk-indicator {
         display: none !important;
@@ -6036,15 +6498,15 @@ sk Suggestions Styles */
         background: rgba(220, 38, 38, 0.1);
         opacity: 0.5;
     }
-    
+
     .high-risk-suggestions {
         animation: none;
     }
-    
+
     .medium-risk-indicator {
         animation: slideInRight 0.5s ease;
     }
-    
+
     .suggestion-card:hover {
         transform: none;
     }
@@ -6060,6 +6522,7 @@ sk Suggestions Styles */
     outline: 3px solid rgba(255, 255, 255, 0.8);
     outline-offset: -3px;
 }
+
 /* 
 ADR Risk Alert Popup */
 .adr-risk-popup {
@@ -6303,24 +6766,37 @@ ADR Risk Alert Popup */
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideUp {
-    from { 
+    from {
         opacity: 0;
         transform: translateY(50px) scale(0.9);
     }
-    to { 
+
+    to {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 /* Responsive ADR Popup */
@@ -6329,24 +6805,412 @@ ADR Risk Alert Popup */
         width: 95%;
         margin: 20px;
     }
-    
+
     .adr-risk-popup .popup-header {
         padding: 20px;
         flex-direction: column;
         text-align: center;
         gap: 15px;
     }
-    
+
     .adr-risk-popup .popup-body {
         padding: 20px;
     }
-    
+
     .adr-risk-popup .popup-actions {
         padding: 15px 20px;
         flex-direction: column;
     }
-    
+
     .adr-risk-popup .risk-metrics {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ═════
+══════════════════════════════════════════════════════════════════════════════════
+   🧬 ADVANCED PHARMACOGENOMICS ANALYSIS STYLING
+   ═══════════════════════════════════════════════════════════════════════════════════════ */
+
+/* Special Styling for Pharmacogenomic Content */
+.report-content .pgx-section {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 3px solid #16a34a;
+    border-radius: 16px;
+    padding: 25px;
+    margin: 25px 0;
+    box-shadow: 0 12px 35px rgba(22, 163, 74, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.report-content .pgx-section::before {
+    content: '🧬';
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.3;
+}
+
+/* CYP Enzyme Analysis Styling */
+.report-content .cyp-analysis {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+.report-content .cyp-enzyme {
+    display: inline-block;
+    background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 2px 4px;
+    box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+}
+
+/* Transporter Genetics Styling */
+.report-content .transporter-analysis {
+    background: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 100%);
+    border: 2px solid #8b5cf6;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+}
+
+.report-content .transporter-name {
+    display: inline-block;
+    background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 2px 4px;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+/* HLA Risk Assessment Styling */
+.report-content .hla-analysis {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border: 2px solid #ef4444;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+}
+
+.report-content .hla-allele {
+    display: inline-block;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 2px 4px;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+}
+
+/* Dosing Recommendations Styling */
+.report-content .dosing-recommendations {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.15);
+    position: relative;
+}
+
+.report-content .dosing-recommendations::before {
+    content: '💊';
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.5rem;
+    opacity: 0.4;
+}
+
+.report-content .dose-adjustment {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 4px 6px;
+    box-shadow: 0 3px 10px rgba(217, 119, 6, 0.3);
+}
+
+/* Risk Level Indicators */
+.report-content .risk-critical {
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%) !important;
+    color: white !important;
+    border: 3px solid #dc2626 !important;
+    animation: criticalPulse 2s ease-in-out infinite;
+}
+
+@keyframes criticalPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow: 0 12px 35px rgba(220, 38, 38, 0.5);
+        transform: scale(1.02);
+    }
+}
+
+.report-content .risk-high {
+    background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%) !important;
+    color: white !important;
+    border: 2px solid #f97316 !important;
+}
+
+.report-content .risk-moderate {
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%) !important;
+    color: white !important;
+    border: 2px solid #eab308 !important;
+}
+
+.report-content .risk-low {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    color: white !important;
+    border: 2px solid #16a34a !important;
+}
+
+/* Monitoring Intensity Indicators */
+.report-content .monitoring-intensive {
+    background: linear-gradient(135deg, #be123c 0%, #e11d48 100%);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-weight: 600;
+    display: inline-block;
+    margin: 5px;
+    box-shadow: 0 4px 15px rgba(190, 18, 60, 0.3);
+}
+
+.report-content .monitoring-enhanced {
+    background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-weight: 600;
+    display: inline-block;
+    margin: 5px;
+    box-shadow: 0 4px 15px rgba(194, 65, 12, 0.3);
+}
+
+.report-content .monitoring-standard {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-weight: 600;
+    display: inline-block;
+    margin: 5px;
+    box-shadow: 0 4px 15px rgba(15, 118, 110, 0.3);
+}
+
+/* Clinical Actionability Styling */
+.report-content .actionability-critical {
+    background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 3px solid #dc2626;
+    margin: 15px 0;
+    box-shadow: 0 8px 25px rgba(127, 29, 29, 0.4);
+    animation: urgentBlink 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes urgentBlink {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.8;
+    }
+}
+
+.report-content .actionability-high {
+    background: linear-gradient(135deg, #9a3412 0%, #c2410c 100%);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 2px solid #ea580c;
+    margin: 12px 0;
+    box-shadow: 0 6px 20px rgba(154, 52, 18, 0.3);
+}
+
+.report-content .actionability-moderate {
+    background: linear-gradient(135deg, #a16207 0%, #ca8a04 100%);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 2px solid #eab308;
+    margin: 10px 0;
+    box-shadow: 0 4px 15px rgba(161, 98, 7, 0.3);
+}
+
+/* Special Icons and Indicators */
+.report-content .genetic-marker {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 2px 3px;
+    box-shadow: 0 2px 6px rgba(30, 41, 59, 0.3);
+}
+
+.report-content .genetic-marker::before {
+    content: '🧬';
+    margin-right: 5px;
+    font-size: 0.9rem;
+}
+
+.report-content .drug-name {
+    display: inline-block;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 1px 2px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3);
+}
+
+/* Enhanced Percentage and Numeric Displays */
+.report-content .percentage {
+    display: inline-block;
+    background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0 2px;
+    box-shadow: 0 2px 6px rgba(6, 95, 70, 0.3);
+}
+
+.report-content .confidence-score {
+    display: inline-block;
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0 2px;
+    box-shadow: 0 2px 6px rgba(30, 64, 175, 0.3);
+}
+
+/* Timeline and Process Indicators */
+.report-content .timeline-item {
+    position: relative;
+    padding: 15px 20px;
+    margin: 15px 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-left: 4px solid #64748b;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.report-content .timeline-item::before {
+    content: '⏰';
+    position: absolute;
+    left: -12px;
+    top: 15px;
+    background: white;
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.report-content .timeline-immediate {
+    border-left-color: #dc2626;
+}
+
+.report-content .timeline-short-term {
+    border-left-color: #f59e0b;
+}
+
+.report-content .timeline-long-term {
+    border-left-color: #10b981;
+}
+
+/* Enhanced Accessibility and Focus States */
+.report-content *:focus {
+    outline: 3px solid rgba(59, 130, 246, 0.5);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Dark Mode Support (if needed) */
+@media (prefers-color-scheme: dark) {
+    .report-content {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #e2e8f0;
+        border-color: #475569;
+    }
+
+    .report-content h1,
+    .report-content h2,
+    .report-content h3,
+    .report-content h4 {
+        color: #f1f5f9;
+    }
+
+    .report-content p,
+    .report-content li {
+        color: #cbd5e1;
+    }
+}
+
+/* Animation for Loading States */
+.report-content.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.report-content.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
     }
 }
