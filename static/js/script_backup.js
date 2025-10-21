@@ -1,8 +1,6 @@
 // DOM Elements - will be initialized when DOM is ready
 let form, clearButton, resultsContainer, resultsContent, generateReportButton, reportContainer, reportContent, loadingOverlay;
 
-// Test functions removed - alert system disabled for better responsiveness
-
 // Global variables
 let currentPatientData = {};
 let currentPredictionResult = {};
@@ -583,8 +581,11 @@ function updateBMIDisplay(bmi, category, categoryClass) {
                     // Store current prediction result
                     currentPredictionResult = result;
 
-                    // Display results
+                    // Display results (this will also trigger the ADR alert system)
                     displayResults(result);
+                    
+                    // Check for ADR risk and show alert if needed
+                    checkAndShowADRAlert(result);
 
                     // Show detailed analysis container
                     showDetailedAnalysisContainer();
@@ -859,7 +860,33 @@ function updateBMIDisplay(bmi, category, categoryClass) {
             return suggestions;
         }
 
+        // Show blinking warning overlay for high-risk cases
+        function showBlinkingWarningOverlay() {
+            // Remove any existing overlay
+            const existingOverlay = document.getElementById('high-risk-warning-overlay');
+            if (existingOverlay) {
+                existingOverlay.remove();
+            }
 
+            // Create blinking overlay
+            const overlay = document.createElement('div');
+            overlay.id = 'high-risk-warning-overlay';
+            overlay.className = 'high-risk-blinking-overlay';
+
+            document.body.appendChild(overlay);
+
+            // Auto-remove overlay after 30 seconds or when user clicks
+            const removeOverlay = () => {
+                if (overlay.parentElement) {
+                    overlay.remove();
+                }
+            };
+
+            overlay.addEventListener('click', removeOverlay);
+            setTimeout(removeOverlay, 30000); // Remove after 30 seconds
+
+            console.log('🚨 High-risk blinking overlay activated');
+        }
 
         // Show medium risk indicator
         function showMediumRiskIndicator() {
@@ -1485,6 +1512,8 @@ function updateBMIDisplay(bmi, category, categoryClass) {
         </div>
         
         ${generateRiskSuggestions(result, riskLevel)}
+        
+        ${generateHighRiskADRWarning(result)}
     `;
 
             resultsContainer.style.display = 'block';
@@ -1492,8 +1521,13 @@ function updateBMIDisplay(bmi, category, categoryClass) {
             // Show Clinical Decision Support
             showClinicalDecisionSupport(result, currentPatientData);
 
-            // Alert system removed for better responsiveness
-            if (result.risk_level && result.risk_level.toLowerCase() === 'medium') {
+            // Play warning notification and show blinking overlay for high-risk cases
+            if (result.risk_level && result.risk_level.toLowerCase() === 'high') {
+                setTimeout(() => {
+                    playWarningNotification();
+                    showBlinkingWarningOverlay();
+                }, 500);
+            } else if (result.risk_level && result.risk_level.toLowerCase() === 'medium') {
                 // Show subtle warning for medium risk
                 showMediumRiskIndicator();
             }
@@ -2385,6 +2419,8 @@ function updateBMIDisplay(bmi, category, categoryClass) {
         </div>
         ` : ''}
         
+        ${generateHighRiskADRWarning(result)}
+        
         <div class="enhanced-features">
             <div class="feature-buttons">
                 <button onclick="showRiskFactorAnalysis()" class="btn btn-feature">
@@ -2417,7 +2453,164 @@ function updateBMIDisplay(bmi, category, categoryClass) {
             }, 1500);
         }
 
+        // Generate High Risk ADR Warning
+        function generateHighRiskADRWarning(result) {
+            const riskLevel = result.risk_level.toLowerCase();
+            const predictedADR = result.predicted_adr_type;
+            const noAdrProb = result.no_adr_probability;
 
+            // Show warning for high and medium risk cases
+            if (riskLevel === 'low') {
+                return '';
+            }
+
+            // Get the highest specific ADR risk
+            const topSpecificRisks = result.top_specific_adr_risks || {};
+            const topADRs = Object.entries(topSpecificRisks)
+                .sort(([, a], [, b]) => b - a)
+                .slice(0, 3);
+
+            const warningColor = getWarningColor(riskLevel);
+            const urgencyLevel = getUrgencyLevel(noAdrProb);
+            const clinicalRecommendations = getClinicalRecommendations(predictedADR, riskLevel);
+            const alertTitle = riskLevel === 'high' ? '⚠️ HIGH RISK ADR ALERT' : '⚠️ MODERATE RISK ADR ALERT';
+            const alertIcon = riskLevel === 'high' ? 'fas fa-exclamation-triangle' : 'fas fa-exclamation-circle';
+
+            return `
+                <div class="high-risk-adr-warning ${warningColor}" data-risk-level="${riskLevel}">
+                    <div class="warning-header">
+                        <div class="warning-icon">
+                            <i class="${alertIcon}"></i>
+                        </div>
+                        <div class="warning-title">
+                            <h3>${alertTitle}</h3>
+                            <p class="urgency-badge ${urgencyLevel.class}">${urgencyLevel.text}</p>
+                        </div>
+                        <div class="warning-actions">
+                            <button class="btn-acknowledge" onclick="acknowledgeWarning(this)" title="Acknowledge Warning">
+                                <i class="fas fa-check"></i> Acknowledge
+                            </button>
+                            <button class="btn-print-warning" onclick="printWarning(this)" title="Print Warning">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                            <button class="btn-share-warning" onclick="shareWarning(this)" title="Share Warning">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-content">
+                        <div class="risk-summary-alert">
+                            <div class="alert-item">
+                                <span class="alert-label">Risk Level:</span>
+                                <span class="alert-value high-risk">${result.risk_level}</span>
+                            </div>
+                            <div class="alert-item">
+                                <span class="alert-label">Primary ADR Risk:</span>
+                                <span class="alert-value">${predictedADR}</span>
+                            </div>
+                            <div class="alert-item">
+                                <span class="alert-label">Safety Probability:</span>
+                                <span class="alert-value">${noAdrProb}%</span>
+                            </div>
+                        </div>
+                        
+                        ${topADRs.length > 0 ? `
+                        <div class="specific-adr-alerts">
+                            <h4><i class="fas fa-medical-kit"></i> Specific ADR Risks to Monitor</h4>
+                            <div class="adr-risk-grid">
+                                ${topADRs.map(([adrType, probability]) => `
+                                    <div class="adr-risk-item ${getRiskClass(probability)}">
+                                        <div class="adr-name">${adrType}</div>
+                                        <div class="adr-probability">${probability}%</div>
+                                        <div class="adr-severity">${getSeverityText(probability)}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="clinical-recommendations">
+                            <h4><i class="fas fa-stethoscope"></i> Immediate Clinical Actions Required</h4>
+                            <div class="recommendations-grid">
+                                ${clinicalRecommendations.map(rec => `
+                                    <div class="recommendation-item ${rec.priority}">
+                                        <div class="rec-icon">
+                                            <i class="${rec.icon}"></i>
+                                        </div>
+                                        <div class="rec-content">
+                                            <div class="rec-title">${rec.title}</div>
+                                            <div class="rec-description">${rec.description}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="emergency-contacts">
+                            <h4><i class="fas fa-phone-alt"></i> Emergency Response</h4>
+                            <div class="emergency-grid">
+                                <div class="emergency-item critical">
+                                    <i class="fas fa-ambulance"></i>
+                                    <div>
+                                        <strong>Severe ADR Emergency</strong>
+                                        <p>Call 911 immediately</p>
+                                    </div>
+                                </div>
+                                <div class="emergency-item urgent">
+                                    <i class="fas fa-user-md"></i>
+                                    <div>
+                                        <strong>Physician Consultation</strong>
+                                        <p>Contact prescribing physician within 2 hours</p>
+                                    </div>
+                                </div>
+                                <div class="emergency-item moderate">
+                                    <i class="fas fa-pills"></i>
+                                    <div>
+                                        <strong>Pharmacy Consultation</strong>
+                                        <p>Consult clinical pharmacist for medication review</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="monitoring-schedule">
+                            <h4><i class="fas fa-calendar-check"></i> Enhanced Monitoring Protocol</h4>
+                            <div class="monitoring-timeline">
+                                <div class="timeline-item immediate">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <strong>Immediate (0-2 hours)</strong>
+                                        <p>Assess vital signs, review symptoms, consider dose reduction</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item short-term">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <strong>Short-term (2-24 hours)</strong>
+                                        <p>Monitor for early ADR signs, laboratory follow-up if indicated</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item ongoing">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <strong>Ongoing (Daily)</strong>
+                                        <p>Daily symptom assessment, weekly lab monitoring, medication adherence review</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-footer">
+                        <div class="disclaimer">
+                            <i class="fas fa-info-circle"></i>
+                            <span>This is a predictive assessment. Clinical judgment should always take precedence. Document all interventions and patient responses.</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
         // Helper functions for ADR warning
         function getWarningColor(riskLevel) {
@@ -2441,9 +2634,93 @@ function updateBMIDisplay(bmi, category, categoryClass) {
             }
         }
 
+        // Acknowledge warning function
+        function acknowledgeWarning(button) {
+            const warningContainer = button.closest('.high-risk-adr-warning');
+            const riskLevel = warningContainer.dataset.riskLevel;
 
+            // Add acknowledged state
+            warningContainer.classList.add('acknowledged');
 
+            // Update button
+            button.innerHTML = '<i class="fas fa-check-circle"></i> Acknowledged';
+            button.disabled = true;
+            button.classList.add('acknowledged');
 
+            // Show confirmation
+            showSuccess(`${riskLevel.toUpperCase()} risk ADR warning acknowledged. Please ensure all recommended actions are implemented.`);
+
+            // Log acknowledgment (in real system, this would be sent to server)
+            console.log(`ADR Warning Acknowledged: ${riskLevel} risk at ${new Date().toISOString()}`);
+
+            // Add timestamp
+            const timestamp = document.createElement('div');
+            timestamp.className = 'acknowledgment-timestamp';
+            timestamp.innerHTML = `<i class="fas fa-clock"></i> Acknowledged at ${new Date().toLocaleString()}`;
+            warningContainer.querySelector('.warning-footer').appendChild(timestamp);
+        }
+
+        // Play warning notification sound
+        function playWarningNotification() {
+            try {
+                // Create audio context for notification sound
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                // Create a simple warning tone
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                // Configure warning tone (urgent beeping pattern)
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+
+                // Repeat the warning tone 3 times
+                setTimeout(() => {
+                    if (audioContext.state !== 'closed') {
+                        const osc2 = audioContext.createOscillator();
+                        const gain2 = audioContext.createGain();
+                        osc2.connect(gain2);
+                        gain2.connect(audioContext.destination);
+                        osc2.frequency.setValueAtTime(800, audioContext.currentTime);
+                        gain2.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                        osc2.start();
+                        osc2.stop(audioContext.currentTime + 0.2);
+                    }
+                }, 500);
+
+                setTimeout(() => {
+                    if (audioContext.state !== 'closed') {
+                        const osc3 = audioContext.createOscillator();
+                        const gain3 = audioContext.createGain();
+                        osc3.connect(gain3);
+                        gain3.connect(audioContext.destination);
+                        osc3.frequency.setValueAtTime(800, audioContext.currentTime);
+                        gain3.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gain3.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                        osc3.start();
+                        osc3.stop(audioContext.currentTime + 0.2);
+                    }
+                }, 1000);
+
+                console.log('🔊 High-risk ADR warning notification played');
+
+            } catch (error) {
+                console.warn('Could not play warning notification sound:', error);
+                // Fallback: show visual notification
+                showVisualWarningNotification();
+            }
+        }
 
         // Visual warning notification fallback
         function showVisualWarningNotification() {
@@ -6710,89 +6987,31 @@ function displayResults(result) {
         console.error('❌ resultsContent is null, cannot set innerHTML');
     }
 
-    // Check for high-risk ADR and trigger warning system
+    // Trigger ADR alert system for ALL risk levels (High, Medium, Low)
     const riskLevel = result.risk_level ? result.risk_level.toLowerCase() : 'unknown';
     console.log('🎯 Risk level detected:', riskLevel, 'from result:', result.risk_level);
 
-    if (riskLevel === 'high') {
-        console.log('🚨 HIGH RISK ADR DETECTED - Triggering warning system');
-        console.log('🔍 Available functions:', {
-            showHighRiskWarningOverlay: typeof showHighRiskWarningOverlay,
-            showHighRiskMedicalSuggestionsPopup: typeof showHighRiskMedicalSuggestionsPopup,
-            playWarningNotification: typeof playWarningNotification
-        });
+    // Store current prediction result for alert system
+    window.currentPredictionResult = result;
 
-        // Store current prediction result for warning system
-        window.currentPredictionResult = result;
-
-        // Add visual indicator to page title for debugging
-        document.title = '🚨 HIGH RISK ADR DETECTED - ' + document.title;
-
-        // Add emergency banner to page for debugging
-        const emergencyBanner = document.createElement('div');
-        emergencyBanner.id = 'emergency-banner';
-        emergencyBanner.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            z-index: 10000;
-            animation: emergencyFlash 1s ease-in-out infinite alternate;
-        `;
-        emergencyBanner.innerHTML = '🚨 HIGH RISK ADR DETECTED - IMMEDIATE MEDICAL ATTENTION REQUIRED 🚨';
-        document.body.insertBefore(emergencyBanner, document.body.firstChild);
-
-        // Add CSS animation for emergency banner
-        if (!document.querySelector('#emergency-banner-styles')) {
-            const style = document.createElement('style');
-            style.id = 'emergency-banner-styles';
-            style.textContent = `
-                @keyframes emergencyFlash {
-                    0% { opacity: 1; }
-                    100% { opacity: 0.7; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // Trigger high-risk warning overlay and medical suggestions popup
-        setTimeout(() => {
-            console.log('⏰ Timeout triggered - calling warning functions');
-
-            try {
-                if (typeof showHighRiskWarningOverlay === 'function') {
-                    console.log('📞 Calling showHighRiskWarningOverlay()');
-                    showHighRiskWarningOverlay();
-                } else {
-                    console.error('❌ showHighRiskWarningOverlay function not found');
-                    alert('HIGH RISK ADR DETECTED!\n\nThe popup system is not working properly.\nPlease contact your system administrator.\n\nRisk Level: ' + result.risk_level + '\nADR Type: ' + result.predicted_adr_type);
-                }
-
-                if (typeof showHighRiskMedicalSuggestionsPopup === 'function') {
-                    console.log('📞 Calling showHighRiskMedicalSuggestionsPopup()');
-                    showHighRiskMedicalSuggestionsPopup(result);
-                } else {
-                    console.error('❌ showHighRiskMedicalSuggestionsPopup function not found');
-                }
-
-                if (typeof playWarningNotification === 'function') {
-                    console.log('📞 Calling playWarningNotification()');
-                    playWarningNotification();
-                } else {
-                    console.error('❌ playWarningNotification function not found');
-                }
-            } catch (error) {
-                console.error('❌ Error calling warning functions:', error);
-                alert('HIGH RISK ADR DETECTED!\n\nError: ' + error.message + '\n\nRisk Level: ' + result.risk_level + '\nADR Type: ' + result.predicted_adr_type);
+    // Trigger the integrated ADR alert system for ANY risk level
+    console.log('🚨 Triggering ADR alert system for:', riskLevel);
+    setTimeout(() => {
+        try {
+            if (typeof showADRRiskPopup === 'function') {
+                console.log('📞 Calling showADRRiskPopup() for', riskLevel, 'risk');
+                showADRRiskPopup(result);
+                console.log('✅ ADR alert system triggered successfully');
+            } else {
+                console.error('❌ showADRRiskPopup function not found');
+                // Fallback alert for any risk level
+                alert(`ADR RISK DETECTED!\n\nRisk Level: ${result.risk_level}\nADR Type: ${result.predicted_adr_type}\nSafety Probability: ${result.no_adr_probability}%\n\nPlease review the assessment results carefully.`);
             }
-        }, 1500); // Delay to allow results to render first
-    }
+        } catch (error) {
+            console.error('❌ Error calling ADR alert system:', error);
+            alert(`ADR RISK DETECTED!\n\nError: ${error.message}\n\nRisk Level: ${result.risk_level}\nADR Type: ${result.predicted_adr_type}`);
+        }
+    }, 1000); // Delay to allow results to render first
 
     // Trigger detailed clinical analysis
     console.log('🤖 Triggering detailed analysis in 1 second...');
@@ -6965,16 +7184,11 @@ document.addEventListener('DOMContentLoaded', function () {
         initializeQuickActions();
         console.log('✅ Quick actions initialized');
 
-        // Make ADR test functions globally available
-        window.testHighRiskAlert = testHighRiskAlert;
-        // Alert system functions removed for better responsiveness
-        console.log('✅ Core application functions loaded');
-
         console.log('🎉 Application initialization complete!');
 
     } catch (error) {
         console.error('❌ Error during initialization:', error);
-        showNotification('Application initialization failed. Please refresh the page.', 'error');
+        showError('Application initialization failed. Please refresh the page.');
     }
 });
 
@@ -7851,12 +8065,2464 @@ function fallbackShare(text) {
         document.body.appendChild(modal);
     });
 }
-// Alert system removed for better responsiveness
 
+// ===== DOWNLOAD FUNCTIONALITY FOR GEMINI ANALYSIS =====
 
+// Download analysis as PDF
+function downloadAnalysisPDF() {
+    console.log('downloadAnalysisPDF called');
+    console.log('currentPredictionResult:', currentPredictionResult);
+    console.log('window.currentPredictionResult:', window.currentPredictionResult);
 
+    const result = currentPredictionResult || window.currentPredictionResult;
+    if (!result || Object.keys(result).length === 0) {
+        showNotification('No analysis data available for download. Please run an analysis first.', 'error');
+        return;
+    }
 
+    const button = document.querySelector('.btn-download-pdf');
+    if (button) {
+        button.classList.add('loading');
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+    }
 
+    try {
+        // Create comprehensive analysis report
+        const reportData = generateComprehensiveReport(result);
 
+        // Send to server for PDF generation
+        fetch('/download/pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                patient_info: patientInfo || window.patientInfo || { id: 'Unknown', name: 'Patient' },
+                analysis_data: result,
+                report_content: reportData,
+                timestamp: new Date().toISOString()
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('PDF generation failed');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create download link
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ADR_Analysis_${patientInfo.id}_${new Date().toISOString().split('T')[0]}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
 
-// All alert system functions removed for better responsiveness
+                showNotification('PDF report downloaded successfully', 'success');
+            })
+            .catch(error => {
+                console.error('PDF download error:', error);
+                showNotification('Failed to generate PDF. Please try again.', 'error');
+            })
+            .finally(() => {
+                if (button) {
+                    button.classList.remove('loading');
+                    button.innerHTML = '<i class="fas fa-file-pdf"></i> Download PDF';
+                }
+            });
+
+    } catch (error) {
+        console.error('PDF generation error:', error);
+        showNotification('Failed to prepare PDF data. Please try again.', 'error');
+        if (button) {
+            button.classList.remove('loading');
+            button.innerHTML = '<i class="fas fa-file-pdf"></i> Download PDF';
+        }
+    }
+}
+
+// Download analysis as Word document
+function downloadAnalysisWord() {
+    console.log('downloadAnalysisWord called');
+
+    const result = currentPredictionResult || window.currentPredictionResult;
+    if (!result || Object.keys(result).length === 0) {
+        showNotification('No analysis data available for download. Please run an analysis first.', 'error');
+        return;
+    }
+
+    const button = document.querySelector('.btn-download-word');
+    if (button) {
+        button.classList.add('loading');
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Word...';
+    }
+
+    try {
+        // Create comprehensive analysis report
+        const reportData = generateComprehensiveReport(result);
+
+        // Send to server for Word generation
+        fetch('/download/word', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                patient_info: patientInfo || window.patientInfo || { id: 'Unknown', name: 'Patient' },
+                analysis_data: result,
+                report_content: reportData,
+                timestamp: new Date().toISOString()
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Word generation failed');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create download link
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ADR_Analysis_${patientInfo.id}_${new Date().toISOString().split('T')[0]}.docx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                showNotification('Word document downloaded successfully', 'success');
+            })
+            .catch(error => {
+                console.error('Word download error:', error);
+                showNotification('Failed to generate Word document. Please try again.', 'error');
+            })
+            .finally(() => {
+                if (button) {
+                    button.classList.remove('loading');
+                    button.innerHTML = '<i class="fas fa-file-word"></i> Download Word';
+                }
+            });
+
+    } catch (error) {
+        console.error('Word generation error:', error);
+        showNotification('Failed to prepare Word document data. Please try again.', 'error');
+        if (button) {
+            button.classList.remove('loading');
+            button.innerHTML = '<i class="fas fa-file-word"></i> Download Word';
+        }
+    }
+}
+
+// Download analysis as JSON
+function downloadAnalysisJSON() {
+    console.log('downloadAnalysisJSON called');
+
+    const result = currentPredictionResult || window.currentPredictionResult;
+    if (!result || Object.keys(result).length === 0) {
+        showNotification('No analysis data available for download. Please run an analysis first.', 'error');
+        return;
+    }
+
+    const button = document.querySelector('.btn-download-json');
+    if (button) {
+        button.classList.add('loading');
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing JSON...';
+    }
+
+    try {
+        // Create comprehensive data export
+        const patientInfoData = patientInfo || window.patientInfo || { id: 'Unknown', name: 'Patient', clinician: 'Unknown' };
+        const exportData = {
+            metadata: {
+                patient_id: patientInfoData.id,
+                patient_name: patientInfoData.name,
+                clinician: patientInfoData.clinician,
+                analysis_date: new Date().toISOString(),
+                system_version: "ADR Risk Predictor v2.0",
+                export_timestamp: new Date().toISOString()
+            },
+            patient_data: currentPatientData || window.currentPatientData || {},
+            prediction_results: result,
+            gemini_analysis: {
+                report_generated: !!document.querySelector('.report-content')?.textContent,
+                report_content: document.querySelector('.report-content')?.textContent || null,
+                analysis_timestamp: new Date().toISOString()
+            },
+            clinical_recommendations: extractClinicalRecommendations(),
+            risk_assessment: {
+                overall_risk: currentPredictionResult.risk_level,
+                no_adr_probability: currentPredictionResult.no_adr_probability,
+                predicted_adr_type: currentPredictionResult.predicted_adr_type,
+                specific_risks: currentPredictionResult.top_specific_adr_risks || {}
+            }
+        };
+
+        // Convert to JSON and create download
+        const jsonString = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ADR_Analysis_${patientInfo.id}_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        showNotification('JSON data exported successfully', 'success');
+
+    } catch (error) {
+        console.error('JSON export error:', error);
+        showNotification('Failed to export JSON data. Please try again.', 'error');
+    } finally {
+        if (button) {
+            button.classList.remove('loading');
+            button.innerHTML = '<i class="fas fa-file-code"></i> Download JSON';
+        }
+    }
+}
+
+// Generate comprehensive report for downloads
+function generateComprehensiveReport(result) {
+    const currentDate = new Date().toLocaleDateString();
+    const currentTime = new Date().toLocaleTimeString();
+    const predictionResult = result || currentPredictionResult || window.currentPredictionResult || {};
+
+    const patientInfoData = patientInfo || window.patientInfo || { id: 'Unknown', name: 'Patient', clinician: 'Unknown' };
+
+    return {
+        header: {
+            title: "ADR Risk Assessment Report",
+            patient_name: patientInfoData.name,
+            patient_id: patientInfoData.id,
+            clinician: patientInfoData.clinician,
+            date: currentDate,
+            time: currentTime
+        },
+        executive_summary: {
+            risk_level: predictionResult.risk_level,
+            no_adr_probability: predictionResult.no_adr_probability,
+            predicted_adr_type: predictionResult.predicted_adr_type,
+            key_findings: generateKeyFindings(predictionResult)
+        },
+        patient_profile: generatePatientProfile(),
+        risk_analysis: generateRiskAnalysis(),
+        clinical_recommendations: extractClinicalRecommendations(),
+        monitoring_plan: generateMonitoringPlan(),
+        gemini_insights: document.querySelector('.report-content')?.textContent || 'No AI analysis available',
+        disclaimer: "This report is generated by an AI-powered system and should be used in conjunction with clinical judgment. All recommendations should be reviewed by qualified healthcare professionals."
+    };
+}
+
+// Generate key findings summary
+function generateKeyFindings(result) {
+    const findings = [];
+    const predictionResult = result || currentPredictionResult || window.currentPredictionResult || {};
+
+    if (predictionResult.risk_level === 'High') {
+        findings.push("HIGH RISK: Immediate clinical attention required");
+    } else if (predictionResult.risk_level === 'Medium') {
+        findings.push("MODERATE RISK: Enhanced monitoring recommended");
+    }
+
+    if (predictionResult.no_adr_probability < 50) {
+        findings.push(`Low safety probability (${predictionResult.no_adr_probability}%)`);
+    }
+
+    if (currentPatientData.age >= 65) {
+        findings.push("Elderly patient - increased ADR susceptibility");
+    }
+
+    if (currentPatientData.concomitant_drugs_count > 5) {
+        findings.push(`Polypharmacy risk (${currentPatientData.concomitant_drugs_count} medications)`);
+    }
+
+    return findings;
+}
+
+// Generate patient profile summary
+function generatePatientProfile() {
+    return {
+        demographics: {
+            age: currentPatientData.age,
+            gender: currentPatientData.gender === 1 ? 'Male' : 'Female',
+            bmi: currentPatientData.bmi
+        },
+        comorbidities: extractComorbidities(),
+        medications: {
+            total_count: currentPatientData.concomitant_drugs_count,
+            polypharmacy_risk: currentPatientData.concomitant_drugs_count > 5
+        },
+        laboratory_values: extractLabValues()
+    };
+}
+
+// Extract comorbidities from patient data
+function extractComorbidities() {
+    const comorbidities = [];
+
+    if (currentPatientData.diabetes === 1) comorbidities.push('Diabetes');
+    if (currentPatientData.hypertension === 1) comorbidities.push('Hypertension');
+    if (currentPatientData.cardiac_disease === 1) comorbidities.push('Cardiac Disease');
+    if (currentPatientData.liver_disease === 1) comorbidities.push('Liver Disease');
+    if (currentPatientData.ckd === 1) comorbidities.push('Chronic Kidney Disease');
+    if (currentPatientData.copd === 1) comorbidities.push('COPD');
+    if (currentPatientData.depression === 1) comorbidities.push('Depression');
+    if (currentPatientData.anxiety === 1) comorbidities.push('Anxiety');
+
+    return comorbidities;
+}
+
+// Extract laboratory values
+function extractLabValues() {
+    return {
+        creatinine: currentPatientData.creatinine,
+        egfr: currentPatientData.egfr,
+        ast_alt: currentPatientData.ast_alt,
+        hemoglobin: currentPatientData.hemoglobin
+    };
+}
+
+// Generate risk analysis section
+function generateRiskAnalysis() {
+    return {
+        overall_assessment: {
+            risk_level: currentPredictionResult.risk_level,
+            confidence: currentPredictionResult.no_adr_probability,
+            primary_concern: currentPredictionResult.predicted_adr_type
+        },
+        specific_risks: currentPredictionResult.top_specific_adr_risks || {},
+        risk_factors: identifyRiskFactors()
+    };
+}
+
+// Identify key risk factors
+function identifyRiskFactors() {
+    const factors = [];
+
+    if (currentPatientData.age >= 65) {
+        factors.push({ factor: 'Advanced age', impact: 'High', description: 'Increased ADR susceptibility' });
+    }
+
+    if (currentPatientData.egfr < 60) {
+        factors.push({ factor: 'Renal impairment', impact: 'High', description: 'Reduced drug clearance' });
+    }
+
+    if (currentPatientData.liver_disease === 1) {
+        factors.push({ factor: 'Liver disease', impact: 'High', description: 'Altered drug metabolism' });
+    }
+
+    if (currentPatientData.concomitant_drugs_count > 5) {
+        factors.push({ factor: 'Polypharmacy', impact: 'Medium', description: 'Increased interaction risk' });
+    }
+
+    return factors;
+}
+
+// Extract clinical recommendations
+function extractClinicalRecommendations() {
+    const recommendations = [];
+
+    // Get recommendations from warning if present
+    const warningElement = document.querySelector('.high-risk-adr-warning');
+    if (warningElement) {
+        const recElements = warningElement.querySelectorAll('.recommendation-item');
+        recElements.forEach(rec => {
+            const title = rec.querySelector('.rec-title')?.textContent;
+            const description = rec.querySelector('.rec-description')?.textContent;
+            const priority = rec.classList.contains('critical') ? 'Critical' :
+                rec.classList.contains('urgent') ? 'Urgent' : 'Moderate';
+
+            if (title && description) {
+                recommendations.push({ title, description, priority });
+            }
+        });
+    }
+
+    return recommendations;
+}
+
+// Generate monitoring plan
+function generateMonitoringPlan() {
+    const plan = {
+        immediate: [],
+        short_term: [],
+        ongoing: []
+    };
+
+    // Immediate monitoring (0-24 hours)
+    plan.immediate.push('Assess vital signs and symptoms');
+    plan.immediate.push('Review current medications');
+
+    if (currentPredictionResult.risk_level === 'High') {
+        plan.immediate.push('Consider dose reduction or alternative therapy');
+        plan.immediate.push('Obtain baseline laboratory studies');
+    }
+
+    // Short-term monitoring (1-7 days)
+    plan.short_term.push('Daily symptom assessment');
+    plan.short_term.push('Monitor for early ADR signs');
+
+    if (currentPatientData.liver_disease === 1 || currentPatientData.ast_alt > 40) {
+        plan.short_term.push('Monitor liver function tests');
+    }
+
+    if (currentPatientData.ckd === 1 || currentPatientData.egfr < 60) {
+        plan.short_term.push('Monitor renal function');
+    }
+
+    // Ongoing monitoring
+    plan.ongoing.push('Regular medication adherence assessment');
+    plan.ongoing.push('Periodic laboratory monitoring as indicated');
+    plan.ongoing.push('Patient education on ADR recognition');
+
+    return plan;
+}
+
+// Initialize download functionality
+function initializeDownloadFunctionality() {
+    // Add event listeners for download buttons
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.btn-download-pdf')) {
+            e.preventDefault();
+            downloadAnalysisPDF();
+        } else if (e.target.closest('.btn-download-word')) {
+            e.preventDefault();
+            downloadAnalysisWord();
+        } else if (e.target.closest('.btn-download-json')) {
+            e.preventDefault();
+            downloadAnalysisJSON();
+        }
+    });
+
+    console.log('Download functionality initialized');
+}
+
+// Add download section to results
+function addDownloadSection() {
+    const resultsContainer = document.querySelector('.results-container');
+    if (!resultsContainer || document.querySelector('.download-section')) {
+        return; // Already exists or no results container
+    }
+
+    const downloadSection = document.createElement('div');
+    downloadSection.className = 'download-section';
+    downloadSection.innerHTML = `
+        <h4><i class="fas fa-download"></i> Download Analysis Report</h4>
+        <div class="download-buttons">
+            <button class="btn-download btn-download-pdf" title="Download as PDF">
+                <i class="fas fa-file-pdf"></i> Download PDF
+            </button>
+            <button class="btn-download btn-download-word" title="Download as Word Document">
+                <i class="fas fa-file-word"></i> Download Word
+            </button>
+            <button class="btn-download btn-download-json" title="Download raw data as JSON">
+                <i class="fas fa-file-code"></i> Download JSON
+            </button>
+        </div>
+        <div class="download-info">
+            <i class="fas fa-info-circle"></i>
+            Download comprehensive analysis reports including AI insights and clinical recommendations
+        </div>
+    `;
+
+    resultsContainer.appendChild(downloadSection);
+}
+
+// Call initialization when DOM is ready
+document.addEventListener('DOMContentLoaded', function () {
+    initializeDownloadFunctionality();
+});
+
+// Add download section when results are displayed
+function showDownloadOptions() {
+    setTimeout(() => {
+        addDownloadSection();
+    }, 500);
+}
+
+// Simple test functions for immediate functionality
+function downloadAnalysisPDF() {
+    console.log('PDF download clicked');
+    alert('PDF download functionality is being prepared. This feature will be available soon.');
+    showNotification('PDF download feature coming soon!', 'info');
+}
+
+function downloadAnalysisWord() {
+    console.log('Word download clicked');
+    alert('Word download functionality is being prepared. This feature will be available soon.');
+    showNotification('Word download feature coming soon!', 'info');
+}
+
+function downloadAnalysisJSON() {
+    console.log('JSON download clicked');
+
+    // Get current results
+    const result = currentPredictionResult || window.currentPredictionResult;
+    if (!result || Object.keys(result).length === 0) {
+        showNotification('No analysis data available for download. Please run an analysis first.', 'error');
+        return;
+    }
+
+    try {
+        // Create simple JSON export
+        const exportData = {
+            timestamp: new Date().toISOString(),
+            analysis_results: result,
+            patient_data: currentPatientData || window.currentPatientData || {},
+            system_info: {
+                version: "ADR Risk Predictor v2.0",
+                export_type: "JSON"
+            }
+        };
+
+        // Convert to JSON and create download
+        const jsonString = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ADR_Analysis_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        showNotification('JSON data exported successfully', 'success');
+
+    } catch (error) {
+        console.error('JSON export error:', error);
+        showNotification('Failed to export JSON data. Please try again.', 'error');
+    }
+}
+
+// Export functions for global access
+window.downloadAnalysisPDF = downloadAnalysisPDF;
+window.downloadAnalysisWord = downloadAnalysisWord;
+window.downloadAnalysisJSON = downloadAnalysisJSON;
+// ==
+// ========================================
+// COMPREHENSIVE ADR ALERT SYSTEM
+// ========================================
+console.log('🚨 Loading Comprehensive ADR Alert System...');
+
+// Main ADR Risk Alert Function - triggers for EVERY risk level
+window.showADRRiskPopup = function (result) {
+    console.log('🚨 ADR Risk Alert triggered for:', result.risk_level);
+
+    const riskLevel = result.risk_level.toLowerCase();
+
+    // Always show popup, play sound, and vibrate for ANY risk level
+    showADRPopup(result);
+    playADRWarningSound(riskLevel);
+    triggerPhoneVibration(riskLevel);
+    showColorOverlay(riskLevel);
+
+    console.log(`✅ Complete ADR alert system activated for ${riskLevel} risk`);
+};
+
+// Create and show ADR popup for any risk level
+function showADRPopup(result) {
+    const riskLevel = result.risk_level.toLowerCase();
+
+    console.log(`🚨 Showing ${riskLevel.toUpperCase()} RISK popup`);
+
+    // Remove any existing popup
+    const existingPopup = document.getElementById('adr-risk-popup');
+    if (existingPopup) {
+        existingPopup.remove();
+    }
+
+    // Configure popup based on risk level
+    let config = getPopupConfig(riskLevel, result);
+
+    const popup = createADRPopupElement(config);
+    document.body.appendChild(popup);
+
+    // Auto-focus for accessibility
+    setTimeout(() => {
+        const acknowledgeBtn = popup.querySelector('.btn-acknowledge');
+        if (acknowledgeBtn) {
+            acknowledgeBtn.focus();
+        }
+    }, 100);
+}
+
+// Get popup configuration based on risk level
+function getPopupConfig(riskLevel, result) {
+    const configs = {
+        high: {
+            title: '🚨 HIGH RISK ADR ALERT',
+            subtitle: 'IMMEDIATE MEDICAL ATTENTION REQUIRED',
+            riskLevel: 'high',
+            result: result,
+            color: '#dc2626',
+            bgColor: '#fef2f2',
+            borderColor: '#fca5a5',
+            urgency: 'critical'
+        },
+        medium: {
+            title: '⚠️ MEDIUM RISK ADR ALERT',
+            subtitle: 'Enhanced monitoring recommended',
+            riskLevel: 'medium',
+            result: result,
+            color: '#d97706',
+            bgColor: '#fffbeb',
+            borderColor: '#fcd34d',
+            urgency: 'moderate'
+        },
+        low: {
+            title: '✅ LOW RISK ADR ASSESSMENT',
+            subtitle: 'Standard monitoring sufficient',
+            riskLevel: 'low',
+            result: result,
+            color: '#059669',
+            bgColor: '#f0fdf4',
+            borderColor: '#86efac',
+            urgency: 'routine'
+        }
+    };
+
+    return configs[riskLevel] || configs.low;
+}
+
+// Create ADR popup element
+function createADRPopupElement(config) {
+    const popup = document.createElement('div');
+    popup.id = 'adr-risk-popup';
+    popup.className = `adr-popup ${config.riskLevel}-risk`;
+
+    popup.innerHTML = `
+        <div class="popup-overlay" onclick="closeADRPopup()"></div>
+        <div class="popup-content" style="border-color: ${config.borderColor}; background: ${config.bgColor};">
+            <div class="popup-header" style="color: ${config.color};">
+                <h2>${config.title}</h2>
+                <p class="popup-subtitle">${config.subtitle}</p>
+                <button class="popup-close" onclick="closeADRPopup()" style="color: ${config.color};">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="popup-body">
+                <div class="risk-summary">
+                    <div class="risk-item">
+                        <span class="risk-label">Risk Level:</span>
+                        <span class="risk-value" style="color: ${config.color};">${config.result.risk_level}</span>
+                    </div>
+                    <div class="risk-item">
+                        <span class="risk-label">Primary ADR Type:</span>
+                        <span class="risk-value">${config.result.predicted_adr_type}</span>
+                    </div>
+                    <div class="risk-item">
+                        <span class="risk-label">Safety Probability:</span>
+                        <span class="risk-value">${config.result.no_adr_probability}%</span>
+                    </div>
+                </div>
+                
+                ${Object.keys(config.result.top_specific_adr_risks || {}).length > 0 ? `
+                <div class="specific-risks">
+                    <h4>Specific ADR Risks:</h4>
+                    <div class="risks-grid">
+                        ${Object.entries(config.result.top_specific_adr_risks).map(([adr, prob]) => `
+                            <div class="risk-card">
+                                <div class="adr-name">${adr}</div>
+                                <div class="adr-prob" style="color: ${config.color};">${prob}%</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="recommendations">
+                    <h4>Clinical Recommendations:</h4>
+                    <div class="rec-list">
+                        ${getADRRecommendations(config.riskLevel).map(rec => `
+                            <div class="rec-item">
+                                <i class="${rec.icon}" style="color: ${config.color};"></i>
+                                <span>${rec.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="popup-footer">
+                <button class="btn-acknowledge" onclick="acknowledgeADRRisk('${config.riskLevel}')" 
+                        style="background: ${config.color};">
+                    <i class="fas fa-check"></i> Acknowledge & Continue
+                </button>
+                <button class="btn-print" onclick="printADRAlert()" style="border-color: ${config.color}; color: ${config.color};">
+                    <i class="fas fa-print"></i> Print Alert
+                </button>
+            </div>
+        </div>
+    `;
+
+    return popup;
+}
+
+// Get clinical recommendations based on risk level
+function getADRRecommendations(riskLevel) {
+    const recommendations = {
+        high: [
+            { icon: 'fas fa-ambulance', text: 'Immediate medical evaluation required' },
+            { icon: 'fas fa-pills', text: 'Consider dose reduction or alternative therapy' },
+            { icon: 'fas fa-heartbeat', text: 'Continuous vital signs monitoring' },
+            { icon: 'fas fa-vial', text: 'Emergency laboratory tests within 2 hours' },
+            { icon: 'fas fa-phone-alt', text: 'Contact physician immediately' }
+        ],
+        medium: [
+            { icon: 'fas fa-eye', text: 'Enhanced monitoring required' },
+            { icon: 'fas fa-calendar-check', text: 'Weekly clinical assessments' },
+            { icon: 'fas fa-user-md', text: 'Patient education on warning signs' },
+            { icon: 'fas fa-clipboard-list', text: 'Document all symptoms and changes' },
+            { icon: 'fas fa-pills', text: 'Review medication regimen' }
+        ],
+        low: [
+            { icon: 'fas fa-check-circle', text: 'Standard monitoring sufficient' },
+            { icon: 'fas fa-calendar', text: 'Regular follow-up appointments' },
+            { icon: 'fas fa-info-circle', text: 'Patient awareness of potential side effects' },
+            { icon: 'fas fa-notes-medical', text: 'Continue current treatment plan' }
+        ]
+    };
+
+    return recommendations[riskLevel] || recommendations.low;
+}
+
+// Enhanced warning sound system for all risk levels
+function playADRWarningSound(riskLevel) {
+    console.log(`🔊 Playing ${riskLevel} risk warning sound...`);
+
+    try {
+        // Request audio context (required for modern browsers)
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Configure sound parameters based on risk level
+        let soundConfig = getSoundConfig(riskLevel);
+
+        // Play the warning tones
+        playWarningTones(audioContext, soundConfig);
+
+        console.log(`✅ ${riskLevel} risk warning sound played successfully`);
+
+    } catch (error) {
+        console.warn('Could not play warning sound:', error);
+        // Fallback to visual notification
+        showVisualSoundNotification(riskLevel);
+    }
+}
+
+// Get sound configuration for each risk level
+function getSoundConfig(riskLevel) {
+    const configs = {
+        high: {
+            frequency: 800,
+            duration: 0.4,
+            repeats: 4,
+            interval: 400,
+            volume: 0.4
+        },
+        medium: {
+            frequency: 600,
+            duration: 0.3,
+            repeats: 3,
+            interval: 500,
+            volume: 0.3
+        },
+        low: {
+            frequency: 450,
+            duration: 0.2,
+            repeats: 2,
+            interval: 600,
+            volume: 0.25
+        }
+    };
+
+    return configs[riskLevel] || configs.low;
+}
+
+// Play warning tones with specified configuration
+function playWarningTones(audioContext, config) {
+    function playTone(delay = 0) {
+        setTimeout(() => {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.setValueAtTime(config.frequency, audioContext.currentTime);
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(config.volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + config.duration);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + config.duration);
+        }, delay);
+    }
+
+    // Play multiple tones with intervals
+    for (let i = 0; i < config.repeats; i++) {
+        playTone(i * config.interval);
+    }
+}
+
+// Enhanced phone vibration system for all risk levels
+function triggerPhoneVibration(riskLevel) {
+    console.log(`📳 Triggering ${riskLevel} risk vibration...`);
+
+    // Check if vibration is supported
+    if (!('vibrate' in navigator)) {
+        console.log('📳 Vibration not supported on this device');
+        return;
+    }
+
+    // Configure vibration patterns based on risk level
+    let vibrationPattern = getVibrationPattern(riskLevel);
+
+    try {
+        // Trigger vibration
+        navigator.vibrate(vibrationPattern);
+        console.log(`✅ ${riskLevel} risk vibration triggered:`, vibrationPattern);
+
+        // Show vibration indicator
+        showVibrationIndicator(riskLevel);
+
+    } catch (error) {
+        console.warn('Could not trigger vibration:', error);
+    }
+}
+
+// Get vibration patterns for each risk level
+function getVibrationPattern(riskLevel) {
+    const patterns = {
+        high: [200, 100, 200, 100, 200, 100, 400], // Urgent pattern
+        medium: [150, 150, 150, 150, 300],          // Moderate pattern  
+        low: [100, 200, 100]                        // Gentle pattern
+    };
+
+    return patterns[riskLevel] || patterns.low;
+}
+
+// Show vibration indicator for user feedback
+function showVibrationIndicator(riskLevel) {
+    const indicator = document.createElement('div');
+    indicatlassName = `vibration-indicator ${riskLevel}-vibration`;
+
+    let icon, message, color;
+
+    switch (riskLevel) {
+        case 'high':
+            icon = 'fas fa-mobile-alt';
+            message = 'HIGH RISK - DVibrating';
+            color = '#dc2626';
+            break;
+        case 'medium':
+            icon = 'fas fa-mobile-alt';
+            message = 'MEDIUM RISK - Device Vibrating';
+            color = '#d97706';
+            break;
+        case 'low':
+            icon = 'fas fa-mobile-alt';
+            message = 'LOW RISK - Device Vibrating';
+            color = '#059669';
+            break;
+        default:
+            icon = 'fas fa-mobile-alt';
+            message = 'Device Vibrating';
+            color = '#6b7280';
+    }
+
+    indicator.innerHTML = `
+        <div class="vibration-content">
+            <i class="${icon}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+    indicator.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: ${color};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 25px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        z-index: 2002;
+        animation: vibrationPulse 0.5s ease-in-out infinite alternate;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    `;
+
+    document.body.appendChild(indicator);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        if (indicator.parentElement) {
+            indicator.remove();
+        }
+    }, 3000);
+}
+
+// Show color overlay based on risk level
+function showColorOverlay(riskLevel) {
+    console.log(`🎨 Showing ${riskLevel} risk color overlay...`);
+
+    // Remove any existing overlay
+    const existingOverlay = document.getElementById('adr-color-overlay');
+    if (existingOverlay) {
+        existingOverlay.remove();
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'adr-color-overlay';
+    overlay.className = `color-overlay ${riskLevel}-overlay`;
+
+    let overlayConfig = getOverlayConfig(riskLevel);
+
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: ${overlayConfig.color};
+        z-index: 998;
+        pointer-events: none;
+        animation: ${overlayConfig.animation} 2s ease-in-out infinite alternate;
+    `;
+
+    document.body.appendChild(overlay);
+
+    // Auto-remove overlay after duration
+    setTimeout(() => {
+        if (overlay.parentElement) {
+            overlay.remove();
+        }
+    }, overlayConfig.duration);
+
+    console.log(`✅ ${riskLevel} risk color overlay activated`);
+}
+
+// Get overlay configuration for each risk level
+function getOverlayConfig(riskLevel) {
+    const configs = {
+        high: {
+            color: 'rgba(220, 38, 38, 0.3)',
+            animation: 'redPulse',
+            duration: 30000 // 30 seconds for high risk
+        },
+        medium: {
+            color: 'rgba(217, 119, 6, 0.25)',
+            animation: 'orangePulse',
+            duration: 15000 // 15 seconds for medium risk
+        },
+        low: {
+            color: 'rgba(5, 150, 105, 0.2)',
+            animation: 'greenPulse',
+            duration: 8000 // 8 seconds for low risk
+        }
+    };
+
+    return configs[riskLevel] || configs.low;
+}
+
+// Visual notification fallback when sound fails
+function showVisualSoundNotification(riskLevel) {
+    const notification = document.createElement('div');
+    notification.className = `visual-sound-notification ${riskLevel}-notification`;
+
+    let icon, message, color;
+
+    switch (riskLevel) {
+        case 'high':
+            icon = 'fas fa-volume-up';
+            message = 'HIGH RISK ADR - SOUND ALERT';
+            color = '#dc2626';
+            break;
+        case 'medium':
+            icon = 'fas fa-volume-up';
+            message = 'MEDIUM RISK ADR - SOUND ALERT';
+            color = '#d97706';
+            break;
+        case 'low':
+            icon = 'fas fa-volume-up';
+            message = 'LOW RISK ADR - SOUND ALERT';
+            color = '#059669';
+            break;
+        default:
+            icon = 'fas fa-volume-up';
+            message = 'ADR SOUND ALERT';
+            color = '#6b7280';
+    }
+
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="${icon}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${color};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        z-index: 2001;
+        animation: slideInRight 0.3s ease, soundPulse 1s ease-in-out infinite alternate;
+        font-weight: 600;
+        max-width: 300px;
+    `;
+
+    document.body.appendChild(notification);
+
+    // Remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Close ADR popup
+function closeADRPopup() {
+    const popup = document.getElementById('adr-risk-popup');
+    if (popup) {
+        popup.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            popup.remove();
+        }, 300);
+    }
+
+    // Also remove color overlay
+    const overlay = document.getElementById('adr-color-overlay');
+    if (overlay) {
+        overlay.remove();
+    }
+
+    console.log('✅ ADR popup closed');
+}
+
+// Acknowledge ADR risk
+function acknowledgeADRRisk(riskLevel) {
+    const timestamp = new Date().toLocaleString();
+    const patientName = (window.patientInfo && window.patientInfo.name) || 'Patient';
+
+    console.log(`✅ ADR Risk Acknowledged: ${riskLevel} risk for ${patientName} at ${timestamp}`);
+
+    // Show success message
+    if (window.showSuccess) {
+        window.showSuccess(`${riskLevel.toUpperCase()} risk ADR alert acknowledged successfully`);
+    }
+
+    // Close popup
+    closeADRPopup();
+
+    // Log to session storage for audit trail
+    const acknowledgments = JSON.parse(sessionStorage.getItem('adr_acknowledgments') || '[]');
+    acknowledgments.push({
+        patient: patientName,
+        riskLevel: riskLevel,
+        timestamp: timestamp,
+        acknowledged: true
+    });
+    sessionStorage.setItem('adr_acknowledgments', JSON.stringify(acknowledgments));
+
+    // Trigger success vibration
+    if ('vibrate' in navigator) {
+        navigator.vibrate([100, 50, 100]);
+    }
+}
+
+// Print ADR alert
+function printADRAlert() {
+    const popup = document.getElementById('adr-risk-popup');
+    if (!popup) return;
+
+    const patientName = (window.patientInfo && window.patientInfo.name) || 'Patient';
+    const currentDate = new Date().toLocaleDateString();
+    const currentTime = new Date().toLocaleTimeString();
+
+    const printContent = `
+        <html>
+        <head>
+            <title>ADR Risk Alert - ${patientName}</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+                .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
+                .alert-box { border: 3px solid #dc2626; padding: 20px; margin: 20px 0; background: #fef2f2; border-radius: 8px; }
+                .risk-high { border-color: #dc2626; background: #fef2f2; }
+                .risk-medium { border-color: #d97706; background: #fffbeb; }
+                .risk-low { border-color: #059669; background: #f0fdf4; }
+                .section { margin: 20px 0; }
+                .section h3 { color: #1f2937; border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 15px; }
+                .risk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0; }
+                .risk-item { padding: 12px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 6px; }
+                .footer { margin-top: 30px; font-size: 0.9em; color: #666; border-top: 1px solid #ccc; padding-top: 15px; }
+                @media print { body { margin: 0; } .no-print { display: none; } }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>ADR RISK ASSESSMENT ALERT</h1>
+                <p><strong>Patient:</strong> ${patientName}</p>
+                <p><strong>Date:</strong> ${currentDate} | <strong>Time:</strong> ${currentTime}</p>
+            </div>
+            
+            <div class="alert-box">
+                ${popup.querySelector('.popup-content').innerHTML.replace(/onclick="[^"]*"/g, '').replace(/style="[^"]*"/g, '')}
+            </div>
+            
+            <div class="footer">
+                <p><strong>Important:</strong> This alert was generated by an AI-powered ADR risk prediction system. Clinical judgment should always take precedence.</p>
+                <p><strong>Generated:</strong> ${currentDate} at ${currentTime} | <strong>System:</strong> ADR Risk Predictor</p>
+            </div>
+        </body>
+        </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+
+    if (window.showSuccess) {
+        window.showSuccess('ADR alert prepared for printing');
+    }
+
+    console.log('📄 ADR alert printed');
+}
+
+// Test function for immediate popup testing
+window.testADRPopup = function (riskLevel = 'high') {
+    console.log(`🧪 Testing ${riskLevel} risk popup with full alert system...`);
+
+    const mockResults = {
+        high: {
+            risk_level: 'High',
+            predicted_adr_type: 'Hepatotoxicity',
+            no_adr_probability: 15,
+            top_specific_adr_risks: {
+                'Hepatotoxicity': 25.8,
+                'Nephrotoxicity': 18.3,
+                'Cardiotoxicity': 12.7
+            }
+        },
+        medium: {
+            risk_level: 'Medium',
+            predicted_adr_type: 'Dermatologic',
+            no_adr_probability: 55,
+            top_specific_adr_risks: {
+                'Dermatologic': 8.2,
+                'Gastrointestinal': 6.1,
+                'Neurologic': 4.3
+            }
+        },
+        low: {
+            risk_level: 'Low',
+            predicted_adr_type: 'No ADR',
+            no_adr_probability: 85,
+            top_specific_adr_risks: {
+                'Mild Gastrointestinal': 2.1,
+                'Mild Dermatologic': 1.8
+            }
+        }
+    };
+
+    showADRRiskPopup(mockResults[riskLevel] || mockResults.high);
+    return `✅ ${riskLevel} risk popup test executed with sound and vibration!`;
+};
+
+// Keyboard shortcuts for ADR system
+document.addEventListener('keydown', function (e) {
+    // ESC key to close popup
+    if (e.key === 'Escape') {
+        closeADRPopup();
+    }
+
+    // Ctrl+T to test high risk popup (for development)
+    if (e.ctrlKey && e.key === 't') {
+        e.preventDefault();
+        testADRPopup('high');
+    }
+
+    // Ctrl+M to test medium risk popup (for development)
+    if (e.ctrlKey && e.key === 'm') {
+        e.preventDefault();
+        testADRPopup('medium');
+    }
+
+    // Ctrl+L to test low risk popup (for development)
+    if (e.ctrlKey && e.key === 'l') {
+        e.preventDefault();
+        testADRPopup('low');
+    }
+});
+
+// Initialize ADR alert system
+console.log('✅ Comprehensive ADR Alert System loaded successfully!');
+console.log('🧪 Test commands available:');
+console.log('   - testADRPopup("high") - Test high risk alert');
+console.log('   - testADRPopup("medium") - Test medium risk alert');
+console.log('   - testADRPopup("low") - Test low risk alert');
+console.log('📱 Features: Sound alerts, phone vibration, visual overlays for ALL risk levels');
+// ==
+// ======================================
+// DEBUG AND TESTING FUNCTIONS
+// ========================================
+
+// Debug function to check ADR system status
+window.debugADRSystem = function () {
+    console.log('🔍 ADR System Debug Check:');
+
+    const functions = {
+        'showADRRiskPopup': typeof showADRRiskPopup,
+        'testADRPopup': typeof testADRPopup,
+        'playADRWarningSound': typeof playADRWarningSound,
+        'triggerPhoneVibration': typeof triggerPhoneVibration,
+        'showColorOverlay': typeof showColorOverlay,
+        'closeADRPopup': typeof closeADRPopup,
+        'acknowledgeADRRisk': typeof acknowledgeADRRisk
+    };
+
+    const apis = {
+        'Vibration API': 'vibrate' in navigator,
+        'Web Audio API': !!(window.AudioContext || window.webkitAudioContext),
+        'Local Storage': typeof Storage !== 'undefined'
+    };
+
+    console.table(functions);
+    console.table(apis);
+
+    let report = '🔍 ADR System Status Report:\n\n';
+    report += '📋 Functions:\n';
+    for (const [name, type] of Object.entries(functions)) {
+        const status = type === 'function' ? '✅' : '❌';
+        report += `${status} ${name}: ${type}\n`;
+    }
+
+    report += '\n🌐 Browser APIs:\n';
+    for (const [name, available] of Object.entries(apis)) {
+        const status = available ? '✅' : '❌';
+        report += `${status} ${name}: ${available}\n`;
+    }
+
+    alert(report);
+    return { functions, apis };
+};
+
+// Quick test function for immediate verification
+window.quickTestADR = function () {
+    console.log('🧪 Quick ADR Test Starting...');
+
+    if (typeof testADRPopup !== 'function') {
+        alert('❌ ADR Test System Not Available\n\nThe testADRPopup function is not loaded.');
+        return false;
+    }
+
+    try {
+        testADRPopup('high');
+        console.log('✅ Quick ADR test completed');
+        return true;
+    } catch (error) {
+        console.error('❌ Quick ADR test failed:', error);
+        alert('❌ ADR Test Failed\n\nError: ' + error.message);
+        return false;
+    }
+};
+
+// Add test button to page for immediate testing
+function addTestButton() {
+    // Only add if not already present
+    if (document.getElementById('adr-test-button')) return;
+
+    const testButton = document.createElement('button');
+    testButton.id = 'adr-test-button';
+    testButton.innerHTML = '🧪 Test ADR Alerts';
+    testButton.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        z-index: 1001;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    `;
+
+    testButton.addEventListener('click', () => {
+        const testMenu = document.createElement('div');
+        testMenu.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 1002;
+            min-width: 200px;
+        `;
+
+        testMenu.innerHTML = `
+            <div style="margin-bottom: 10px; font-weight: 600; color: #374151;">Test ADR Alerts:</div>
+            <button onclick="testADRPopup('high'); this.parentElement.remove();" style="display: block; width: 100%; margin: 5px 0; padding: 8px; background: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer;">🚨 High Risk</button>
+            <button onclick="testADRPopup('medium'); this.parentElement.remove();" style="display: block; width: 100%; margin: 5px 0; padding: 8px; background: #d97706; color: white; border: none; border-radius: 6px; cursor: pointer;">⚠️ Medium Risk</button>
+            <button onclick="testADRPopup('low'); this.parentElement.remove();" style="display: block; width: 100%; margin: 5px 0; padding: 8px; background: #059669; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Low Risk</button>
+            <button onclick="debugADRSystem(); this.parentElement.remove();" style="display: block; width: 100%; margin: 5px 0; padding: 8px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">🔍 Debug Info</button>
+            <button onclick="this.parentElement.remove();" style="display: block; width: 100%; margin: 5px 0; padding: 8px; background: #f3f4f6; color: #374151; border: none; border-radius: 6px; cursor: pointer;">❌ Close</button>
+        `;
+
+        // Remove existing menu if present
+        const existingMenu = document.querySelector('[style*="bottom: 80px"]');
+        if (existingMenu) existingMenu.remove();
+
+        document.body.appendChild(testMenu);
+
+        // Auto-remove after 10 seconds
+        setTimeout(() => {
+            if (testMenu.parentElement) {
+                testMenu.remove();
+            }
+        }, 10000);
+    });
+
+    testButton.addEventListener('mouseenter', () => {
+        testButton.style.transform = 'translateY(-2px)';
+        testButton.style.boxShadow = '0 6px 20px rgba(59, 130, 246, 0.4)';
+    });
+
+    testButton.addEventListener('mouseleave', () => {
+        testButton.style.transform = 'translateY(0)';
+        testButton.style.boxShadow = '0 4px 15px rgba(59, 130, 246, 0.3)';
+    });
+
+    document.body.appendChild(testButton);
+    console.log('🧪 ADR test button added to page');
+}
+
+// Initialize test button when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(addTestButton, 2000); // Add after page is fully loaded
+});
+
+console.log('🔧 ADR Debug and Testing System loaded');
+console.log('📞 Available debug functions: debugADRSystem(), quickTestADR()');
+
+        // ADR Alert System Functions
+        function checkAndShowADRAlert(result) {
+            const riskLevel = result.risk_level?.toLowerCase();
+            
+            if (riskLevel === 'high') {
+                playADRAlertSound();
+                showADRPopup(result, 'high');
+            } else if (riskLevel === 'medium') {
+                playADRAlertSound('medium');
+                showADRPopup(result, 'medium');
+            }
+        }
+
+        // Play ADR alert sound
+        function playADRAlertSound(riskLevel = 'high') {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                if (riskLevel === 'high') {
+                    // High risk: Urgent beeping pattern
+                    playUrgentBeeps(audioContext, 3);
+                } else {
+                    // Medium risk: Single alert tone
+                    playAlertTone(audioContext);
+                }
+            } catch (error) {
+                console.warn('Audio not supported:', error);
+                // Fallback: Browser notification if available
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('ADR Risk Alert', {
+                        body: `${riskLevel.toUpperCase()} risk detected - Review patient immediately`,
+                        icon: '/static/favicon.ico'
+                    });
+                }
+            }
+        }
+
+        // Play urgent beeping pattern for high risk
+        function playUrgentBeeps(audioContext, count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                }, i * 500);
+            }
+        }
+
+        // Play single alert tone for medium risk
+        function playAlertTone(audioContext) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        // Show ADR popup alert
+        function showADRPopup(result, riskLevel) {
+            // Remove any existing popup
+            const existingPopup = document.getElementById('adr-alert-popup');
+            if (existingPopup) {
+                existingPopup.remove();
+            }
+
+            const popup = document.createElement('div');
+            popup.id = 'adr-alert-popup';
+            popup.className = `adr-alert-popup ${riskLevel}-risk`;
+            
+            const isHighRisk = riskLevel === 'high';
+            const bgColor = isHighRisk ? '#dc2626' : '#f59e0b';
+            const textColor = 'white';
+            const icon = isHighRisk ? 'fas fa-exclamation-triangle' : 'fas fa-exclamation-circle';
+            const title = isHighRisk ? 'HIGH RISK ADR ALERT' : 'MEDIUM RISK ADR ALERT';
+            
+            popup.innerHTML = `
+                <div class="popup-overlay" onclick="closeADRPopup()"></div>
+                <div class="popup-content">
+                    <div class="popup-header" style="background: ${bgColor}; color: ${textColor};">
+                        <div class="alert-icon">
+                            <i class="${icon}"></i>
+                        </div>
+                        <div class="alert-title">
+                            <h2>${title}</h2>
+                            <p>Immediate attention required</p>
+                        </div>
+                        <button class="close-btn" onclick="closeADRPopup()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="popup-body">
+                        <div class="risk-summary">
+                            <div class="risk-item">
+                                <span class="label">Risk Level:</span>
+                                <span class="value ${riskLevel}">${result.risk_level}</span>
+                            </div>
+                            <div class="risk-item">
+                                <span class="label">Predicted ADR:</span>
+                                <span class="value">${result.predicted_adr_type}</span>
+                            </div>
+                            <div class="risk-item">
+                                <span class="label">Safety Probability:</span>
+                                <span class="value">${result.no_adr_probability}%</span>
+                            </div>
+                        </div>
+                        <div class="action-required">
+                            <h3>Immediate Actions Required:</h3>
+                            <ul>
+                                ${getImmediateActions(riskLevel, result.predicted_adr_type).map(action => 
+                                    `<li><i class="fas fa-arrow-right"></i> ${action}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="popup-footer">
+                        <button class="btn-acknowledge" onclick="acknowledgeADRAlert()">
+                            <i class="fas fa-check"></i> Acknowledge Alert
+                        </button>
+                        <button class="btn-view-details" onclick="closeADRPopup(); scrollToResults()">
+                            <i class="fas fa-eye"></i> View Full Results
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Add popup styles
+            addADRPopupStyles();
+            
+            document.body.appendChild(popup);
+            
+            // Auto-close after 30 seconds for medium risk, keep open for high risk
+            if (riskLevel === 'medium') {
+                setTimeout(() => {
+                    if (document.getElementById('adr-alert-popup')) {
+                        closeADRPopup();
+                    }
+                }, 30000);
+            }
+        }
+
+        // Get immediate actions based on risk level and ADR type
+        function getImmediateActions(riskLevel, adrType) {
+            const actions = [];
+            
+            if (riskLevel === 'high') {
+                actions.push('Contact physician immediately');
+                actions.push('Consider medication discontinuation');
+                actions.push('Implement continuous monitoring');
+                actions.push('Prepare for emergency intervention');
+            } else {
+                actions.push('Increase monitoring frequency');
+                actions.push('Review medication dosage');
+                actions.push('Schedule follow-up within 24 hours');
+                actions.push('Document all observations');
+            }
+            
+            // Add specific actions based on ADR type
+            if (adrType?.toLowerCase().includes('hepato')) {
+                actions.push('Monitor liver function tests');
+            } else if (adrType?.toLowerCase().includes('nephro')) {
+                actions.push('Check kidney function and urine output');
+            } else if (adrType?.toLowerCase().includes('cardio')) {
+                actions.push('Monitor ECG and cardiac enzymes');
+            }
+            
+            return actions;
+        }
+
+        // Close ADR popup
+        function closeADRPopup() {
+            const popup = document.getElementById('adr-alert-popup');
+            if (popup) {
+                popup.classList.add('closing');
+                setTimeout(() => popup.remove(), 300);
+            }
+        }
+
+        // Acknowledge ADR alert
+        function acknowledgeADRAlert() {
+            const timestamp = new Date().toLocaleString();
+            const clinician = sessionStorage.getItem('clinicianName') || 'Clinician';
+            
+            // Log acknowledgment
+            console.log(`ADR Alert acknowledged by ${clinician} at ${timestamp}`);
+            
+            // Show confirmation
+            showNotification('ADR alert acknowledged. Please ensure all recommended actions are implemented.', 'success');
+            
+            // Close popup
+            closeADRPopup();
+        }
+
+        // Scroll to results section
+        function scrollToResults() {
+            const resultsContainer = document.getElementById('results-container');
+            if (resultsContainer) {
+                resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Add ADR popup styles
+        function addADRPopupStyles() {
+            if (document.getElementById('adr-popup-styles')) return;
+            
+            const style = document.createElement('style');
+            style.id = 'adr-popup-styles';
+            style.textContent = `
+                .adr-alert-popup {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 10000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    animation: popupFadeIn 0.3s ease-out;
+                }
+                
+                .adr-alert-popup.closing {
+                    animation: popupFadeOut 0.3s ease-in;
+                }
+                
+                .popup-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    backdrop-filter: blur(5px);
+                }
+                
+                .popup-content {
+                    position: relative;
+                    background: white;
+                    border-radius: 16px;
+                    max-width: 500px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+                    animation: popupSlideIn 0.3s ease-out;
+                }
+                
+                .high-risk .popup-content {
+                    border: 3px solid #dc2626;
+                    animation: popupSlideIn 0.3s ease-out, highRiskPulse 2s infinite;
+                }
+                
+                .popup-header {
+                    padding: 20px;
+                    border-radius: 16px 16px 0 0;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                }
+                
+                .alert-icon {
+                    font-size: 2rem;
+                    animation: iconPulse 1s infinite;
+                }
+                
+                .alert-title {
+                    flex: 1;
+                }
+                
+                .alert-title h2 {
+                    margin: 0 0 5px 0;
+                    font-size: 1.3rem;
+                    font-weight: 700;
+                }
+                
+                .alert-title p {
+                    margin: 0;
+                    opacity: 0.9;
+                    font-size: 0.9rem;
+                }
+                
+                .close-btn {
+                    background: rgba(255, 255, 255, 0.2);
+                    border: none;
+                    color: white;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.3s ease;
+                }
+                
+                .close-btn:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                    transform: scale(1.1);
+                }
+                
+                .popup-body {
+                    padding: 20px;
+                }
+                
+                .risk-summary {
+                    background: #f8fafc;
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                }
+                
+                .risk-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 8px;
+                }
+                
+                .risk-item:last-child {
+                    margin-bottom: 0;
+                }
+                
+                .risk-item .label {
+                    font-weight: 600;
+                    color: #374151;
+                }
+                
+                .risk-item .value {
+                    font-weight: 700;
+                    color: #1f2937;
+                }
+                
+                .risk-item .value.high {
+                    color: #dc2626;
+                }
+                
+                .risk-item .value.medium {
+                    color: #f59e0b;
+                }
+                
+                .action-required h3 {
+                    color: #374151;
+                    margin: 0 0 10px 0;
+                    font-size: 1.1rem;
+                }
+                
+                .action-required ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                }
+                
+                .action-required li {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 8px 0;
+                    border-bottom: 1px solid #e5e7eb;
+                    color: #374151;
+                }
+                
+                .action-required li:last-child {
+                    border-bottom: none;
+                }
+                
+                .action-required li i {
+                    color: #dc2626;
+                    font-size: 0.8rem;
+                }
+                
+                .popup-footer {
+                    padding: 20px;
+                    border-top: 1px solid #e5e7eb;
+                    display: flex;
+                    gap: 10px;
+                    justify-content: flex-end;
+                }
+                
+                .btn-acknowledge {
+                    background: #dc2626;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: all 0.3s ease;
+                }
+                
+                .btn-acknowledge:hover {
+                    background: #b91c1c;
+                    transform: translateY(-1px);
+                }
+                
+                .btn-view-details {
+                    background: #f3f4f6;
+                    color: #374151;
+                    border: 1px solid #d1d5db;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: all 0.3s ease;
+                }
+                
+                .btn-view-details:hover {
+                    background: #e5e7eb;
+                    transform: translateY(-1px);
+                }
+                
+                @keyframes popupFadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                
+                @keyframes popupFadeOut {
+                    from { opacity: 1; }
+                    to { opacity: 0; }
+                }
+                
+                @keyframes popupSlideIn {
+                    from {
+                        transform: scale(0.8) translateY(-20px);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: scale(1) translateY(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes highRiskPulse {
+                    0%, 100% { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3); }
+                    50% { box-shadow: 0 25px 50px rgba(220, 38, 38, 0.5); }
+                }
+                
+                @keyframes iconPulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.1); }
+                }
+                
+                @media (max-width: 768px) {
+                    .popup-content {
+                        width: 95%;
+                        margin: 10px;
+                    }
+                    
+                    .popup-footer {
+                        flex-direction: column;
+                    }
+                    
+                    .btn-acknowledge,
+                    .btn-view-details {
+                        width: 100%;
+                        justify-content: center;
+                    }
+                }
+            `;
+            
+            document.head.appendChild(style);
+        }
+        // Display results function
+        function displayResults(result) {
+            console.log('Displaying results:', result);
+
+            const resultsContainer = document.getElementById('results-container');
+            const resultsContent = document.getElementById('results-content');
+
+            if (!resultsContainer || !resultsContent) {
+                console.error('Results container elements not found');
+                showNotification('Unable to display results. Please refresh the page.', 'error');
+                return;
+            }
+
+            const riskLevel = result.risk_level.toLowerCase();
+            const noAdrProb = result.no_adr_probability;
+            const topRisks = result.top_adr_risks;
+
+            resultsContent.innerHTML = `
+                <div class="results-header">
+                    <h2><i class="fas fa-chart-bar"></i> Risk Assessment Results</h2>
+                    <div class="results-meta">
+                        <span class="patient-name-display">
+                            <i class="fas fa-user"></i> ${sessionStorage.getItem('patientName') || 'Patient'}
+                        </span>
+                        <span>
+                            <i class="fas fa-calendar"></i> ${new Date().toLocaleDateString()}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="risk-summary">
+                    <div class="risk-card ${riskLevel}">
+                        <h3>Overall Risk Level</h3>
+                        <div class="risk-value">${result.risk_level}</div>
+                        <div class="risk-label">Risk Assessment</div>
+                    </div>
+                    <div class="risk-card">
+                        <h3>No ADR Probability</h3>
+                        <div class="risk-value">${noAdrProb}%</div>
+                        <div class="risk-label">Safety Likelihood</div>
+                    </div>
+                    <div class="risk-card">
+                        <h3>Predicted ADR Type</h3>
+                        <div class="risk-value" style="font-size: 1.2rem; line-height: 1.2;">
+                            ${result.predicted_adr_type}
+                        </div>
+                        <div class="risk-label">Most Likely Outcome</div>
+                    </div>
+                </div>
+                
+                <div class="prediction-details">
+                    <h3><i class="fas fa-info-circle"></i> Assessment Details</h3>
+                    <div class="prediction-item">
+                        <span class="prediction-label">Patient Name:</span>
+                        <span class="prediction-value">${sessionStorage.getItem('patientName') || 'Patient'}</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="prediction-label">Risk Classification:</span>
+                        <span class="prediction-value ${riskLevel}">${result.risk_level} Risk</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="prediction-label">Assessment Time:</span>
+                        <span class="prediction-value">${new Date().toLocaleString()}</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="prediction-label">Clinician:</span>
+                        <span class="prediction-value">${sessionStorage.getItem('clinicianName') || 'Clinician'}</span>
+                    </div>
+                </div>
+                
+                <div class="top-risks">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Top ADR Risk Probabilities</h3>
+                    ${Object.entries(topRisks).map(([adrType, probability]) => `
+                        <div class="risk-item">
+                            <span class="risk-name">${adrType}</span>
+                            <span class="risk-percentage">${probability}%</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            resultsContainer.style.display = 'block';
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+// ===== ADR ALERT SYSTEM =====
+// Main function to check ADR risk and show alerts
+function checkAndShowADRAlert(result) {
+    console.log('🚨 Checking ADR risk for alerts...', result);
+    
+    if (!result || !result.risk_level) {
+        console.log('❌ No result or risk level found');
+        return;
+    }
+    
+    const riskLevel = result.risk_level.toLowerCase();
+    const noADRProb = result.no_adr_probability || 0;
+    
+    console.log(`📊 Risk Level: ${riskLevel}, No ADR Probability: ${noADRProb}%`);
+    
+    // Show alerts for high and medium risk
+    if (riskLevel === 'high' || riskLevel === 'medium') {
+        console.log(`🚨 ${riskLevel.toUpperCase()} RISK DETECTED - Showing alert`);
+        
+        // Play alert sound
+        playADRAlertSound(riskLevel);
+        
+        // Show visual popup alert
+        setTimeout(() => {
+            showADRPopup(result, riskLevel);
+        }, 500);
+    } else {
+        console.log('✅ Low risk - No alerts needed');
+    }
+}
+
+// Play ADR alert sound based on risk level
+function playADRAlertSound(riskLevel) {
+    try {
+        console.log(`🔊 Playing ${riskLevel} risk alert sound`);
+        
+        // Create audio context
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        if (riskLevel === 'high') {
+            // High risk: Urgent beeping pattern (3 beeps)
+            playUrgentBeeps(audioContext, 3);
+        } else if (riskLevel === 'medium') {
+            // Medium risk: Single alert tone
+            playAlertTone(audioContext);
+        }
+        
+    } catch (error) {
+        console.warn('🔇 Could not play alert sound:', error);
+        // Fallback: Browser notification
+        if ('Notification' in window) {
+            new Notification(`${riskLevel.toUpperCase()} ADR Risk Detected`, {
+                body: 'Please review the assessment results immediately.',
+                icon: '/static/favicon.ico'
+            });
+        }
+    }
+}
+
+// Play urgent beeping pattern for high risk
+function playUrgentBeeps(audioContext, count) {
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }, i * 300);
+    }
+}
+
+// Play single alert tone for medium risk
+function playAlertTone(audioContext) {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+}
+
+// Show ADR popup alert
+function showADRPopup(result, riskLevel) {
+    console.log(`📱 Showing ${riskLevel} risk popup`);
+    
+    // Remove any existing popup
+    const existingPopup = document.getElementById('adr-alert-popup');
+    if (existingPopup) {
+        existingPopup.remove();
+    }
+    
+    // Add popup styles if not already added
+    addADRPopupStyles();
+    
+    // Create popup
+    const popup = document.createElement('div');
+    popup.id = 'adr-alert-popup';
+    popup.className = `adr-alert-popup ${riskLevel}-risk`;
+    
+    const predictedADR = result.predicted_adr_type || 'Unknown ADR';
+    const noADRProb = result.no_adr_probability || 0;
+    const actions = getImmediateActions(riskLevel, predictedADR);
+    
+    popup.innerHTML = `
+        <div class="adr-popup-overlay"></div>
+        <div class="adr-popup-content">
+            <div class="adr-popup-header ${riskLevel}-risk">
+                <div class="adr-alert-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="adr-alert-title">
+                    <h2>${riskLevel.toUpperCase()} ADR RISK DETECTED</h2>
+                    <p>Immediate attention required</p>
+                </div>
+            </div>
+            
+            <div class="adr-popup-body">
+                <div class="adr-risk-summary">
+                    <div class="adr-risk-item">
+                        <span class="adr-label">Risk Level:</span>
+                        <span class="adr-value ${riskLevel}-risk">${riskLevel.toUpperCase()}</span>
+                    </div>
+                    <div class="adr-risk-item">
+                        <span class="adr-label">Predicted ADR:</span>
+                        <span class="adr-value">${predictedADR}</span>
+                    </div>
+                    <div class="adr-risk-item">
+                        <span class="adr-label">Safety Probability:</span>
+                        <span class="adr-value">${noADRProb}%</span>
+                    </div>
+                </div>
+                
+                <div class="adr-immediate-actions">
+                    <h3>Immediate Actions Required:</h3>
+                    <ul>
+                        ${actions.map(action => `<li>${action}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="adr-popup-footer">
+                <button class="adr-btn adr-btn-acknowledge" onclick="acknowledgeADRAlert()">
+                    <i class="fas fa-check"></i> Acknowledge Alert
+                </button>
+                <button class="adr-btn adr-btn-details" onclick="scrollToResults()">
+                    <i class="fas fa-eye"></i> View Full Results
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(popup);
+    
+    // Auto-close for medium risk after 30 seconds
+    if (riskLevel === 'medium') {
+        setTimeout(() => {
+            if (document.getElementById('adr-alert-popup')) {
+                closeADRPopup();
+            }
+        }, 30000);
+    }
+    
+    // Add pulsing animation for high risk
+    if (riskLevel === 'high') {
+        popup.classList.add('pulse-animation');
+    }
+}
+
+// Get immediate actions based on risk level and ADR type
+function getImmediateActions(riskLevel, adrType) {
+    const baseActions = {
+        'high': [
+            'Contact physician immediately',
+            'Consider medication discontinuation',
+            'Implement continuous monitoring',
+            'Prepare for emergency intervention'
+        ],
+        'medium': [
+            'Increase monitoring frequency',
+            'Review medication dosage',
+            'Schedule follow-up within 24 hours',
+            'Document all observations'
+        ]
+    };
+    
+    const actions = [...baseActions[riskLevel]];
+    
+    // Add ADR-specific actions
+    if (adrType.toLowerCase().includes('hepato')) {
+        actions.push('Monitor liver function tests');
+    } else if (adrType.toLowerCase().includes('nephro')) {
+        actions.push('Check kidney function and urine output');
+    } else if (adrType.toLowerCase().includes('cardio')) {
+        actions.push('Monitor ECG and cardiac enzymes');
+    }
+    
+    return actions;
+}
+
+// Close ADR popup
+function closeADRPopup() {
+    const popup = document.getElementById('adr-alert-popup');
+    if (popup) {
+        popup.classList.add('fade-out');
+        setTimeout(() => {
+            popup.remove();
+        }, 300);
+    }
+}
+
+// Acknowledge ADR alert
+function acknowledgeADRAlert() {
+    const timestamp = new Date().toISOString();
+    const clinician = sessionStorage.getItem('clinicianName') || 'Unknown Clinician';
+    
+    console.log(`✅ ADR Alert acknowledged by ${clinician} at ${timestamp}`);
+    
+    // Log acknowledgment (in real system, send to server)
+    const acknowledgment = {
+        timestamp: timestamp,
+        clinician: clinician,
+        action: 'ADR_ALERT_ACKNOWLEDGED'
+    };
+    
+    // Store acknowledgment
+    localStorage.setItem('last_adr_acknowledgment', JSON.stringify(acknowledgment));
+    
+    // Close popup
+    closeADRPopup();
+    
+    // Show confirmation
+    showNotification('ADR alert acknowledged. Please follow recommended actions.', 'success');
+}
+
+// Scroll to results section
+function scrollToResults() {
+    closeADRPopup();
+    const resultsContainer = document.getElementById('results-container');
+    if (resultsContainer) {
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// Add ADR popup styles
+function addADRPopupStyles() {
+    if (document.getElementById('adr-popup-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'adr-popup-styles';
+    style.textContent = `
+        .adr-alert-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .adr-popup-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .adr-popup-content {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.4s ease;
+        }
+        
+        .adr-popup-header {
+            padding: 25px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .adr-popup-header.high-risk {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+        }
+        
+        .adr-popup-header.medium-risk {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        
+        .adr-alert-icon {
+            font-size: 2rem;
+            animation: pulse 1s infinite;
+        }
+        
+        .adr-alert-title h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .adr-alert-title p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .adr-popup-body {
+            padding: 25px;
+        }
+        
+        .adr-risk-summary {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .adr-risk-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .adr-risk-item:last-child {
+            border-bottom: none;
+        }
+        
+        .adr-label {
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .adr-value {
+            font-weight: 700;
+        }
+        
+        .adr-value.high-risk {
+            color: #dc2626;
+        }
+        
+        .adr-value.medium-risk {
+            color: #f59e0b;
+        }
+        
+        .adr-immediate-actions h3 {
+            color: #1f2937;
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .adr-immediate-actions ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .adr-immediate-actions li {
+            margin-bottom: 8px;
+            color: #374151;
+            line-height: 1.5;
+        }
+        
+        .adr-popup-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        
+        .adr-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .adr-btn-acknowledge {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .adr-btn-acknowledge:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+        
+        .adr-btn-details {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .adr-btn-details:hover {
+            background: #e5e7eb;
+            transform: translateY(-1px);
+        }
+        
+        .pulse-animation {
+            animation: alertPulse 2s infinite;
+        }
+        
+        .fade-out {
+            animation: fadeOut 0.3s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes alertPulse {
+            0%, 100% { 
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            }
+            50% { 
+                box-shadow: 0 25px 50px rgba(220, 38, 38, 0.4);
+            }
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .adr-popup-content {
+                width: 95%;
+                margin: 10px;
+            }
+            
+            .adr-popup-header {
+                padding: 20px;
+            }
+            
+            .adr-popup-body {
+                padding: 20px;
+            }
+            
+            .adr-popup-footer {
+                flex-direction: column;
+                padding: 15px 20px;
+            }
+            
+            .adr-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    `;
+    
+    document.head.appendChild(style);
+}
+
+// Test functions for development
+function testHighRiskAlert() {
+    const mockResult = {
+        risk_level: 'High',
+        predicted_adr_type: 'Hepatotoxicity',
+        no_adr_probability: 15.2
+    };
+    checkAndShowADRAlert(mockResult);
+}
+
+function testMediumRiskAlert() {
+    const mockResult = {
+        risk_level: 'Medium',
+        predicted_adr_type: 'Nephrotoxicity',
+        no_adr_probability: 45.8
+    };
+    checkAndShowADRAlert(mockResult);
+}
+
+// Make test functions globally available
+window.testHighRiskAlert = testHighRiskAlert;
+window.testMediumRiskAlert = testMediumRiskAlert;
+
+console.log('🚨 ADR Alert System loaded successfully');

@@ -54,7 +54,7 @@ def index():
 
 @app.route('/patient-details')
 def patient_details():
-    return render_template('patient_details.html')
+    return render_template('patient_details_form.html')
 
 @app.route('/assessment')
 def assessment():
@@ -233,107 +233,293 @@ def generate_report():
         patient_id = data.get('patient_id', '')
         clinician_name = data.get('clinician_name', 'Clinician')
         
-        # Create a comprehensive prompt for Gemini
+        # Create an extremely detailed and comprehensive prompt for Gemini
         prompt = f"""
-        As a clinical pharmacologist, generate a comprehensive ADR risk assessment report for the following patient:
+        As a senior clinical pharmacologist and ADR specialist with 20+ years of experience, generate an EXTREMELY DETAILED and COMPREHENSIVE ADR risk assessment report for the following patient. This report will be used for critical clinical decision-making and must include exhaustive analysis across all relevant domains.
 
-        PATIENT INFORMATION:
+        ═══════════════════════════════════════════════════════════════════════════════════════
+        📋 COMPLETE PATIENT PROFILE & CLINICAL DATA
+        ═══════════════════════════════════════════════════════════════════════════════════════
+
+        🏥 PATIENT DEMOGRAPHICS & IDENTIFICATION:
         - Patient Name: {patient_name}
         {f"- Patient ID: {patient_id}" if patient_id else ""}
         - Assessing Clinician: {clinician_name}
+        - Assessment Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
         - Age: {patient_data.get('age', 'N/A')} years
         - Sex: {patient_data.get('sex', 'N/A')}
         - Ethnicity: {patient_data.get('ethnicity', 'N/A')}
-        - BMI: {patient_data.get('bmi', 'N/A')}
+        - Height: {patient_data.get('height', 'N/A')} cm
+        - Weight: {patient_data.get('weight', 'N/A')} kg
+        - BMI: {patient_data.get('bmi', 'N/A')} kg/m²
 
-
-        CLINICAL PARAMETERS:
-        - Creatinine: {patient_data.get('creatinine', 'N/A')} mg/dL
-        - eGFR: {patient_data.get('egfr', 'N/A')} mL/min/1.73m²
+        🧪 COMPREHENSIVE LABORATORY VALUES & ORGAN FUNCTION:
+        - Serum Creatinine: {patient_data.get('creatinine', 'N/A')} mg/dL
+        - Estimated GFR: {patient_data.get('egfr', 'N/A')} mL/min/1.73m²
         - AST/ALT: {patient_data.get('ast_alt', 'N/A')} U/L
-        - Albumin: {patient_data.get('albumin', 'N/A')} g/dL
+        - Total Bilirubin: {patient_data.get('bilirubin', 'N/A')} mg/dL
+        - Serum Albumin: {patient_data.get('albumin', 'N/A')} g/dL
+        - Hemoglobin: {patient_data.get('hemoglobin', 'N/A')} g/dL
+        - Hematocrit: {patient_data.get('hematocrit', 'N/A')}%
+        - WBC Count: {patient_data.get('wbc_count', 'N/A')} × 10³/μL
+        - Platelet Count: {patient_data.get('platelet_count', 'N/A')} × 10³/μL
+        - RBC Count: {patient_data.get('rbc_count', 'N/A')} × 10⁶/μL
 
-        COMORBIDITIES:
-        - Diabetes: {'Yes' if patient_data.get('diabetes') == 1 else 'No'}
-        - Liver Disease: {'Yes' if patient_data.get('liver_disease') == 1 else 'No'}
-        - CKD: {'Yes' if patient_data.get('ckd') == 1 else 'No'}
-        - Cardiac Disease: {'Yes' if patient_data.get('cardiac_disease') == 1 else 'No'}
+        🏥 DETAILED COMORBIDITY PROFILE:
+        - Type 2 Diabetes Mellitus: {'✓ PRESENT' if patient_data.get('diabetes') == 1 else '✗ Absent'}
+        - Chronic Liver Disease: {'✓ PRESENT' if patient_data.get('liver_disease') == 1 else '✗ Absent'}
+        - Chronic Kidney Disease: {'✓ PRESENT' if patient_data.get('ckd') == 1 else '✗ Absent'}
+        - Cardiovascular Disease: {'✓ PRESENT' if patient_data.get('cardiac_disease') == 1 else '✗ Absent'}
+        - Hypertension: {'✓ PRESENT' if patient_data.get('hypertension') == 1 else '✗ Absent'}
+        - Respiratory Disease: {'✓ PRESENT' if patient_data.get('respiratory_disease') == 1 else '✗ Absent'}
+        - Neurological Disease: {'✓ PRESENT' if patient_data.get('neurological_disease') == 1 else '✗ Absent'}
+        - Autoimmune Disease: {'✓ PRESENT' if patient_data.get('autoimmune_disease') == 1 else '✗ Absent'}
 
-        MEDICATION PROFILE:
+        💊 COMPREHENSIVE MEDICATION PROFILE & PHARMACOTHERAPY:
+        - Primary Medication: {patient_data.get('medication_name', 'N/A')}
         - Index Drug Dose: {patient_data.get('index_drug_dose', 'N/A')} mg
-        - Concomitant Drugs: {patient_data.get('concomitant_drugs_count', 'N/A')}
-        - CYP2C9 Status: {patient_data.get('cyp2c9', 'N/A')}
-        - CYP2D6 Status: {patient_data.get('cyp2d6', 'N/A')}
+        - Total Concomitant Medications: {patient_data.get('concomitant_drugs_count', 'N/A')}
+        - Drug Interaction Severity: {patient_data.get('drug_interactions', 'N/A')}
+        - Polypharmacy Status: {'✓ YES (>5 drugs)' if patient_data.get('concomitant_drugs_count', 0) > 5 else '✗ No'}
+        - Treatment Duration: {patient_data.get('time_since_start_days', 'N/A')} days
+        - Cumulative Dose: {patient_data.get('cumulative_dose_mg', patient_data.get('index_drug_dose', 0) * patient_data.get('time_since_start_days', 0))} mg
+        - Daily Dose Density: {patient_data.get('dose_density_mg_day', patient_data.get('index_drug_dose', 0))} mg/day
 
-        PREDICTION RESULTS:
-        - Predicted ADR Type: {prediction_result.get('predicted_adr_type', 'N/A')}
-        - Risk Level: {prediction_result.get('risk_level', 'N/A')}
-        - No ADR Probability: {prediction_result.get('no_adr_probability', 'N/A')}%
+        🧬 DETAILED PHARMACOGENOMIC PROFILE:
+        - CYP2C9 Genotype: {patient_data.get('cyp2c9', 'N/A')} {'(POOR METABOLIZER - HIGH RISK)' if patient_data.get('cyp2c9') == 'Poor' else '(INTERMEDIATE METABOLIZER - MODERATE RISK)' if patient_data.get('cyp2c9') == 'Intermediate' else '(NORMAL METABOLIZER)' if patient_data.get('cyp2c9') == 'Wild' else ''}
+        - CYP2D6 Phenotype: {patient_data.get('cyp2d6', 'N/A')} {'(POOR METABOLIZER - HIGH RISK)' if patient_data.get('cyp2d6') == 'PM' else '(INTERMEDIATE METABOLIZER - MODERATE RISK)' if patient_data.get('cyp2d6') == 'IM' else '(EXTENSIVE METABOLIZER - NORMAL)' if patient_data.get('cyp2d6') == 'EM' else ''}
+        - CYP Inhibitor Co-administration: {'⚠️ YES - SIGNIFICANT INTERACTION RISK' if patient_data.get('cyp_inhibitors_flag') == 1 else '✓ No'}
+        - QT-Prolonging Drugs: {'⚠️ YES - CARDIAC ARRHYTHMIA RISK' if patient_data.get('qt_prolonging_flag') == 1 else '✓ No'}
+        - HLA Risk Alleles: {'⚠️ PRESENT - SEVERE HYPERSENSITIVITY RISK' if patient_data.get('hla_risk_allele_flag') == 1 else '✓ Absent'}
+
+        📊 VITAL SIGNS & PHYSIOLOGICAL PARAMETERS:
+        - Systolic Blood Pressure: {patient_data.get('bp_systolic', 'N/A')} mmHg
+        - Diastolic Blood Pressure: {patient_data.get('bp_diastolic', 'N/A')} mmHg
+        - Heart Rate: {patient_data.get('heart_rate', 'N/A')} bpm
+        - Blood Pressure Category: {'HYPERTENSIVE CRISIS' if patient_data.get('bp_systolic', 0) >= 180 else 'STAGE 2 HYPERTENSION' if patient_data.get('bp_systolic', 0) >= 140 else 'STAGE 1 HYPERTENSION' if patient_data.get('bp_systolic', 0) >= 130 else 'ELEVATED' if patient_data.get('bp_systolic', 0) >= 120 else 'NORMAL'}
+
+        🏥 CLINICAL SETTING & RISK FACTORS:
+        - Inpatient Status: {'✓ INPATIENT (Higher ADR Risk)' if patient_data.get('inpatient_flag') == 1 else '✗ Outpatient'}
+        - Prior ADR History: {'⚠️ POSITIVE HISTORY (Increased Risk)' if patient_data.get('prior_adr_history') == 1 else '✓ No Previous ADRs'}
+
+        ═══════════════════════════════════════════════════════════════════════════════════════
+        🤖 AI PREDICTION MODEL RESULTS & RISK STRATIFICATION
+        ═══════════════════════════════════════════════════════════════════════════════════════
+
+        🎯 PRIMARY PREDICTION OUTCOME:
+        - Most Likely ADR Type: {prediction_result.get('predicted_adr_type', 'N/A')}
+        - Overall Risk Classification: {prediction_result.get('risk_level', 'N/A')} RISK
+        - Safety Probability (No ADR): {prediction_result.get('no_adr_probability', 'N/A')}%
+        - ADR Probability: {100 - float(prediction_result.get('no_adr_probability', 0))}%
+
+        📈 COMPLETE ADR TYPE PROBABILITY MATRIX:
+        {chr(10).join([f"   • {adr_type}: {prob}% probability" for adr_type, prob in prediction_result.get('all_adr_types', {}).items()])}
+
+        🔥 TOP HIGH-RISK ADR CATEGORIES (Requiring Immediate Attention):
+        {chr(10).join([f"   🚨 {adr_type}: {prob}% - {'CRITICAL RISK' if prob > 15 else 'HIGH RISK' if prob > 10 else 'MODERATE RISK'}" for adr_type, prob in list(prediction_result.get('top_specific_adr_risks', {}).items())[:5]])}
+
+        ═══════════════════════════════════════════════════════════════════════════════════════
+        📝 GENERATE EXTREMELY DETAILED CLINICAL ANALYSIS REPORT
+        ═══════════════════════════════════════════════════════════════════════════════════════
+
+        Please provide an EXHAUSTIVELY DETAILED clinical report with the following comprehensive sections. Each section must be thorough, evidence-based, and clinically actionable:
+
+        ## 🎯 EXECUTIVE RISK ASSESSMENT SUMMARY
+        Provide a detailed 4-5 paragraph executive summary covering:
+        - Overall ADR risk stratification with specific percentages and clinical significance
+        - Primary concerns and immediate risk factors requiring attention
+        - Key patient-specific vulnerabilities and protective factors
+        - Comparison to population norms and risk benchmarks
+        - Clinical decision-making implications and urgency level
+
+        ## ⚠️ COMPREHENSIVE RISK FACTOR ANALYSIS
+        Provide detailed analysis of ALL contributing factors:
         
-        TOP SPECIFIC ADR TYPE RISKS:
-        {chr(10).join([f"- {adr_type}: {prob}%" for adr_type, prob in prediction_result.get('top_specific_adr_risks', {}).items()])}
+        ### Patient-Specific Risk Factors:
+        - Age-related pharmacokinetic/pharmacodynamic changes and implications
+        - Sex-specific considerations (hormonal, metabolic, body composition effects)
+        - Ethnicity-related genetic polymorphisms and drug response variations
+        - BMI impact on drug distribution, metabolism, and clearance
         
-        ALL ADR TYPE PROBABILITIES:
-        {chr(10).join([f"- {adr_type}: {prob}%" for adr_type, prob in prediction_result.get('all_adr_types', {}).items()])}
+        ### Organ Function Assessment:
+        - Detailed renal function analysis (creatinine, eGFR) and drug clearance implications
+        - Comprehensive hepatic function evaluation (AST/ALT, bilirubin, albumin) and metabolism capacity
+        - Hematological status assessment and bleeding/infection risk evaluation
+        - Cardiovascular status and hemodynamic considerations
+        
+        ### Comorbidity Impact Analysis:
+        - Diabetes: glycemic control, nephropathy, neuropathy implications for drug safety
+        - Liver disease: Child-Pugh classification implications, drug metabolism alterations
+        - CKD: staging, progression risk, drug accumulation potential
+        - Cardiac disease: arrhythmia risk, heart failure considerations, drug interactions
+        
+        ### Pharmacogenomic Risk Assessment:
+        - CYP2C9 status: specific drug metabolism implications, dose adjustment requirements
+        - CYP2D6 phenotype: affected drug classes, alternative therapy considerations
+        - Drug-gene interaction predictions and clinical significance
+        - Population pharmacokinetic variations and personalized dosing needs
 
-        Please provide a comprehensive clinical report with the following sections:
+        ## 💊 DETAILED MEDICATION OPTIMIZATION RECOMMENDATIONS
+        
+        ### Current Therapy Assessment:
+        - Detailed analysis of current medication appropriateness for this patient profile
+        - Dose optimization based on organ function, age, weight, and genetic factors
+        - Drug-drug interaction assessment with specific mechanism explanations
+        - Therapeutic drug monitoring recommendations with target levels
+        
+        ### Alternative Medication Strategies:
+        - Safer therapeutic alternatives with lower ADR risk profiles for this patient
+        - Specific medication switches with transition protocols and monitoring plans
+        - Dose reduction strategies while maintaining therapeutic efficacy
+        - Combination therapy modifications to reduce overall risk burden
+        
+        ### Drug Avoidance Recommendations:
+        - Specific medications to absolutely avoid in this patient (with detailed rationale)
+        - Drug classes requiring extreme caution with enhanced monitoring
+        - Over-the-counter medications and supplements to avoid
+        - Future prescribing considerations and contraindications
 
-        ## RISK ASSESSMENT SUMMARY
-        Provide an executive summary of the overall ADR risk profile and predicted outcomes.
+        ## 🏥 COMPREHENSIVE CLINICAL MANAGEMENT PROTOCOL
+        
+        ### Immediate Actions (Next 24-48 Hours):
+        - Urgent interventions required based on current risk level
+        - Laboratory tests to order immediately with specific rationale
+        - Vital sign monitoring frequency and parameters to track
+        - Patient assessment priorities and red flag symptoms to monitor
+        
+        ### Short-term Management (1-4 Weeks):
+        - Medication adjustments with specific timelines and protocols
+        - Follow-up appointment scheduling with appropriate specialists
+        - Patient education priorities and safety counseling points
+        - Caregiver involvement and support system activation
+        
+        ### Long-term Management Strategy (1-6 Months):
+        - Ongoing monitoring protocols with specific intervals and parameters
+        - Disease progression monitoring and medication adjustment triggers
+        - Quality of life assessments and functional status evaluations
+        - Preventive care integration and health maintenance priorities
 
-        ## KEY RISK FACTORS IDENTIFIED
-        List and explain the most significant risk factors contributing to ADR potential, including patient-specific factors.
+        ## 📊 INTENSIVE MONITORING PROTOCOL
+        
+        ### Laboratory Monitoring Schedule:
+        - Specific lab tests required with detailed frequency (daily, weekly, monthly)
+        - Target ranges and action thresholds for each parameter
+        - Trending analysis requirements and interpretation guidelines
+        - Critical value protocols and immediate notification procedures
+        
+        ### Clinical Monitoring Requirements:
+        - Vital sign monitoring frequency and automated alert parameters
+        - Physical examination focus areas and assessment techniques
+        - Symptom tracking tools and patient-reported outcome measures
+        - Functional status assessments and activities of daily living evaluation
+        
+        ### Technology-Enhanced Monitoring:
+        - Remote monitoring device recommendations (BP cuffs, glucose meters, etc.)
+        - Mobile health app integration for symptom tracking and medication adherence
+        - Telemedicine follow-up protocols and virtual care coordination
+        - Electronic health record alert configurations and clinical decision support
 
-        ## MEDICATION RECOMMENDATIONS
-        Based on the risk assessment, provide specific medication suggestions:
-        - Alternative medications with lower ADR risk for this patient profile
-        - Dose adjustments for current medications if needed
-        - Drug combinations to avoid
-        - Safer therapeutic alternatives considering the patient's comorbidities and risk factors
+        ## 👨‍⚕️ PATIENT & FAMILY EDUCATION COMPREHENSIVE PLAN
+        
+        ### Critical Safety Education:
+        - Detailed explanation of specific ADR risks in patient-friendly language
+        - Red flag symptoms requiring immediate medical attention (with specific examples)
+        - When and how to contact healthcare providers (emergency vs. routine)
+        - Medication administration best practices and timing optimization
+        
+        ### Lifestyle Modification Recommendations:
+        - Dietary considerations and drug-food interactions to avoid
+        - Exercise limitations and safe physical activity guidelines
+        - Sleep hygiene and stress management for optimal drug response
+        - Alcohol and substance use restrictions with detailed explanations
+        
+        ### Adherence Support Strategies:
+        - Medication organization systems and reminder tools
+        - Side effect management techniques and coping strategies
+        - Communication strategies for reporting concerns and symptoms
+        - Family/caregiver involvement in medication management and monitoring
 
-        ## CLINICAL MANAGEMENT SUGGESTIONS
-        Provide detailed clinical management recommendations:
-        - Immediate actions required based on risk level
-        - Preventive measures to reduce ADR risk
-        - Treatment modifications or optimizations
-        - Specialist referrals if indicated
+        ## 🧬 ADVANCED PHARMACOGENOMIC CONSIDERATIONS
+        
+        ### Genetic Testing Implications:
+        - Current genetic profile impact on drug selection and dosing
+        - Additional genetic testing recommendations for future therapy optimization
+        - Pharmacogenomic-guided therapy adjustments with evidence-based protocols
+        - Family genetic counseling considerations and cascade testing recommendations
+        
+        ### Personalized Medicine Applications:
+        - Precision dosing algorithms based on genetic and clinical factors
+        - Biomarker-guided therapy selection and monitoring strategies
+        - Population pharmacokinetic model applications for this patient
+        - Future therapeutic options based on emerging pharmacogenomic research
 
-        ## MONITORING PROTOCOL
-        Detail comprehensive monitoring recommendations:
-        - Laboratory parameters to monitor and frequency
-        - Clinical signs and symptoms to watch for
-        - Vital signs monitoring requirements
-        - Timeline for follow-up assessments
+        ## 🚨 EMERGENCY RESPONSE PROTOCOLS
+        
+        ### High-Risk ADR Recognition:
+        - Specific signs and symptoms of each predicted ADR type with clinical descriptions
+        - Severity grading systems and escalation criteria
+        - Time-sensitive intervention protocols and treatment algorithms
+        - Emergency department communication templates and critical information transfer
+        
+        ### Immediate Intervention Protocols:
+        - Step-by-step emergency response procedures for each ADR type
+        - Antidote administration protocols and contraindications
+        - Supportive care measures and monitoring requirements during acute events
+        - Medication discontinuation criteria and withdrawal management protocols
+        
+        ### Healthcare System Coordination:
+        - Emergency contact information and escalation pathways
+        - Specialist consultation triggers and referral protocols
+        - Hospital admission criteria and inpatient management considerations
+        - Discharge planning and transition of care protocols
 
-        ## PATIENT EDUCATION & COUNSELING
-        Provide specific patient counseling points:
-        - Warning signs to report immediately
-        - Medication adherence guidance
-        - Lifestyle modifications to reduce risk
-        - When to seek medical attention
+        ## 📅 DETAILED FOLLOW-UP & CONTINUITY OF CARE PLAN
+        
+        ### Structured Follow-up Schedule:
+        - Specific appointment intervals with rationale for timing
+        - Visit-specific objectives and assessment priorities
+        - Provider coordination and communication protocols
+        - Patient preparation requirements for each follow-up visit
+        
+        ### Outcome Monitoring & Assessment:
+        - Therapeutic efficacy monitoring with objective measures
+        - ADR surveillance protocols and documentation requirements
+        - Quality of life assessments and patient satisfaction measures
+        - Healthcare utilization tracking and cost-effectiveness evaluation
+        
+        ### Long-term Care Coordination:
+        - Specialist referral protocols and shared care arrangements
+        - Medication therapy management services integration
+        - Chronic disease management program enrollment considerations
+        - Preventive care integration and health maintenance scheduling
 
-        ## PHARMACOGENOMIC CONSIDERATIONS
-        Based on CYP enzyme status, provide:
-        - Implications for current medication metabolism
-        - Dose adjustment recommendations
-        - Alternative medications for poor metabolizers
-        - Future prescribing considerations
+        ## 📋 CLINICAL DECISION SUPPORT & DOCUMENTATION
+        
+        ### Evidence-Based Recommendations:
+        - Literature citations supporting each recommendation
+        - Clinical guideline adherence and best practice alignment
+        - Risk-benefit analysis for each therapeutic decision
+        - Alternative approach considerations with comparative effectiveness data
+        
+        ### Quality Metrics & Outcomes:
+        - Key performance indicators for monitoring care quality
+        - Patient safety metrics and adverse event tracking
+        - Clinical outcome measures and success criteria
+        - Continuous quality improvement opportunities and protocols
 
-        ## EMERGENCY PROTOCOLS
-        If high risk is identified, provide:
-        - Emergency signs and symptoms to monitor
-        - Immediate interventions if ADR occurs
-        - When to discontinue medications
-        - Emergency contact protocols
+        ═══════════════════════════════════════════════════════════════════════════════════════
 
-        ## FOLLOW-UP RECOMMENDATIONS
-        Specify follow-up care:
-        - Recommended follow-up intervals
-        - Parameters to reassess
-        - Criteria for medication continuation or discontinuation
-        - Long-term monitoring strategy
+        FORMAT REQUIREMENTS:
+        - Use professional medical terminology appropriate for clinical documentation
+        - Include specific medication names, doses, frequencies, and durations
+        - Provide exact timeframes for all recommendations (hours, days, weeks, months)
+        - Use bullet points, numbered lists, and clear headings for readability
+        - Highlight critical information with appropriate emphasis
+        - Include relevant clinical pearls and evidence-based insights
+        - Ensure all recommendations are actionable and specific
+        - Maintain consistency with current clinical guidelines and best practices
 
-        Format the report professionally for clinical documentation. Use clear headings, bullet points, and highlight critical information. Include specific medication names, doses, and timeframes where appropriate.
+        This report will be used for critical patient care decisions and must be comprehensive, accurate, and clinically actionable. Please provide the most detailed analysis possible across all requested domains.
         """
         
         # Generate report using Gemini
@@ -547,84 +733,7 @@ def test_report():
             'error': str(e)
         }), 500
 
-@app.route('/get_patient_details')
-def get_patient_details():
-    """Get all patient details from stored assessments"""
-    logger.info("📋 Patient details endpoint called")
-    
-    try:
-        # Load patient assessments from JSON file
-        import json
-        try:
-            with open('patient_assessments.json', 'r') as f:
-                assessments = json.load(f)
-        except FileNotFoundError:
-            assessments = []
-        
-        # Format patient details for display
-        patient_details = []
-        for assessment in assessments:
-            patient_data = assessment.get('patient_data', {})
-            prediction_result = assessment.get('prediction_result', {})
-            
-            # Format patient information
-            patient_info = {
-                'patient_id': assessment.get('patient_id', 'N/A'),
-                'patient_name': assessment.get('patient_name', 'Unknown Patient'),
-                'clinician': assessment.get('clinician', 'Unknown Clinician'),
-                'timestamp': assessment.get('timestamp', 'N/A'),
-                'demographics': {
-                    'age': f"{patient_data.get('age', 'N/A')} years",
-                    'sex': patient_data.get('sex', 'N/A'),
-                    'ethnicity': patient_data.get('ethnicity', 'N/A'),
-                    'bmi': f"{patient_data.get('bmi', 'N/A')} kg/m²"
-                },
-                'clinical_parameters': {
-                    'creatinine': f"{patient_data.get('creatinine', 'N/A')} mg/dL",
-                    'egfr': f"{patient_data.get('egfr', 'N/A')} mL/min/1.73m²",
-                    'ast_alt': f"{patient_data.get('ast_alt', 'N/A')} U/L",
-                    'bilirubin': f"{patient_data.get('bilirubin', 'N/A')} mg/dL",
-                    'albumin': f"{patient_data.get('albumin', 'N/A')} g/dL"
-                },
-                'comorbidities': {
-                    'diabetes': 'Yes' if patient_data.get('diabetes') == 1 else 'No',
-                    'liver_disease': 'Yes' if patient_data.get('liver_disease') == 1 else 'No',
-                    'ckd': 'Yes' if patient_data.get('ckd') == 1 else 'No',
-                    'cardiac_disease': 'Yes' if patient_data.get('cardiac_disease') == 1 else 'No'
-                },
-                'medication_profile': {
-                    'index_drug_dose': f"{patient_data.get('index_drug_dose', 'N/A')} mg",
-                    'concomitant_drugs_count': patient_data.get('concomitant_drugs_count', 'N/A'),
-                    'indication': patient_data.get('indication', 'N/A'),
-                    'cyp2c9': patient_data.get('cyp2c9', 'N/A'),
-                    'cyp2d6': patient_data.get('cyp2d6', 'N/A')
-                },
-                'vital_signs': {
-                    'bp_systolic': f"{patient_data.get('bp_systolic', 'N/A')} mmHg",
-                    'bp_diastolic': f"{patient_data.get('bp_diastolic', 'N/A')} mmHg",
-                    'heart_rate': f"{patient_data.get('heart_rate', 'N/A')} bpm"
-                },
-                'risk_assessment': {
-                    'predicted_adr_type': prediction_result.get('predicted_adr_type', 'N/A'),
-                    'risk_level': prediction_result.get('risk_level', 'N/A'),
-                    'no_adr_probability': f"{prediction_result.get('no_adr_probability', 'N/A')}%",
-                    'top_adr_risks': prediction_result.get('top_specific_adr_risks', {})
-                }
-            }
-            
-            patient_details.append(patient_info)
-        
-        logger.info(f"✅ Retrieved {len(patient_details)} patient records")
-        return jsonify({
-            'patients': patient_details,
-            'total_count': len(patient_details),
-            'timestamp': datetime.now().isoformat()
-        })
-        
-    except Exception as e:
-        logger.error(f"❌ Error retrieving patient details: {e}")
-        import traceback
-        logger.error(f"📋 Traceback: {traceback.format_exc()}")
+# Patient details endpoint removed
         return jsonify({'error': f'Failed to retrieve patient details: {str(e)}'}), 500
 
 @app.route('/health')
@@ -1352,7 +1461,7 @@ def generate_fallback_report(patient_data, prediction_result, patient_name, clin
 
 if __name__ == '__main__':
     import os
-    port = int(os.environ.get('PORT', 5001))
+    port = int(os.environ.get('PORT', 5000))
     debug = os.environ.get('FLASK_ENV') == 'development'
     print(f"🌐 Starting ADR Risk Predictor on http://localhost:{port}")
     print("🔥 New features: Emergency ADR Management, Clinical Decision Support, Enhanced CBC Analysis")

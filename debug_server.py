@@ -41,11 +41,6 @@ def patient_details_page():
     logger.info("👥 Patient details form accessed")
     return render_template('patient_details_form.html')
 
-@app.route('/patient-records')
-def patient_records_page():
-    logger.info("📋 Patient records page accessed")
-    return render_template('patient_details.html')
-
 @app.route('/assessment')
 def assessment():
     logger.info("🔬 Assessment page accessed")
@@ -501,85 +496,7 @@ Format with clear headings, bullet points, and practical, actionable recommendat
         logger.error(f"📋 Traceback: {traceback.format_exc()}")
         return jsonify({'error': f'Failed to generate medication analysis: {str(e)}'}), 500
 
-@app.route('/get_patient_details')
-def get_patient_details():
-    """Get all patient details from stored assessments"""
-    logger.info("📋 Patient details endpoint called")
-    
-    try:
-        # Load patient assessments from JSON file
-        import json
-        try:
-            with open('patient_assessments.json', 'r') as f:
-                assessments = json.load(f)
-        except FileNotFoundError:
-            assessments = []
-        
-        # Format patient details for display
-        patient_details = []
-        for assessment in assessments:
-            patient_data = assessment.get('patient_data', {})
-            prediction_result = assessment.get('prediction_result', {})
-            
-            # Format patient information
-            patient_info = {
-                'patient_id': assessment.get('patient_id', 'N/A'),
-                'patient_name': assessment.get('patient_name', 'Unknown Patient'),
-                'clinician': assessment.get('clinician', 'Unknown Clinician'),
-                'timestamp': assessment.get('timestamp', 'N/A'),
-                'demographics': {
-                    'age': f"{patient_data.get('age', 'N/A')} years",
-                    'sex': patient_data.get('sex', 'N/A'),
-                    'ethnicity': patient_data.get('ethnicity', 'N/A'),
-                    'bmi': f"{patient_data.get('bmi', 'N/A')} kg/m²"
-                },
-                'clinical_parameters': {
-                    'creatinine': f"{patient_data.get('creatinine', 'N/A')} mg/dL",
-                    'egfr': f"{patient_data.get('egfr', 'N/A')} mL/min/1.73m²",
-                    'ast_alt': f"{patient_data.get('ast_alt', 'N/A')} U/L",
-                    'bilirubin': f"{patient_data.get('bilirubin', 'N/A')} mg/dL",
-                    'albumin': f"{patient_data.get('albumin', 'N/A')} g/dL"
-                },
-                'comorbidities': {
-                    'diabetes': 'Yes' if patient_data.get('diabetes') == 1 else 'No',
-                    'liver_disease': 'Yes' if patient_data.get('liver_disease') == 1 else 'No',
-                    'ckd': 'Yes' if patient_data.get('ckd') == 1 else 'No',
-                    'cardiac_disease': 'Yes' if patient_data.get('cardiac_disease') == 1 else 'No'
-                },
-                'medication_profile': {
-                    'index_drug_dose': f"{patient_data.get('index_drug_dose', 'N/A')} mg",
-                    'concomitant_drugs_count': patient_data.get('concomitant_drugs_count', 'N/A'),
-                    'indication': patient_data.get('indication', 'N/A'),
-                    'cyp2c9': patient_data.get('cyp2c9', 'N/A'),
-                    'cyp2d6': patient_data.get('cyp2d6', 'N/A')
-                },
-                'vital_signs': {
-                    'bp_systolic': f"{patient_data.get('bp_systolic', 'N/A')} mmHg",
-                    'bp_diastolic': f"{patient_data.get('bp_diastolic', 'N/A')} mmHg",
-                    'heart_rate': f"{patient_data.get('heart_rate', 'N/A')} bpm"
-                },
-                'risk_assessment': {
-                    'predicted_adr_type': prediction_result.get('predicted_adr_type', 'N/A'),
-                    'risk_level': prediction_result.get('risk_level', 'N/A'),
-                    'no_adr_probability': f"{prediction_result.get('no_adr_probability', 'N/A')}%",
-                    'top_adr_risks': prediction_result.get('top_specific_adr_risks', {})
-                }
-            }
-            
-            patient_details.append(patient_info)
-        
-        logger.info(f"✅ Retrieved {len(patient_details)} patient records")
-        return jsonify({
-            'patients': patient_details,
-            'total_count': len(patient_details),
-            'timestamp': datetime.now().isoformat()
-        })
-        
-    except Exception as e:
-        logger.error(f"❌ Error retrieving patient details: {e}")
-        import traceback
-        logger.error(f"📋 Traceback: {traceback.format_exc()}")
-        return jsonify({'error': f'Failed to retrieve patient details: {str(e)}'}), 500
+# Patient details endpoint removed
 
 @app.route('/test-warning')
 def test_warning():
@@ -656,7 +573,7 @@ def health_check():
         'status': 'healthy',
         'model_loaded': model is not None,
         'endpoints_available': [
-            '/', '/assessment', '/predict', '/generate_report', '/generate_detailed_analysis', '/generate_medication_analysis', '/get_patient_details', '/health', '/debug', '/test-warning'
+            '/', '/assessment', '/predict', '/generate_report', '/generate_detailed_analysis', '/generate_medication_analysis', '/health', '/debug', '/test-warning'
         ],
         'timestamp': datetime.now().isoformat()
     })
