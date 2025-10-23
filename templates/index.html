@@ -1167,6 +1167,48 @@
             }
         }
 
+        /* Scroll Down Indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+            color: #0f2027;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 8px 25px rgba(79, 209, 197, 0.5);
+            cursor: pointer;
+            z-index: 1000;
+            animation: bounceIndicator 2s infinite;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scroll-indicator.show {
+            display: flex;
+        }
+
+        @keyframes bounceIndicator {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        .scroll-indicator:hover {
+            transform: translateX(-50%) translateY(-3px);
+            box-shadow: 0 12px 30px rgba(79, 209, 197, 0.6);
+        }
+
         /* Results Container */
         .results-container {
             background: rgba(15, 32, 39, 0.85);
@@ -1417,17 +1459,17 @@
         }
 
         .roadmap-phase {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             margin-bottom: 20px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid rgba(79, 209, 197, 0.3);
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .roadmap-phase.completed {
             border-color: #10b981;
-            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+            background: rgba(16, 185, 129, 0.15);
         }
 
         .roadmap-phase:hover {
@@ -1439,8 +1481,8 @@
             display: flex;
             align-items: center;
             padding: 20px;
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
+            background: rgba(15, 32, 39, 0.6);
+            border-bottom: 1px solid rgba(79, 209, 197, 0.2);
         }
 
         .roadmap-phase.completed .phase-header {
@@ -1456,8 +1498,8 @@
             align-items: center;
             justify-content: center;
             margin-right: 15px;
-            background: #e5e7eb;
-            color: #6b7280;
+            background: rgba(79, 209, 197, 0.2);
+            color: #4fd1c5;
             font-size: 1.2rem;
         }
 
@@ -1470,7 +1512,7 @@
             margin: 0 0 5px 0;
             font-size: 1.1rem;
             font-weight: 600;
-            color: #1e293b;
+            color: #e2e8f0;
         }
 
         .roadmap-phase.completed .phase-info h4 {
@@ -1824,14 +1866,14 @@
         .comparison-advantages {
             margin: 30px 0;
             padding: 25px;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 16px;
-            border: 2px solid #0ea5e9;
+            border: 2px solid #4fd1c5;
         }
 
         .comparison-advantages h4 {
             margin: 0 0 20px 0;
-            color: #0c4a6e;
+            color: #4fd1c5;
             font-size: 1.2rem;
             font-weight: 600;
             display: flex;
@@ -1889,14 +1931,14 @@
         .validation-metrics {
             margin: 30px 0;
             padding: 25px;
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            background: rgba(16, 185, 129, 0.1);
             border-radius: 16px;
-            border: 2px solid #22c55e;
+            border: 2px solid #10b981;
         }
 
         .validation-metrics h4 {
             margin: 0 0 20px 0;
-            color: #14532d;
+            color: #6ee7b7;
             font-size: 1.2rem;
             font-weight: 600;
             display: flex;
@@ -1948,7 +1990,7 @@
         .clinical-impact {
             margin: 30px 0;
             padding: 25px;
-            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+            background: rgba(245, 158, 11, 0.1);
             border-radius: 16px;
             border: 2px solid #f59e0b;
         }
@@ -1962,13 +2004,13 @@
 
         .impact-header h4 {
             margin: 0;
-            color: #92400e;
+            color: #fbbf24;
             font-size: 1.2rem;
             font-weight: 600;
         }
 
         .impact-header i {
-            color: #d97706;
+            color: #fbbf24;
             font-size: 1.3rem;
         }
 
@@ -2871,7 +2913,7 @@
         .adjustment-type {
             font-size: 1.2rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #ffffff;
         }
 
         .evidence-badge {
@@ -5381,6 +5423,12 @@
             </form>
         </div>
 
+        <!-- Scroll Down Indicator -->
+        <div id="scroll-indicator" class="scroll-indicator" onclick="scrollToResults()">
+            <i class="fas fa-arrow-down"></i>
+            Scroll down to view results
+        </div>
+
         <!-- Results Section -->
         <div id="results-container" class="results-container" style="display: none;">
             <div class="results-header">
@@ -7373,7 +7421,12 @@
                     </div>
                 `;
                 resultsContainer.style.display = 'block';
-                resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                // Auto-scroll removed for better user control
+                // resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                
+                // Show scroll down notification and indicator
+                showNotification('✅ Assessment complete! Scroll down to view your results', 'success', 5000);
+                showScrollIndicator();
             }
         }
 
@@ -7469,8 +7522,8 @@
             const container = document.getElementById('mitigation-strategies-container');
             container.style.display = 'block';
             
-            // Scroll to mitigation strategies
-            container.scrollIntoView({ behavior: 'smooth' });
+            // Auto-scroll removed for better user control
+            // container.scrollIntoView({ behavior: 'smooth' });
             
             // Load mitigation strategies data
             loadMitigationStrategies(patientData, predictionResult);
@@ -8555,10 +8608,10 @@
                 section.style.display = 'block';
                 card.classList.add('active');
 
-                // Smooth scroll to the section
-                setTimeout(() => {
-                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+                // Auto-scroll removed for better user control
+                // setTimeout(() => {
+                //     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // }, 100);
             } else {
                 // Hide selected section
                 section.style.display = 'none';
@@ -11390,6 +11443,37 @@
             interpretationDiv.innerHTML = interpretation;
             interpretationDiv.className = `age-interpretation ${className}`;
             interpretationDiv.style.display = 'block';
+        }
+
+        // Scroll indicator functions
+        function showScrollIndicator() {
+            const indicator = document.getElementById('scroll-indicator');
+            if (indicator) {
+                indicator.classList.add('show');
+                
+                // Hide indicator after 10 seconds or when user scrolls
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 10000);
+                
+                // Hide on scroll
+                window.addEventListener('scroll', hideScrollIndicatorOnScroll, { once: true });
+            }
+        }
+
+        function hideScrollIndicatorOnScroll() {
+            const indicator = document.getElementById('scroll-indicator');
+            if (indicator) {
+                indicator.classList.remove('show');
+            }
+        }
+
+        function scrollToResults() {
+            const resultsContainer = document.getElementById('results-container');
+            if (resultsContainer) {
+                resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                hideScrollIndicatorOnScroll();
+            }
         }
     </script>
 </body>
