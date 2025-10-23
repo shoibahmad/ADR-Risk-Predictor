@@ -1272,7 +1272,515 @@ def predict_adr():
         logger.error(f"Error in prediction: {e}")
         return jsonify({'error': str(e)}), 500
 
-@app.route('/generate_report', methods=['POST'])
+@app.route('/mitigation_strategies', methods=['POST'])
+def generate_mitigation_strategies():
+    """Generate personalized mitigation strategies based on ADR risk assessment"""
+    try:
+        data = request.json
+        patient_data = data.get('patient_data', {})
+        prediction_result = data.get('prediction_result', {})
+        
+        logger.info(f"Generating mitigation strategies for patient data: {patient_data}")
+        
+        # Extract key risk factors
+        risk_level = prediction_result.get('risk_level', 'Medium')
+        top_adr_risks = prediction_result.get('top_specific_adr_risks', {})
+        major_factors = prediction_result.get('major_adr_factors', [])
+        
+        # Generate comprehensive mitigation strategies
+        mitigation_strategies = {
+            'risk_reduction_recommendations': generate_risk_reduction_recommendations(patient_data, prediction_result),
+            'alternative_drug_suggestions': generate_alternative_drug_suggestions(patient_data, prediction_result),
+            'dose_optimization': generate_dose_optimization_recommendations(patient_data, prediction_result),
+            'monitoring_protocol': generate_monitoring_protocol(patient_data, prediction_result),
+            'patient_education': generate_patient_education_points(patient_data, prediction_result),
+            'emergency_protocols': generate_emergency_protocols(patient_data, prediction_result),
+            'follow_up_schedule': generate_follow_up_schedule(patient_data, prediction_result),
+            'clinical_decision_support': generate_clinical_decision_support(patient_data, prediction_result)
+        }
+        
+        return jsonify(mitigation_strategies)
+        
+    except Exception as e:
+        logger.error(f"Error generating mitigation strategies: {e}")
+        return jsonify({'error': str(e)}), 500
+
+def generate_risk_reduction_recommendations(patient_data, prediction_result):
+    """Generate specific interventions to lower ADR probability"""
+    recommendations = []
+    risk_level = prediction_result.get('risk_level', 'Medium')
+    top_adr_risks = prediction_result.get('top_specific_adr_risks', {})
+    
+    # General risk reduction based on risk level
+    if risk_level == 'High':
+        recommendations.extend([
+            {
+                'category': 'Immediate Actions',
+                'priority': 'Critical',
+                'intervention': 'Consider delaying drug initiation until risk factors are optimized',
+                'rationale': 'High ADR risk requires risk factor modification before treatment',
+                'timeline': 'Before drug administration'
+            },
+            {
+                'category': 'Pre-medication',
+                'priority': 'High',
+                'intervention': 'Administer prophylactic medications (antihistamines, corticosteroids)',
+                'rationale': 'Reduces hypersensitivity and inflammatory ADR risk',
+                'timeline': '30-60 minutes before drug administration'
+            }
+        ])
+    
+    # Specific recommendations based on patient factors
+    if patient_data.get('liver_disease', 0) == 1:
+        recommendations.append({
+            'category': 'Hepatic Protection',
+            'priority': 'High',
+            'intervention': 'Hepatoprotective agents (N-acetylcysteine, silymarin)',
+            'rationale': 'Reduces hepatotoxicity risk in patients with existing liver disease',
+            'timeline': 'Concurrent with treatment'
+        })
+    
+    if patient_data.get('ckd', 0) == 1:
+        recommendations.append({
+            'category': 'Renal Protection',
+            'priority': 'High',
+            'intervention': 'Ensure adequate hydration and consider nephroprotective measures',
+            'rationale': 'Prevents further renal impairment and drug accumulation',
+            'timeline': 'Before and during treatment'
+        })
+    
+    if patient_data.get('cardiac_disease', 0) == 1:
+        recommendations.append({
+            'category': 'Cardiac Monitoring',
+            'priority': 'High',
+            'intervention': 'Continuous cardiac monitoring and electrolyte optimization',
+            'rationale': 'Prevents arrhythmias and cardiovascular complications',
+            'timeline': 'During treatment initiation'
+        })
+    
+    # ADR-specific recommendations
+    for adr_type, probability in top_adr_risks.items():
+        if probability > 10:  # Only for significant risks
+            if 'Hepatotoxicity' in adr_type:
+                recommendations.append({
+                    'category': 'Hepatotoxicity Prevention',
+                    'priority': 'High',
+                    'intervention': 'Baseline and serial liver function monitoring',
+                    'rationale': f'{probability:.1f}% risk of hepatotoxicity detected',
+                    'timeline': 'Baseline, 1 week, 2 weeks, then monthly'
+                })
+            elif 'Nephrotoxicity' in adr_type:
+                recommendations.append({
+                    'category': 'Nephrotoxicity Prevention',
+                    'priority': 'High',
+                    'intervention': 'Maintain optimal fluid balance and avoid nephrotoxic co-medications',
+                    'rationale': f'{probability:.1f}% risk of nephrotoxicity detected',
+                    'timeline': 'Throughout treatment course'
+                })
+            elif 'Cardiovascular' in adr_type:
+                recommendations.append({
+                    'category': 'Cardiovascular Protection',
+                    'priority': 'High',
+                    'intervention': 'ECG monitoring and electrolyte management',
+                    'rationale': f'{probability:.1f}% risk of cardiovascular events detected',
+                    'timeline': 'Baseline and periodic monitoring'
+                })
+    
+    return recommendations
+
+def generate_alternative_drug_suggestions(patient_data, prediction_result):
+    """Generate AI-powered therapeutic alternatives with lower risk profiles"""
+    alternatives = []
+    current_drug = patient_data.get('medication_name', 'Unknown')
+    risk_level = prediction_result.get('risk_level', 'Medium')
+    top_adr_risks = prediction_result.get('top_specific_adr_risks', {})
+    
+    # Drug class-specific alternatives
+    drug_alternatives = {
+        'Warfarin': [
+            {
+                'alternative': 'Apixaban',
+                'risk_reduction': '40-60%',
+                'advantages': ['Lower bleeding risk', 'No routine monitoring required', 'Fewer drug interactions'],
+                'considerations': ['More expensive', 'Requires dose adjustment in renal impairment'],
+                'monitoring': 'Renal function every 6 months'
+            },
+            {
+                'alternative': 'Rivaroxaban',
+                'risk_reduction': '35-50%',
+                'advantages': ['Once daily dosing', 'Predictable pharmacokinetics'],
+                'considerations': ['Contraindicated in severe renal impairment'],
+                'monitoring': 'Renal and hepatic function'
+            }
+        ],
+        'Metformin': [
+            {
+                'alternative': 'Empagliflozin',
+                'risk_reduction': '30-45%',
+                'advantages': ['Cardiovascular benefits', 'Weight loss', 'Lower hypoglycemia risk'],
+                'considerations': ['Risk of genital infections', 'Requires adequate renal function'],
+                'monitoring': 'Renal function, ketones'
+            }
+        ],
+        'Acetaminophen': [
+            {
+                'alternative': 'Ibuprofen (if no contraindications)',
+                'risk_reduction': '70-80%',
+                'advantages': ['Lower hepatotoxicity risk', 'Anti-inflammatory effects'],
+                'considerations': ['GI and cardiovascular risks', 'Renal toxicity'],
+                'monitoring': 'Renal function, GI symptoms'
+            }
+        ]
+    }
+    
+    # Get alternatives for current drug
+    if current_drug in drug_alternatives:
+        alternatives.extend(drug_alternatives[current_drug])
+    
+    # Generic alternatives based on risk factors
+    if patient_data.get('liver_disease', 0) == 1:
+        alternatives.append({
+            'alternative': 'Consider hepatically-eliminated alternatives',
+            'risk_reduction': '50-70%',
+            'advantages': ['Reduced hepatic metabolism burden'],
+            'considerations': ['May require dose adjustments'],
+            'monitoring': 'Liver function tests'
+        })
+    
+    if patient_data.get('ckd', 0) == 1:
+        alternatives.append({
+            'alternative': 'Consider renally-safe alternatives',
+            'risk_reduction': '40-60%',
+            'advantages': ['Minimal renal elimination', 'Reduced accumulation risk'],
+            'considerations': ['Alternative elimination pathways'],
+            'monitoring': 'Drug levels if available'
+        })
+    
+    return alternatives
+
+def generate_dose_optimization_recommendations(patient_data, prediction_result):
+    """Generate ML-suggested dose adjustments for risk minimization"""
+    dose_recommendations = []
+    current_dose = patient_data.get('index_drug_dose', 200)
+    risk_level = prediction_result.get('risk_level', 'Medium')
+    
+    # Pharmacogenomic-based dosing
+    cyp2d6_status = patient_data.get('cyp2d6', 'EM')
+    cyp2c9_status = patient_data.get('cyp2c9', 'Wild')
+    
+    if cyp2d6_status == 'PM':  # Poor metabolizer
+        dose_recommendations.append({
+            'adjustment_type': 'Pharmacogenomic',
+            'recommendation': f'Reduce dose by 50-75% (from {current_dose}mg to {current_dose * 0.25:.0f}-{current_dose * 0.5:.0f}mg)',
+            'rationale': 'CYP2D6 poor metabolizer - increased drug exposure risk',
+            'monitoring': 'Therapeutic drug monitoring recommended',
+            'evidence_level': 'Strong (PharmGKB Level A)'
+        })
+    elif cyp2d6_status == 'IM':  # Intermediate metabolizer
+        dose_recommendations.append({
+            'adjustment_type': 'Pharmacogenomic',
+            'recommendation': f'Reduce dose by 25-50% (from {current_dose}mg to {current_dose * 0.5:.0f}-{current_dose * 0.75:.0f}mg)',
+            'rationale': 'CYP2D6 intermediate metabolizer - moderately increased exposure',
+            'monitoring': 'Clinical response and adverse effects',
+            'evidence_level': 'Moderate (PharmGKB Level B)'
+        })
+    
+    # Organ function-based dosing
+    if patient_data.get('ckd', 0) == 1:
+        egfr = patient_data.get('egfr', 60)
+        if egfr < 30:
+            dose_recommendations.append({
+                'adjustment_type': 'Renal Impairment',
+                'recommendation': f'Reduce dose by 75% (from {current_dose}mg to {current_dose * 0.25:.0f}mg)',
+                'rationale': f'Severe renal impairment (eGFR: {egfr} mL/min/1.73m²)',
+                'monitoring': 'Drug levels and renal function',
+                'evidence_level': 'Strong (FDA guidance)'
+            })
+        elif egfr < 60:
+            dose_recommendations.append({
+                'adjustment_type': 'Renal Impairment',
+                'recommendation': f'Reduce dose by 50% (from {current_dose}mg to {current_dose * 0.5:.0f}mg)',
+                'rationale': f'Moderate renal impairment (eGFR: {egfr} mL/min/1.73m²)',
+                'monitoring': 'Renal function every 3-6 months',
+                'evidence_level': 'Strong (FDA guidance)'
+            })
+    
+    if patient_data.get('liver_disease', 0) == 1:
+        dose_recommendations.append({
+            'adjustment_type': 'Hepatic Impairment',
+            'recommendation': f'Reduce dose by 50-75% (from {current_dose}mg to {current_dose * 0.25:.0f}-{current_dose * 0.5:.0f}mg)',
+            'rationale': 'Hepatic impairment reduces drug clearance',
+            'monitoring': 'Liver function tests and drug levels',
+            'evidence_level': 'Strong ('
+        })
+    
+    # Age-based adjustments
+    age = patient_data.get('age', 50)
+    if age >= 75:
+        
+            'adjustment_type':
+            'recommendation': f'Start with 50% of standard)',
+            'rationale': 'Elderly patients haverance',
+            'monitoring': 'Frequent clinical assessment',
+        iteria)'
+        })
+    
+    # Risk-based dose titration
+igh':
+        dose_recommendations.append({
+            'adjustment_type': 'Risk-based',
+            'recommendation': 'Start with lowest effective dose and titrate slowly',
+ion',
+            'monitoring': 'Weekly assessment duri
+            'evidence_level': 'Expert nsus'
+        })
+    
+    return dose_recommendations
+
+def generate_monitoring_protocol(patient_data, 
+    """Generate customized surveillance plans based on risk""
+    monitoring_plan = {
+        'baseline_assessments': [],
+        'ongoing_monitoring': [],
+],
+        'emergency_indicators': []
+    }
+    
+    risk_level = prediction_result.get('risk_level', 'Mediu)
+    top_adr_risks = prediction_result.get('top_specific_adr_risks', {})
+    
+    # Baseline assessments
+    monitoring_plan['baseline_assessments'] = [
+        {
+            'assessment': 'Complete Blood Count (CBC)',
+            'rationale': 'Detect baseline hematologic abnormalities',
+
+        },
+        {
+            'assessment': 'Comprehensive Metabolic Panel (CMP)',
+            'rationale': 'Assess organ function and electrolyte status',
+            'timing': 'Within 7 days before treatment'
+        },
+        {
+            'assessment': 'Liver Function Tests (LFTs)',
+            'rationale': 'Baseline hepatic function assessment',
+'
+        }
+    ]
+    
+    # Risk-specific monitoring
+    if 'Hepatotoxicity' in str(top_adr_risks):
+        monitoring_plan['ongoing_monitoring'].append({
+            'parameter': 'Liver Function Tests',
+            'frequency': 'Weekly x 4, then monthly',
+            'alert_threshold': 'ALT/AST >3x ULN or Bilirubin >2x ULN',
+
+        })
+    
+    if 'Nephrotoxicity' in str(top_adr_risks):
+        monitoring_plan['ongoing_monitoring'].append({
+            'parameter': 'Serum Creatinine and eGFR',
+            'frequency': 'Weekly x 2, then every 2 weeks',
+            'alert_threshold': 'Creatinine increase >50% from baseline',
+            'action': 'Dose reduction or discontinuation'
+        })
+    
+    if '
+        monitoring_plan['ongoing_monitornd({
+            'parameter': 'ECG and Cardiac Enzymes',
+thly',
+            'alert_threshold': 'QTc >500ms or new arrhythmias',
+        
+        })
+    
+    # High-risk patient monitoring
+    if risk_level == 'High':
+        monitoring_plan['ongoing_monitoring'].extend([
+            {
+                'parameter': 'Daily symptom assessment',
+        
+                'alert_threshold': 'A
+                'action': 'Clinical evaluation within 24 hours'
+            },
+            {
+        s',
+                'frequency': 'Daily x 3, then
+                'alert_threshold': 'Significant changes from baseline',
+                'action': 'Immediate clinical assessment'
+            }
+        ])
+    
+    # Emergency indicators
+    monitoring_plan['emergency_indicators'] = [
+        'Severe allergic reactions (anaphylaxis)',
+        'Acute liver failure (jaundice, confusion)',
+        'Severe skin reactions (SJS/TEN)',
+        ,
+        'Acute kidney injury (oliguria,,
+        'Severe bleeding or bruising',
+        'Neurological changes (seizures, altered mental status)'
+    ]
+    
+    return monitoring_plan
+
+def gene:
+    """Generate patient education mate"
+    education_points = {
+        'warning_signs': [],
+        'self_monitoring': [],
+[],
+        'when_to_seek_help': []
+    }
+    
+    top_adr_risks = prediction_result.get('top_specific_adr_risks{})
+    
+g signs
+    education_points['warning_signs'] = [
+        'Unusual fatigue or weakness',
+        'Nausea, vomiting, or loss of appetite',
+hives',
+        'Difficulty breathing or chest tightness',
+        'Swelling of face, lips, or tongue',
+        'Unusual bleeding or bruising',
+
+        'Yellowing of skin or eyes'
+    ]
+    
+    # Self-monitoring instructions
+    education_points['self_monitoring'] = [
+
+        'Monitor temperature daily',
+        'Check for skin changes or rashes',
+rgy',
+        'Track any new symptoms or side effects'
+    ]
+
+    # Lifestyle modifications
+    education_points['lifestyle_modifications'] = [
+        'Avoid alcohol consumption',
+ed',
+        'Maintain regular sleep schedule',
+
+        'Inform all healthcare providers about '
+    ]
+    
+    # When to seek immediate help
+    education_points['when_to_seek_help'] = [
+        'Severe allergic reactions (difficulty breathing, sw
+        'Chest pain or irregular heartbeat',
+
+        'Yellowing of skin or eyes',
+        'Unusual bleeding or bruising',
+        
+        'Confusion or changes in mental sts'
+    ]
+    
+    return education_points
+
+def geneesult):
+    """Generate emergency response pro"
+    protocols = []
+    top_adr_risks = prediction_result.get('top_specific_adr_risks', {})
+    
+    # Anaphylaxis protocol
+    prot
+        'emergency_type': 'Anaphylaxis',
+        'recognition': 'Difficulty breathing, swelling, severe rash, hypotension',
+        'immediate_actions': [
+            'Discontinue drug immediately',
+            'Administer epinephrine 0.3-0.5mg IM',
+        ,
+            'Oxygen therapy',
+            'Corticosteroids and antihistamines'
+        ],
+        'monitoring': 'Continuous vital signs, prepare for intubation',
+        'disposition': 'Emergency department immediately'
+    })
+    
+ protocol
+    if 'Hepatotoxicity' in str(top_adr_risks):
+        ppend({
+            'emergency_type': 'Acute He
+            'recognition': 'Jaundice, RUQ pain, elevated LFTs >5x ULN',
+            'immediate_actions': [
+                'Discontinue hepatotoxic drug',
+                'N-acetylcysteine if acetaminophen-related',
+        
+                'Avoid hepatotoxic medications'
+            ],
+            'monitoring': 'Serial LFTs, coagulation studies, mental status',
+            'disposition': 'Hepatology consultation, consider ICU'
+        })
+    
+    return protocols
+
+def generate_follow_up_schedule(patient_data, prediction_result):
+    """Generate structured follow-up schedule"""
+    schedule = []
+Medium')
+    
+    if r':
+        schedule = [
+            {'timepoint': '24-48 hours', 'type': 'Phone call', 'foc'},
+            {'timepoint': '1 week', 'type': 'Office visit', 'focus': 'C'},
+            {'timepoint': '2 weeks', 'type': 'Office visit', 'foct'},
+            {'timepoint': '1 month', 'type': 'Office visit', 'focus': 'Ciew'},
+        }
+        ]
+    elif risk_level == 'Medium':
+        schedule = [
+            {'timepoint': '1 week', 'type': 'Phone call', 'focus': ,
+            {'timepoint': '2 weeks', 'type': 'Office visit', 
+        ew'},
+            {'timepoint': '3 months', 'type': 'Office v}
+        ]
+    else:  # Low risk
+        schedule = [
+            {'timepoint': '2 weeks', 'type': 'Phone call', 'focus': 'In},
+
+            {'timepoint': '3 months', 'typeing'}
+        ]
+    
+    return schedule
+
+def generate_clinical_decision_support(patient_data, prediction_result):
+    """Generate clinical decision support recommendations"""
+    deci
+        'treatment_recommendation': '',
+        'risk_benefit_analysis': {},
+        'alternative_approaches': [],
+        'consultation_recommendations': []
+    }
+    
+    risk_level = prediction_result.get('rism')
+    no_adr_prob = prediction_result.get('no_adr_probability', 50)
+    
+    # Treatment recommendation
+    if risk_level == 'High':
+ion'
+    elif risk_level == 'Medium':
+        
+    else:
+        decision_support['treatment_recommendation'] = 'Proceed with standard mon
+    
+    # Risk-benefit analysis
+    decision_support['risk_benefit_analysis'] = {
+        :.1f}%',
+        'benefit_potential': 'High' if risk_level =
+        'recommendation': 'Benefits likely outweigh risks' if risk_l
+    }
+    
+    # Consultation recommendations
+    if rHigh':
+        decision_support['consultation_re = [
+            'Clinical pharmacist consultation',
+            'Specialist consultation (based on primary indication
+            'Consider multidisciplinary team approach'
+        ]
+    
+    return decision_support
+
+@app.route('/generate_report', methods=['POST']))',ons']mmendaticoel == 'levisk_fits'eneeigh bs may outwlse 'Risk eel != 'High'evcertain',else 'Un'Medium' vel == f risk_lederate' ise 'Moow' el= 'L no_adr_prob00 -: f'{1_risk''adrring'iton'ioatmitigand risk ng onitorih enhanced meed wit'] = 'Procationmmendrecot_tmenupport['treaision_sdecattigve risk mior intensitherapy ative er altern = 'Considdation']nt_recommentmetreart['ion_suppo     decis   Mediuk_level', 'port = {upon_ssitorg monioinOngs': 'it', 'focu'Office vis': '},e assessmentRoutin, 'focus': 'visit'ce  'Offi':'type month', t': '1imepoin        {'t    in'l check-itiamonitoring' 'Routine 'focus':isit', fficacy reviand ey 'Safet: cus'isit', 'fo'Office v, 'type': nth''1 moimepoint':     {'tment'}, lab assessClinical and'focus': 'y check'}nitial safet'Ity'ng-term safe 'Lo', 'focus':e visit 'Offic'type':onths', point': '3 m   {'time ive revmprehensossessmen': 'Safety ausand labson l evaluatilinicassessment'Symptom aus': el == 'Highisk_levl', '('risk_leve.getn_result= predictio_level   risk  ve care',rti'Suppo        ity',toxicpatoocols.aprototoxicitypat    # Hescitation' resus and fluidV acces    'Ippend({ocols.as""tocoln_rtiodata, predicatient_(pocolsergency_prot_emrateatublistering',or n reactions ere ski'Sev',ainabdominal pomiting, or re nausea, v'Seve        ing)',ellmedicationthis ions',edicatnecessary m 'Avoid un       well-hydratStay         '    netite or ein appey changes    'Note an     y',iary symptom dKeep a dail        ',ls' stooine or pale 'Dark ur       ng, or tchirash, i 'Skin        neral warnin Ge    #', ns': atioificifestyle_mod        'lrials""result)diction_ta, prent_daints(patien_pocatioent_edurate_patiedema)' st pain'hmias or cherdiac arrhyt'Caeekly', wtal sign: 'Vimeter'    'para    w symptoms',ny ne,t 7 days'Firs: 'equency'       'fr ion'nsultatdiology co 'Car':   'action  mon1 week, then, neli': 'Baserequency    'f        ing'].appesks):_rir(top_adrar' in stasculCardiovs'asses reandrug  'Hold d 'action':           reatmentbefore tys 'Within 7 da  'timing':           t're treatmenbefoin 7 days  'With':iming   't         m'ameters': [  'alert_par       factors"on_result):predictiseconration',itng tatose escaltious d cauquiresresk ADR ri: 'High e'ional 'rat            == 'Hk_level   if ris ng (Beers Crevel': 'Stroence_l  'evid  cleareduced nd sitivity acreased senin :.0f}mgse * 0.5ent_do ({currdose ,atric' 'Geri{ns.append(iommendatse_recodoes)innical guidelCli
 def generate_report():
     try:
         data = request.json

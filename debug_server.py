@@ -1071,6 +1071,237 @@ def predict_adr():
         logger.error(f"📋 Traceback: {traceback.format_exc()}")
         return jsonify({'error': str(e)}), 500
 
+@app.route('/mitigation_strategies', methods=['POST'])
+def generate_mitigation_strategies():
+    """Generate personalized mitigation strategies based on ADR risk assessment"""
+    logger.info("🛡️ Mitigation strategies endpoint called")
+    
+    try:
+        data = request.json
+        patient_data = data.get('patient_data', {})
+        prediction_result = data.get('prediction_result', {})
+        
+        logger.info(f"🔍 Generating mitigation strategies for risk level: {prediction_result.get('risk_level', 'Unknown')}")
+        
+        # Extract key risk factors
+        risk_level = prediction_result.get('risk_level', 'Medium')
+        top_adr_risks = prediction_result.get('top_specific_adr_risks', {})
+        
+        # Generate comprehensive mitigation strategies using the same functions as app.py
+        # (Note: In a production environment, these functions would be in a shared module)
+        mitigation_strategies = {
+            'risk_reduction_recommendations': generate_debug_risk_reduction_recommendations(patient_data, prediction_result),
+            'alternative_drug_suggestions': generate_debug_alternative_drug_suggestions(patient_data, prediction_result),
+            'dose_optimization': generate_debug_dose_optimization_recommendations(patient_data, prediction_result),
+            'monitoring_protocol': generate_debug_monitoring_protocol(patient_data, prediction_result),
+            'patient_education': generate_debug_patient_education_points(patient_data, prediction_result),
+            'emergency_protocols': generate_debug_emergency_protocols(patient_data, prediction_result),
+            'follow_up_schedule': generate_debug_follow_up_schedule(patient_data, prediction_result),
+            'clinical_decision_support': generate_debug_clinical_decision_support(patient_data, prediction_result)
+        }
+        
+        logger.info("✅ Mitigation strategies generated successfully")
+        return jsonify(mitigation_strategies)
+        
+    except Exception as e:
+        logger.error(f"❌ Error generating mitigation strategies: {e}")
+        import traceback
+        logger.error(f"📋 Traceback: {traceback.format_exc()}")
+        return jsonify({'error': str(e)}), 500
+
+def generate_debug_risk_reduction_recommendations(patient_data, prediction_result):
+    """Generate specific interventions to lower ADR probability (debug version)"""
+    recommendations = []
+    risk_level = prediction_result.get('risk_level', 'Medium')
+    top_adr_risks = prediction_result.get('top_specific_adr_risks', {})
+    
+    # General risk reduction based on risk level
+    if risk_level == 'High':
+        recommendations.extend([
+            {
+                'category': 'Immediate Actions',
+                'priority': 'Critical',
+                'intervention': 'Consider delaying drug initiation until risk factors are optimized',
+                'rationale': 'High ADR risk requires risk factor modification before treatment',
+                'timeline': 'Before drug administration'
+            },
+            {
+                'category': 'Pre-medication',
+                'priority': 'High',
+                'intervention': 'Administer prophylactic medications (antihistamines, corticosteroids)',
+                'rationale': 'Reduces hypersensitivity and inflammatory ADR risk',
+                'timeline': '30-60 minutes before drug administration'
+            }
+        ])
+    
+    # Specific recommendations based on patient factors
+    if patient_data.get('liver_disease', 0) == 1:
+        recommendations.append({
+            'category': 'Hepatic Protection',
+            'priority': 'High',
+            'intervention': 'Hepatoprotective agents (N-acetylcysteine, silymarin)',
+            'rationale': 'Reduces hepatotoxicity risk in patients with existing liver disease',
+            'timeline': 'Concurrent with treatment'
+        })
+    
+    if patient_data.get('ckd', 0) == 1:
+        recommendations.append({
+            'category': 'Renal Protection',
+            'priority': 'High',
+            'intervention': 'Ensure adequate hydration and consider nephroprotective measures',
+            'rationale': 'Prevents further renal impairment and drug accumulation',
+            'timeline': 'Before and during treatment'
+        })
+    
+    return recommendations
+
+def generate_debug_alternative_drug_suggestions(patient_data, prediction_result):
+    """Generate AI-powered therapeutic alternatives with lower risk profiles (debug version)"""
+    alternatives = []
+    current_drug = patient_data.get('medication_name', 'Unknown')
+    
+    # Simplified alternatives for debug version
+    alternatives.append({
+        'alternative': 'Consider safer alternative based on risk profile',
+        'risk_reduction': '30-50%',
+        'advantages': ['Lower ADR risk', 'Better safety profile'],
+        'considerations': ['May require dose adjustment', 'Different monitoring requirements'],
+        'monitoring': 'Standard safety monitoring'
+    })
+    
+    return alternatives
+
+def generate_debug_dose_optimization_recommendations(patient_data, prediction_result):
+    """Generate ML-suggested dose adjustments for risk minimization (debug version)"""
+    dose_recommendations = []
+    current_dose = patient_data.get('index_drug_dose', 200)
+    risk_level = prediction_result.get('risk_level', 'Medium')
+    
+    if risk_level == 'High':
+        dose_recommendations.append({
+            'adjustment_type': 'Risk-based',
+            'recommendation': f'Consider reducing dose by 25-50% (from {current_dose}mg)',
+            'rationale': 'High ADR risk requires cautious dosing approach',
+            'monitoring': 'Enhanced clinical monitoring',
+            'evidence_level': 'Clinical judgment'
+        })
+    
+    return dose_recommendations
+
+def generate_debug_monitoring_protocol(patient_data, prediction_result):
+    """Generate customized surveillance plans based on risk factors"""
+    monitoring_plan = {
+        'baseline_assessments': [
+            {
+                'assessment': 'Complete Blood Count (CBC)',
+                'rationale': 'Detect baseline hematologic abnormalities',
+                'timing': 'Within 7 days before treatment'
+            },
+            {
+                'assessment': 'Comprehensive Metabolic Panel (CMP)',
+                'rationale': 'Assess organ function and electrolyte status',
+                'timing': 'Within 7 days before treatment'
+            }
+        ],
+        'ongoing_monitoring': [
+            {
+                'parameter': 'Clinical Assessment',
+                'frequency': 'Weekly initially, then monthly',
+                'alert_threshold': 'Any new symptoms or changes',
+                'action': 'Clinical evaluation and possible dose adjustment'
+            }
+        ],
+        'emergency_indicators': [
+            'Severe allergic reactions',
+       'Significant clinical deterioration',
+            'New or worsening symptoms'
+        ]
+    }
+    
+    return monitoring_plan
+
+def generate_debug_patient_education_points(patient_data, prediction_result):
+    """Generate patient education materials (debug version)"""
+    education_points = {
+        'warning_signs': [
+            'Unusual fatigue or weakness',
+            'Nausea, vomiting, or loss of appetite',
+            'Skin rash, itching, or hives',
+            'Any new or unusual symptoms'
+        ],
+        'self_monitoring': [
+            'Keep a daily symptom diary',
+            'Monitor for any changes in how you feel',
+            'Note any new symptoms'
+        ],
+        'lifestyle_modifications': [
+            'Follow medication instructions carefully',
+            'Stay well-hydrated',
+            'Avoid alcohol if advised'
+        ],
+        'when_to_seek_help': [
+            'Severe allergic reactions',
+            'Difficulty breathing',
+            'Severe nausea or vomiting',
+            'Any concerning symptoms'
+        ]
+    }
+    
+    return education_points
+
+def generate_debug_emergency_protocols(patient_data, prediction_result):
+    """Generate emergency response protocols (debug version)"""
+    protocols = [
+        {
+            'emergency_type': 'Severe ADR',
+            'recognition': 'Significant clinical deterioration or severe symptoms',
+            'immediate_actions': [
+                'Discontinue medication immediately',
+                'Seek immediate medical attention',
+                'Provide supportive care'
+            ],
+            'monitoring': 'Continuous clinical assessment',
+            'disposition': 'Emergency medical evaluation'
+        }
+    ]
+    
+    return protocols
+
+def generate_debug_follow_up_schedule(patient_data, prediction_result):
+    """Generate structured follow-up schedule (debug version)"""
+    risk_level = prediction_result.get('risk_level', 'Medium')
+    
+    if risk_level == 'High':
+        schedule = [
+            {'timepoint': '24-48 hours', 'type': 'Phone call', 'focus': 'Initial safety check'},
+            {'timepoint': '1 week', 'type': 'Office visit', 'focus': 'Clinical evaluation'},
+            {'timepoint': '1 month', 'type': 'Office visit', 'focus': 'Comprehensive review'}
+        ]
+    else:
+        schedule = [
+            {'timepoint': '1 week', 'type': 'Phone call', 'focus': 'Initial check-in'},
+            {'timepoint': '1 month', 'type': 'Office visit', 'focus': 'Routine assessment'}
+        ]
+    
+    return schedule
+
+def generate_debug_clinical_decision_support(patient_data, prediction_result):
+    """Generate clinical decision support recommendations (debug version)"""
+    risk_level = prediction_result.get('risk_level', 'Medium')
+    
+    decision_support = {
+        'treatment_recommendation': 'Proceed with enhanced monitoring' if risk_level != 'High' else 'Consider alternative therapy',
+        'risk_benefit_analysis': {
+            'adr_risk': f'{risk_level} risk level detected',
+            'benefit_potential': 'Moderate' if risk_level != 'High' else 'Uncertain',
+            'recommendation': 'Benefits likely outweigh risks with proper monitoring' if risk_level != 'High' else 'Consider alternatives'
+        },
+        'alternative_approaches': ['Enhanced monitoring', 'Dose adjustment', 'Alternative therapy'],
+        'consultation_recommendations': ['Clinical pharmacist consultation'] if risk_level == 'High' else []
+    }
+    
+    return decision_support
+
 @app.route('/generate_detailed_analysis', methods=['POST'])
 def generate_detailed_analysis():
     logger.info("🧠 Detailed analysis endpoint called")

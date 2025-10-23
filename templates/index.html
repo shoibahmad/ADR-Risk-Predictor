@@ -16,26 +16,52 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
             min-height: 100vh;
-            color: #333;
+            color: #e2e8f0;
             line-height: 1.6;
+            position: relative;
+        }
+
+        /* Medical grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(79, 209, 197, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79, 209, 197, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Header */
         .header-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(15, 32, 39, 0.8);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(79, 209, 197, 0.2);
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
@@ -47,13 +73,19 @@
             align-items: center;
             gap: 12px;
             padding: 12px;
-            background: #f8fafc;
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 12px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #4fd1c5;
+            transition: all 0.3s ease;
+        }
+
+        .header-item:hover {
+            background: rgba(79, 209, 197, 0.15);
+            transform: translateY(-2px);
         }
 
         .header-item i {
-            color: #667eea;
+            color: #4fd1c5;
             font-size: 1.2rem;
         }
 
@@ -64,42 +96,46 @@
 
         .header-label {
             font-size: 0.8rem;
-            color: #6b7280;
+            color: #a0aec0;
             font-weight: 500;
         }
 
         .header-value {
             font-size: 1rem;
-            color: #1f2937;
+            color: #e2e8f0;
             font-weight: 600;
         }
 
         /* Form Container */
         .form-container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(15, 32, 39, 0.85);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             margin-bottom: 30px;
+            border: 1px solid rgba(79, 209, 197, 0.2);
         }
 
         .form-header {
             text-align: center;
             margin-bottom: 40px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #f1f5f9;
+            border-bottom: 2px solid rgba(79, 209, 197, 0.2);
         }
 
         .form-title {
             font-size: 2rem;
-            color: #1e293b;
+            background: linear-gradient(135deg, #4fd1c5 0%, #63b3ed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 10px;
             font-weight: 700;
         }
 
         .form-subtitle {
-            color: #64748b;
+            color: #a0aec0;
             font-size: 1.1rem;
         }
 
@@ -114,8 +150,8 @@
         }
 
         .btn-sample {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+            color: #0f2027;
             border: none;
             padding: 12px 24px;
             border-radius: 12px;
@@ -125,20 +161,20 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 15px rgba(79, 209, 197, 0.3);
         }
 
         .btn-sample:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 8px 25px rgba(79, 209, 197, 0.5);
         }
 
         .sample-selector {
             padding: 12px 16px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid rgba(79, 209, 197, 0.3);
             border-radius: 12px;
-            background: white;
-            color: #374151;
+            background: rgba(15, 32, 39, 0.6);
+            color: #e2e8f0;
             font-weight: 500;
             min-width: 200px;
             cursor: pointer;
@@ -146,8 +182,13 @@
 
         .sample-selector:focus {
             outline: none;
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+            border-color: #4fd1c5;
+            box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.2);
+        }
+
+        .sample-selector option {
+            background: #1a2f3a;
+            color: #e2e8f0;
         }
 
         .sample-selector optgroup {
@@ -172,13 +213,14 @@
             text-align: center;
             margin: 20px 0 10px 0;
             padding: 15px;
-            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 12px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #4fd1c5;
+            border: 1px solid rgba(79, 209, 197, 0.2);
         }
 
         .sample-indication-title {
-            color: #667eea;
+            color: #4fd1c5;
             font-weight: 600;
             font-size: 1rem;
             margin-bottom: 8px;
@@ -189,19 +231,20 @@
         }
 
         .sample-indication-subtitle {
-            color: #64748b;
+            color: #a0aec0;
             font-size: 0.9rem;
             margin-bottom: 0;
         }
 
         /* Form Sections */
         .form-section {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(79, 209, 197, 0.15);
+            backdrop-filter: blur(10px);
         }
 
         .section-header {
@@ -210,16 +253,16 @@
             gap: 12px;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #f8fafc;
+            border-bottom: 2px solid rgba(79, 209, 197, 0.2);
         }
 
         .section-header i {
-            color: #667eea;
+            color: #4fd1c5;
             font-size: 1.3rem;
         }
 
         .section-header h3 {
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1.4rem;
             font-weight: 700;
             margin: 0;
@@ -239,7 +282,7 @@
 
         .form-group label {
             font-weight: 600;
-            color: #374151;
+            color: #cbd5e0;
             margin-bottom: 8px;
             font-size: 0.95rem;
         }
@@ -247,11 +290,11 @@
         .form-group input,
         .form-group select {
             padding: 14px 16px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid rgba(79, 209, 197, 0.3);
             border-radius: 12px;
             font-size: 1rem;
-            background: #ffffff;
-            color: #1f2937;
+            background: rgba(15, 32, 39, 0.6);
+            color: #e2e8f0;
             transition: all 0.3s ease;
             font-weight: 500;
         }
@@ -259,23 +302,29 @@
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #4fd1c5;
+            box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.2);
             transform: translateY(-1px);
+            background: rgba(15, 32, 39, 0.8);
         }
 
         .form-group input::placeholder {
-            color: #9ca3af;
+            color: #718096;
             font-weight: 400;
+        }
+
+        .form-group select option {
+            background: #1a2f3a;
+            color: #e2e8f0;
         }
 
         /* BMI Display */
         .bmi-display {
             margin-top: 10px;
             padding: 12px;
-            background: #f8fafc;
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 8px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid rgba(79, 209, 197, 0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -284,7 +333,7 @@
         .bmi-value {
             font-size: 1.2rem;
             font-weight: 700;
-            color: #1a202c;
+            color: #4fd1c5;
         }
 
         .bmi-category {
@@ -328,38 +377,39 @@
             align-items: center;
             gap: 12px;
             padding: 16px;
-            background: #ffffff;
-            border: 2px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(79, 209, 197, 0.2);
             border-radius: 12px;
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .checkbox-group:hover {
-            border-color: #667eea;
-            background: #f8fafc;
+            border-color: #4fd1c5;
+            background: rgba(79, 209, 197, 0.1);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(79, 209, 197, 0.2);
         }
 
         .checkbox-group input[type="checkbox"] {
             width: 20px;
             height: 20px;
-            accent-color: #667eea;
+            accent-color: #4fd1c5;
             cursor: pointer;
         }
 
         .checkbox-group label {
             font-weight: 600;
-            color: #374151;
+            color: #cbd5e0;
             cursor: pointer;
             margin: 0;
             flex: 1;
         }
 
         .checkbox-group:has(input[type="checkbox"]:checked) {
-            border-color: #667eea;
-            background: #f0f4ff;
+            border-color: #4fd1c5;
+            background: rgba(79, 209, 197, 0.15);
+            box-shadow: 0 0 15px rgba(79, 209, 197, 0.3);
         }
 
         /* Form Actions */
@@ -369,7 +419,7 @@
             justify-content: center;
             margin-top: 40px;
             padding-top: 30px;
-            border-top: 2px solid #f1f5f9;
+            border-top: 2px solid rgba(79, 209, 197, 0.2);
             flex-wrap: wrap;
         }
 
@@ -390,27 +440,28 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+            color: #0f2027;
+            box-shadow: 0 8px 25px rgba(79, 209, 197, 0.4);
+            font-weight: 700;
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 12px 35px rgba(79, 209, 197, 0.6);
         }
 
         .btn-secondary {
-            background: #f8fafc;
-            color: #374151;
-            border: 2px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 2px solid rgba(79, 209, 197, 0.3);
         }
 
         .btn-secondary:hover {
-            background: #f3f4f6;
-            border-color: #d1d5db;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #4fd1c5;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(79, 209, 197, 0.3);
         }
 
         /* Loading Overlay */
@@ -420,7 +471,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(15, 32, 39, 0.95);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -428,21 +480,30 @@
         }
 
         .loading-content {
-            background: white;
+            background: rgba(15, 32, 39, 0.95);
+            border: 1px solid rgba(79, 209, 197, 0.3);
             padding: 40px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-content p {
+            color: #e2e8f0;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
 
         .spinner {
             width: 50px;
             height: 50px;
-            border: 4px solid #e2e8f0;
-            border-top: 4px solid #667eea;
+            border: 4px solid rgba(79, 209, 197, 0.2);
+            border-top: 4px solid #4fd1c5;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(79, 209, 197, 0.3);
         }
 
         @keyframes spin {
@@ -1108,7 +1169,7 @@
 
         /* Results Container */
         .results-container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(15, 32, 39, 0.85);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
@@ -1120,12 +1181,15 @@
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #f1f5f9;
+            border-bottom: 2px solid rgba(79, 209, 197, 0.2);
         }
 
         .results-header h2 {
             font-size: 1.8rem;
-            color: #1e293b;
+            background: linear-gradient(135deg, #4fd1c5 0%, #63b3ed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 10px;
             font-weight: 700;
             display: flex;
@@ -1135,7 +1199,8 @@
         }
 
         .results-header i {
-            color: #667eea;
+            color: #4fd1c5;
+            -webkit-text-fill-color: #4fd1c5;
         }
 
         .results-layout {
@@ -1145,17 +1210,39 @@
         }
 
         .analysis-column {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             padding: 25px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
         }
 
         .report-column {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             padding: 25px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(79, 209, 197, 0.2);
+        }
+
+        .column-header h3 {
+            color: #e2e8f0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .column-header i {
+            color: #4fd1c5;
+            font-size: 1.3rem;
         }
 
         /* Information Modal */
@@ -1165,7 +1252,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(15, 32, 39, 0.95);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1181,15 +1269,17 @@
         }
 
         .modal-content {
-            background: white;
+            background: rgba(15, 32, 39, 0.95);
+            border: 1px solid rgba(79, 209, 197, 0.3);
             border-radius: 20px;
             padding: 40px;
             max-width: 800px;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             transform: scale(0.9);
             transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .modal-overlay.active .modal-content {
@@ -1200,12 +1290,15 @@
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #f1f5f9;
+            border-bottom: 2px solid rgba(79, 209, 197, 0.2);
         }
 
         .modal-title {
             font-size: 2rem;
-            color: #1e293b;
+            background: linear-gradient(135deg, #4fd1c5 0%, #63b3ed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 10px;
             font-weight: 700;
             display: flex;
@@ -1215,11 +1308,12 @@
         }
 
         .modal-title i {
-            color: #667eea;
+            color: #4fd1c5;
+            -webkit-text-fill-color: #4fd1c5;
         }
 
         .modal-subtitle {
-            color: #64748b;
+            color: #a0aec0;
             font-size: 1.1rem;
         }
 
@@ -1228,7 +1322,7 @@
         }
 
         .modal-section h3 {
-            color: #374151;
+            color: #e2e8f0;
             font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 15px;
@@ -1238,17 +1332,17 @@
         }
 
         .modal-section h3 i {
-            color: #667eea;
+            color: #4fd1c5;
         }
 
         .modal-section p {
-            color: #6b7280;
+            color: #cbd5e0;
             line-height: 1.7;
             margin-bottom: 10px;
         }
 
         .modal-section ul {
-            color: #6b7280;
+            color: #cbd5e0;
             padding-left: 20px;
             line-height: 1.7;
         }
@@ -1265,27 +1359,28 @@
         }
 
         .feature-card {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
             border-radius: 12px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #4fd1c5;
             text-align: center;
+            border: 1px solid rgba(79, 209, 197, 0.2);
         }
 
         .feature-card i {
             font-size: 2rem;
-            color: #667eea;
+            color: #4fd1c5;
             margin-bottom: 10px;
         }
 
         .feature-card h4 {
-            color: #374151;
+            color: #e2e8f0;
             font-weight: 600;
             margin-bottom: 8px;
         }
 
         .feature-card p {
-            color: #6b7280;
+            color: #a0aec0;
             font-size: 0.9rem;
         }
 
@@ -1293,10 +1388,10 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            background: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(79, 209, 197, 0.3);
             font-size: 1.5rem;
-            color: #6b7280;
+            color: #cbd5e0;
             cursor: pointer;
             padding: 10px;
             border-radius: 50%;
@@ -1304,15 +1399,16 @@
         }
 
         .modal-close:hover {
-            background: #f3f4f6;
-            color: #374151;
+            background: rgba(79, 209, 197, 0.2);
+            color: #4fd1c5;
+            border-color: #4fd1c5;
         }
 
         .modal-actions {
             text-align: center;
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 2px solid #f1f5f9;
+            border-top: 2px solid rgba(79, 209, 197, 0.2);
         }
 
         /* Roadmap Styles */
@@ -1383,7 +1479,7 @@
 
         .phase-duration {
             font-size: 0.85rem;
-            color: #6b7280;
+            color: #a0aec0;
             font-weight: 500;
         }
 
@@ -1416,7 +1512,7 @@
         .milestone i {
             width: 20px;
             margin-right: 12px;
-            color: #6b7280;
+            color: #a0aec0;
             font-size: 0.9rem;
         }
 
@@ -1425,7 +1521,7 @@
         }
 
         .milestone span {
-            color: #374151;
+            color: #cbd5e0;
             font-size: 0.95rem;
             line-height: 1.4;
         }
@@ -1440,7 +1536,7 @@
         }
 
         .summary-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
             border-radius: 12px;
             border: 2px solid #e5e7eb;
@@ -1451,16 +1547,16 @@
         }
 
         .summary-card:hover {
-            border-color: #667eea;
+            border-color: #4fd1c5;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            box-shadow: 0 8px 25px rgba(79, 209, 197, 0.15);
         }
 
         .summary-card i {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
             color: white;
             display: flex;
             align-items: center;
@@ -1478,7 +1574,7 @@
 
         .summary-card p {
             margin: 0;
-            color: #6b7280;
+            color: #a0aec0;
             font-size: 0.85rem;
             line-height: 1.4;
         }
@@ -1564,21 +1660,21 @@
             text-align: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 12px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid rgba(79, 209, 197, 0.3);
         }
 
         .comparison-header h4 {
             margin: 0 0 10px 0;
-            color: #1e293b;
+            color: #4fd1c5;
             font-size: 1.3rem;
             font-weight: 600;
         }
 
         .comparison-header p {
             margin: 0;
-            color: #64748b;
+            color: #cbd5e0;
             font-size: 0.95rem;
         }
 
@@ -1590,9 +1686,10 @@
         }
 
         .scale-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
             overflow: hidden;
             transition: all 0.3s ease;
         }
@@ -1611,8 +1708,8 @@
         }
 
         .scale-card.our-system {
-            border-color: #8b5cf6;
-            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            border-color: #4fd1c5;
+            background: rgba(79, 209, 197, 0.1);
         }
 
         .scale-header {
@@ -1633,7 +1730,7 @@
         }
 
         .scale-card.our-system .scale-header {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
             color: white;
         }
 
@@ -1670,7 +1767,7 @@
 
         .scale-description p {
             margin: 8px 0;
-            color: #374151;
+            color: #cbd5e0;
             font-size: 0.9rem;
             line-height: 1.5;
         }
@@ -1749,10 +1846,11 @@
         }
 
         .advantage-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
             border-radius: 12px;
-            border: 1px solid #e0f2fe;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
 
@@ -1776,14 +1874,14 @@
 
         .advantage-card h5 {
             margin: 0 0 10px 0;
-            color: #0c4a6e;
+            color: #4fd1c5;
             font-size: 1rem;
             font-weight: 600;
         }
 
         .advantage-card p {
             margin: 0;
-            color: #475569;
+            color: #cbd5e0;
             font-size: 0.85rem;
             line-height: 1.5;
         }
@@ -1813,11 +1911,12 @@
         }
 
         .metric-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
-            border: 1px solid #dcfce7;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
 
@@ -1842,7 +1941,7 @@
 
         .metric-description {
             font-size: 0.8rem;
-            color: #4b5563;
+            color: #a0aec0;
             line-height: 1.4;
         }
 
@@ -1973,8 +2072,8 @@
         .tab-button {
             padding: 12px 20px;
             border: none;
-            background: #f8fafc;
-            color: #64748b;
+            background: rgba(255, 255, 255, 0.05);
+            color: #a0aec0;
             cursor: pointer;
             border-radius: 8px 8px 0 0;
             font-weight: 500;
@@ -1985,13 +2084,13 @@
         }
 
         .tab-button:hover {
-            background: #e2e8f0;
-            color: #475569;
+            background: rgba(79, 209, 197, 0.1);
+            color: #4fd1c5;
         }
 
         .tab-button.active {
-            background: #667eea;
-            color: white;
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+            color: #0f2027;
         }
 
         .tab-content {
@@ -2010,9 +2109,10 @@
         }
 
         .overview-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
             overflow: hidden;
             transition: all 0.3s ease;
         }
@@ -2031,7 +2131,7 @@
         }
 
         .ai-card {
-            border-color: #8b5cf6;
+            border-color: #4fd1c5;
         }
 
         .card-header {
@@ -2051,7 +2151,7 @@
         }
 
         .ai-card .card-header {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
         }
 
         .card-header h3 {
@@ -2066,42 +2166,42 @@
 
         .card-content p {
             margin: 8px 0;
-            color: #374151;
+            color: #cbd5e0;
             font-size: 0.9rem;
             line-height: 1.5;
         }
 
         .card-score {
             padding: 15px 20px;
-            background: #f8fafc;
-            border-top: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(79, 209, 197, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .score-label {
-            color: #64748b;
+            color: #a0aec0;
             font-size: 0.85rem;
             font-weight: 500;
         }
 
         .score-value {
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1.5rem;
             font-weight: 700;
         }
 
         .comparison-chart {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
             padding: 25px;
             border-radius: 16px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid rgba(79, 209, 197, 0.2);
         }
 
         .comparison-chart h4 {
             margin: 0 0 20px 0;
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1.2rem;
             font-weight: 600;
             display: flex;
@@ -2124,7 +2224,7 @@
 
         .metric-name {
             font-weight: 600;
-            color: #374151;
+            color: #e2e8f0;
             font-size: 0.9rem;
         }
 
@@ -2155,7 +2255,7 @@
         }
 
         .ai-bar {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
         }
 
         .scale-detail-view {
@@ -2167,20 +2267,21 @@
             text-align: center;
             margin-bottom: 30px;
             padding: 25px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 16px;
+            border: 1px solid rgba(79, 209, 197, 0.3);
         }
 
         .scale-intro h3 {
             margin: 0 0 15px 0;
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1.4rem;
             font-weight: 600;
         }
 
         .scale-intro p {
             margin: 0;
-            color: #64748b;
+            color: #cbd5e0;
             line-height: 1.6;
         }
 
@@ -2188,7 +2289,7 @@
         .who-categories h4,
         .ai-features h4 {
             margin: 0 0 20px 0;
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1.2rem;
             font-weight: 600;
         }
@@ -2206,24 +2307,24 @@
             gap: 15px;
             align-items: center;
             padding: 15px;
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid rgba(79, 209, 197, 0.2);
         }
 
         .q-number {
             font-weight: 700;
-            color: #3b82f6;
+            color: #4fd1c5;
         }
 
         .q-text {
-            color: #374151;
+            color: #cbd5e0;
             line-height: 1.5;
         }
 
         .q-score {
             font-weight: 600;
-            color: #059669;
+            color: #10b981;
             text-align: center;
         }
 
@@ -2274,34 +2375,34 @@
         }
 
         .category-detail.certain {
-            background: #fef2f2;
+            background: rgba(239, 68, 68, 0.1);
             border-color: #dc2626;
         }
 
         .category-detail.probable {
-            background: #fefbeb;
+            background: rgba(245, 158, 11, 0.1);
             border-color: #f59e0b;
         }
 
         .category-detail.possible {
-            background: #f0fdf4;
+            background: rgba(16, 185, 129, 0.1);
             border-color: #10b981;
         }
 
         .category-detail.unlikely {
-            background: #f8fafc;
+            background: rgba(107, 114, 128, 0.1);
             border-color: #6b7280;
         }
 
         .category-detail h5 {
             margin: 0 0 10px 0;
-            color: #1e293b;
+            color: #e2e8f0;
             font-weight: 600;
         }
 
         .category-detail p {
             margin: 0;
-            color: #374151;
+            color: #cbd5e0;
             line-height: 1.5;
         }
 
@@ -2313,7 +2414,7 @@
         }
 
         .feature-item {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
             border-radius: 12px;
             border: 2px solid #e5e7eb;
@@ -2322,7 +2423,7 @@
         }
 
         .feature-item:hover {
-            border-color: #8b5cf6;
+            border-color: #4fd1c5;
             transform: translateY(-2px);
         }
 
@@ -2330,7 +2431,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
             color: white;
             display: flex;
             align-items: center;
@@ -2359,7 +2460,7 @@
         }
 
         .validation-metric {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
@@ -2370,12 +2471,12 @@
             display: block;
             font-size: 2rem;
             font-weight: 700;
-            color: #8b5cf6;
+            color: #4fd1c5;
             margin-bottom: 5px;
         }
 
         .validation-metric .metric-label {
-            color: #64748b;
+            color: #a0aec0;
             font-size: 0.9rem;
             font-weight: 500;
         }
@@ -2447,6 +2548,601 @@
             }
         }
 
+        /* Mitigation Strategies Styles */
+        .mitigation-strategies-container {
+            background: rgba(15, 32, 39, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 1400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(79, 209, 197, 0.2);
+        }
+
+        .mitigation-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(79, 209, 197, 0.2);
+        }
+
+        .mitigation-header h2 {
+            background: linear-gradient(135deg, #4fd1c5 0%, #48bb78 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .mitigation-header i {
+            color: #48bb78;
+            -webkit-text-fill-color: #48bb78;
+            font-size: 1.8rem;
+        }
+
+        .mitigation-subtitle p {
+            color: #a0aec0;
+            font-size: 1.1rem;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .mitigation-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .mitigation-tab {
+            padding: 12px 20px;
+            border: 2px solid rgba(79, 209, 197, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #cbd5e0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .mitigation-tab:hover {
+            border-color: #4fd1c5;
+            color: #4fd1c5;
+            transform: translateY(-2px);
+            background: rgba(79, 209, 197, 0.1);
+        }
+
+        .mitigation-tab.active {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border-color: #48bb78;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .mitigation-content {
+            min-height: 400px;
+        }
+
+        .mitigation-tab-content {
+            display: none;
+        }
+
+        .mitigation-tab-content.active {
+            display: block;
+        }
+
+        .mitigation-section h3 {
+            color: #e2e8f0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mitigation-section h3 i {
+            color: #48bb78;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(79, 209, 197, 0.3);
+            border-color: #4fd1c5;
+        }
+
+        .recommendation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+        }
+
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-category {
+            font-weight: 700;
+            color: #4fd1c5;
+            font-size: 1.1rem;
+            background: rgba(15, 32, 39, 0.95) !important;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(79, 209, 197, 0.4);
+            display: inline-block;
+        }
+
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-badge.critical {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+        }
+
+        .priority-badge.high {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        .priority-badge.medium {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .recommendation-intervention {
+            color: #cbd5e0;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .recommendation-rationale {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .recommendation-timeline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #10b981;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .alternatives-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .alternative-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .alternative-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .alternative-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .alternative-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .risk-reduction-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .alternative-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .advantages-list, .considerations-list {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+        }
+
+        .advantages-list h5, .considerations-list h5 {
+            margin: 0 0 10px 0;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .advantages-list ul, .considerations-list ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #cbd5e0;
+        }
+
+        .advantages-list li {
+            color: #6ee7b7;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .considerations-list li {
+            color: #f59e0b;
+            margin-bottom: 5px;
+        }
+
+        .dosing-recommendations {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .dosing-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .dosing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+        }
+
+        .dosing-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .adjustment-type {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .evidence-badge {
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .dosing-recommendation {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .monitoring-protocol {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .monitoring-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .monitoring-section h4 {
+            color: #e2e8f0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .monitoring-section h4 i {
+            color: #fbbf24;
+        }
+
+        .monitoring-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .monitoring-item h5 {
+            margin: 0 0 8px 0;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .monitoring-item p {
+            margin: 0;
+            color: #cbd5e0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .monitoring-item p strong {
+            color: #4fd1c5;
+            font-weight: 600;
+        }
+
+        .emergency-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .emergency-list li {
+            background: rgba(239, 68, 68, 0.1);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #ef4444;
+            color: #fca5a5;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .education-materials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .education-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .education-card h4 {
+            color: #e2e8f0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .education-card h4 i {
+            color: #4fd1c5;
+        }
+
+        .education-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .education-list li {
+            background: rgba(79, 209, 197, 0.08);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #4fd1c5;
+            color: #cbd5e0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .mitigation-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(79, 209, 197, 0.2);
+        }
+
+        .loading-placeholder {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .loading-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #10b981;
+        }
+
+        .loading-placeholder p {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        /* Responsive Mitigation Strategies */
+        @media (max-width: 768px) {
+            .mitigation-strategies-container {
+                margin: 20px 10px;
+                padding: 20px;
+            }
+
+            .mitigation-tabs {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .mitigation-tab {
+                justify-content: center;
+                padding: 10px 15px;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .alternative-details {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .monitoring-protocol {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .education-materials {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .mitigation-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mitigation-header h2 {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .mitigation-subtitle p {
+                font-size: 1rem;
+            }
+
+            .recommendation-card {
+                padding: 15px;
+            }
+
+            .recommendation-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .recommendation-category {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+                word-wrap: break-word;
+                max-width: 100%;
+                white-space: normal;
+            }
+
+            .recommendation-intervention {
+                font-size: 0.95rem;
+            }
+
+            .recommendation-rationale {
+                font-size: 0.85rem;
+            }
+
+            .alternative-card {
+                padding: 15px;
+            }
+
+            .alternative-name {
+                font-size: 1.1rem;
+                word-wrap: break-word;
+            }
+
+            .dosing-card {
+                padding: 15px;
+            }
+
+            .monitoring-protocol {
+                overflow-x: auto;
+            }
+
+            .protocol-table {
+                min-width: 100%;
+            }
+
+            .monitoring-section {
+                padding: 20px;
+            }
+
+            .education-card {
+                padding: 20px;
+            }
+        }
+
         /* Two Column Results Layout */
         .results-layout {
             display: grid;
@@ -2456,7 +3152,7 @@
 
         .analysis-column,
         .report-column {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
             padding: 25px;
             border: 1px solid #e5e7eb;
@@ -2472,14 +3168,14 @@
         }
 
         .column-header h3 {
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1.3rem;
             font-weight: 700;
             margin: 0;
         }
 
         .column-header i {
-            color: #667eea;
+            color: #4fd1c5;
         }
 
         .ai-badge {
@@ -2496,7 +3192,7 @@
         }
 
         .report-content {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            background: rgba(255, 255, 255, 0.02);
             padding: 30px;
             border-radius: 16px;
             border: 2px solid #e2e8f0;
@@ -2513,41 +3209,41 @@
         }
 
         .report-content::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 4px;
         }
 
         .report-content::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: rgba(79, 209, 197, 0.3);
             border-radius: 4px;
         }
 
         .report-content::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: rgba(79, 209, 197, 0.5);
         }
 
         /* Enhanced typography for AI report */
         .report-content h1 {
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1.8rem;
             font-weight: 700;
             margin: 0 0 20px 0;
             padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-bottom: 3px solid #4fd1c5;
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .report-content h2 {
-            color: #667eea;
+            color: #4fd1c5;
             font-size: 1.4rem;
             font-weight: 700;
             margin: 30px 0 15px 0;
             padding: 12px 20px;
-            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
-            border-left: 4px solid #667eea;
+            background: rgba(79, 209, 197, 0.1);
+            border-left: 4px solid #4fd1c5;
             border-radius: 8px;
             position: relative;
         }
@@ -2559,23 +3255,23 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
             border-radius: 2px;
         }
 
         .report-content h3 {
-            color: #374151;
+            color: #cbd5e0;
             font-size: 1.2rem;
             font-weight: 600;
             margin: 25px 0 12px 0;
             padding: 8px 15px;
-            background: #f8fafc;
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 6px;
             border-left: 3px solid #10b981;
         }
 
         .report-content h4 {
-            color: #4b5563;
+            color: #a0aec0;
             font-size: 1.1rem;
             font-weight: 600;
             margin: 20px 0 10px 0;
@@ -2585,7 +3281,7 @@
 
         /* Enhanced paragraph styling */
         .report-content p {
-            color: #374151;
+            color: #cbd5e0;
             font-size: 1rem;
             line-height: 1.8;
             margin: 15px 0;
@@ -2597,7 +3293,7 @@
         .report-content ol {
             margin: 20px 0;
             padding-left: 25px;
-            color: #374151;
+            color: #cbd5e0;
         }
 
         .report-content ul {
@@ -2614,8 +3310,8 @@
         .report-content ul li::before {
             content: '▸';
             position: absolute;
+            color: #4fd1c5;
             left: 0;
-            color: #667eea;
             font-weight: bold;
             font-size: 1.1rem;
         }
@@ -2628,23 +3324,24 @@
 
         /* Strong and emphasis styling */
         .report-content strong {
-            color: #1e293b;
+            color: #e2e8f0;
             font-weight: 700;
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            background: rgba(30, 41, 59, 0.6);
             padding: 2px 6px;
             border-radius: 4px;
+            border: 1px solid rgba(79, 209, 197, 0.3);
         }
 
         .report-content em {
-            color: #667eea;
+            color: #4fd1c5;
             font-style: italic;
             font-weight: 500;
         }
 
         /* Special sections styling */
         .report-content blockquote {
-            background: #f0f9ff;
-            border-left: 4px solid #0ea5e9;
+            background: rgba(79, 209, 197, 0.1);
+            border-left: 4px solid #4fd1c5;
             margin: 20px 0;
             padding: 15px 20px;
             border-radius: 0 8px 8px 0;
@@ -2654,8 +3351,8 @@
 
         /* Code and technical terms */
         .report-content code {
-            background: #f1f5f9;
-            color: #1e293b;
+            background: rgba(79, 209, 197, 0.1);
+            color: #4fd1c5;
             padding: 2px 6px;
             border-radius: 4px;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
@@ -2668,28 +3365,29 @@
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            background: white;
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .report-content th,
         .report-content td {
             padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid rgba(79, 209, 197, 0.2);
+            color: #cbd5e0;
         }
 
         .report-content th {
-            background: #f8fafc;
+            background: rgba(79, 209, 197, 0.1);
             font-weight: 600;
-            color: #374151;
+            color: #e2e8f0;
         }
 
         /* Highlight important sections */
         .report-content .highlight {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            background: rgba(245, 158, 11, 0.15);
             padding: 15px 20px;
             border-radius: 8px;
             border-left: 4px solid #f59e0b;
@@ -2697,7 +3395,7 @@
         }
 
         .report-content .warning {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            background: rgba(239, 68, 68, 0.15);
             padding: 15px 20px;
             border-radius: 8px;
             border-left: 4px solid #ef4444;
@@ -2706,7 +3404,7 @@
         }
 
         .report-content .success {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            background: rgba(72, 187, 120, 0.15);
             padding: 15px 20px;
             border-radius: 8px;
             border-left: 4px solid #22c55e;
@@ -2716,45 +3414,46 @@
 
         /* Medical terminology styling */
         .report-content .medical-term {
-            color: #7c3aed;
+            color: #4fd1c5;
             font-weight: 600;
-            text-decoration: underline;
-            text-decoration-color: #c4b5fd;
-            text-decoration-thickness: 2px;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(79, 209, 197, 0.3);
         }
 
         /* Risk level indicators */
         .report-content .risk-high {
-            color: #dc2626;
+            color: #ef4444;
             font-weight: 700;
-            background: #fef2f2;
+            background: rgba(239, 68, 68, 0.15);
             padding: 2px 8px;
             border-radius: 12px;
-            border: 1px solid #fecaca;
+            border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
         .report-content .risk-medium {
-            color: #d97706;
+            color: #f59e0b;
             font-weight: 700;
-            background: #fffbeb;
+            background: rgba(245, 158, 11, 0.15);
             padding: 2px 8px;
             border-radius: 12px;
-            border: 1px solid #fed7aa;
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         .report-content .risk-low {
-            color: #059669;
+            color: #10b981;
             font-weight: 700;
-            background: #f0fdf4;
+            background: rgba(16, 185, 129, 0.15);
             padding: 2px 8px;
             border-radius: 12px;
-            border: 1px solid #bbf7d0;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .report-loading {
             text-align: center;
             padding: 40px 20px;
-            color: #667eea;
+            color: #4fd1c5;
         }
 
         .report-loading i {
@@ -2865,16 +3564,17 @@
         }
 
         .test-category-section {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(79, 209, 197, 0.2);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 15px;
             animation: slideDown 0.3s ease-out;
+            backdrop-filter: blur(10px);
         }
 
         .test-category-section h5 {
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1.1rem;
             font-weight: 700;
             margin-bottom: 15px;
@@ -2882,7 +3582,11 @@
             align-items: center;
             gap: 8px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid rgba(79, 209, 197, 0.2);
+        }
+
+        .test-category-section h5 i {
+            color: #4fd1c5;
         }
 
         @keyframes slideDown {
@@ -2988,10 +3692,22 @@
         }
 
         .quick-action-btn:hover {
-            background: rgba(226, 232, 240, 0.9) !important;
-            color: #475569 !important;
+            background: rgba(79, 209, 197, 0.15) !important;
+            color: #4fd1c5 !important;
+            border-color: #4fd1c5 !important;
             transform: translateY(-1px) !important;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Tablet Responsive - Medium Screens */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .enhanced-primary-btn {
+                width: 80% !important;
+            }
+
+            .add-drug-btn {
+                width: 80% !important;
+            }
         }
 
         /* Mobile Enhanced Action Buttons */
@@ -3006,8 +3722,17 @@
             }
 
             .enhanced-primary-btn {
-                padding: 18px 25px !important;
-                font-size: 16px !important;
+                padding: 16px 22px !important;
+                font-size: 14px !important;
+                width: 85% !important;
+                letter-spacing: 0.5px !important;
+            }
+
+            .add-drug-btn {
+                padding: 16px 22px !important;
+                font-size: 14px !important;
+                width: 85% !important;
+                letter-spacing: 0.5px !important;
             }
 
             .secondary-actions-grid {
@@ -3049,13 +3774,35 @@
             }
 
             .enhanced-primary-btn {
-                padding: 16px 20px !important;
-                font-size: 15px !important;
+                padding: 14px 18px !important;
+                font-size: 13px !important;
+                width: 95% !important;
+                letter-spacing: 0.3px !important;
+            }
+
+            .add-drug-btn {
+                padding: 14px 18px !important;
+                font-size: 13px !important;
+                width: 95% !important;
+                letter-spacing: 0.3px !important;
             }
 
             .btn-icon {
-                width: 35px !important;
-                height: 35px !important;
+                width: 28px !important;
+                height: 28px !important;
+            }
+
+            .btn-icon i {
+                font-size: 13px !important;
+            }
+
+            .btn-arrow {
+                width: 20px !important;
+                height: 20px !important;
+            }
+
+            .btn-arrow i {
+                font-size: 9px !important;
             }
 
             .btn-arrow {
@@ -3157,8 +3904,8 @@
                     
                     <!-- Basic Demographics Subsection -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-id-card" style="color: #3b82f6;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-id-card" style="color: #4fd1c5;"></i>
                             Basic Information
                         </h4>
                         <div class="form-grid">
@@ -3173,7 +3920,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="sex">
-                                    <i class="fas fa-venus-mars" style="color: #8b5cf6; margin-right: 6px;"></i>
+                                    <i class="fas fa-venus-mars" style="color: #4fd1c5; margin-right: 6px;"></i>
                                     Sex
                                 </label>
                                 <select id="sex" name="sex">
@@ -3200,8 +3947,8 @@
 
                     <!-- Physical Measurements Subsection -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-ruler-combined" style="color: #ef4444;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-ruler-combined" style="color: #f87171;"></i>
                             Physical Measurements
                         </h4>
                         <div class="form-grid">
@@ -3223,7 +3970,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="bmi">
-                                    <i class="fas fa-calculator" style="color: #8b5cf6; margin-right: 6px;"></i>
+                                    <i class="fas fa-calculator" style="color: #4fd1c5; margin-right: 6px;"></i>
                                     BMI (kg/m²)
                                 </label>
                                 <input type="number" id="bmi" name="bmi" step="0.1" min="15" max="50"
@@ -3429,7 +4176,7 @@
 
                             <!-- Hypertension Card -->
                             <div class="test-card" onclick="toggleTestCategory('hypertension')"
-                                style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important; border: none !important;">
+                                style="background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%) !important; border-radius: 12px !important; padding: 20px !important; cursor: pointer !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(79, 209, 197, 0.3) !important; border: none !important;">
                                 <div class="test-card-icon"
                                     style="background: rgba(255, 255, 255, 0.2) !important; width: 48px !important; height: 48px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 12px !important;">
                                     <i class="fas fa-thermometer-half"
@@ -4151,8 +4898,8 @@
                     
                     <!-- Metabolic & Endocrine Conditions -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-tint" style="color: #3b82f6;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-tint" style="color: #60a5fa;"></i>
                             Metabolic & Endocrine Conditions
                         </h4>
                         <div class="checkbox-grid">
@@ -4175,8 +4922,8 @@
 
                     <!-- Organ System Diseases -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-heartbeat" style="color: #ef4444;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-heartbeat" style="color: #f87171;"></i>
                             Major Organ System Diseases
                         </h4>
                         <div class="checkbox-grid">
@@ -4213,15 +4960,15 @@
 
                     <!-- Neurological & Immune System -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-brain" style="color: #8b5cf6;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-brain" style="color: #a78bfa;"></i>
                             Neurological & Immune System
                         </h4>
                         <div class="checkbox-grid">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="neurological_disease" name="neurological_disease" value="1">
                                 <label for="neurological_disease">
-                                    <i class="fas fa-brain" style="color: #8b5cf6; margin-right: 6px;"></i>
+                                    <i class="fas fa-brain" style="color: #4fd1c5; margin-right: 6px;"></i>
                                     Neurological Disease
                                 </label>
                             </div>
@@ -4245,8 +4992,8 @@
                     
                     <!-- Primary Medication Subsection -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-prescription-bottle-alt" style="color: #3b82f6;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-prescription-bottle-alt" style="color: #60a5fa;"></i>
                             Primary Medication
                         </h4>
                         <div class="form-grid">
@@ -4279,14 +5026,14 @@
 
                     <!-- Concomitant Medications Subsection -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-plus-circle" style="color: #10b981;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-plus-circle" style="color: #48bb78;"></i>
                             Concomitant Medications
                         </h4>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="concomitant_drugs_count">
-                                    <i class="fas fa-list-ol" style="color: #8b5cf6; margin-right: 6px;"></i>
+                                    <i class="fas fa-list-ol" style="color: #4fd1c5; margin-right: 6px;"></i>
                                     Concomitant Drugs Count
                                 </label>
                                 <input type="number" id="concomitant_drugs_count" name="concomitant_drugs_count" min="0"
@@ -4309,16 +5056,18 @@
                                     </button>
                                 </div>
                             </div>
-                            <button type="button" id="add-drug-btn" class="add-drug-btn" onclick="addDrugField()">
-                                <i class="fas fa-plus"></i> Add Another Drug
-                            </button>
+                            <div style="display: flex; justify-content: center; margin-top: 10px;">
+                                <button type="button" id="add-drug-btn" class="add-drug-btn" onclick="addDrugField()">
+                                    <i class="fas fa-plus"></i> Add Another Drug
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Drug Interactions Subsection -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-exclamation-triangle" style="color: #fbbf24;"></i>
                             Drug Interaction Assessment
                         </h4>
                         <div class="form-grid">
@@ -4349,14 +5098,14 @@
                     
                     <!-- CYP Enzyme Variants -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-atom" style="color: #8b5cf6;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-atom" style="color: #4fd1c5;"></i>
                             Cytochrome P450 Enzyme Variants
                         </h4>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="cyp2c9">
-                                    <i class="fas fa-dna" style="color: #8b5cf6; margin-right: 6px;"></i>
+                                    <i class="fas fa-dna" style="color: #4fd1c5; margin-right: 6px;"></i>
                                     CYP2C9 Status
                                 </label>
                                 <select id="cyp2c9" name="cyp2c9">
@@ -4382,12 +5131,12 @@
                         </div>
                         
                         <!-- Pharmacogenomic Information Panel -->
-                        <div style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%); border-radius: 8px; border-left: 4px solid #8b5cf6;">
+                        <div style="margin-top: 15px; padding: 12px; background: rgba(79, 209, 197, 0.1); border-radius: 8px; border-left: 4px solid #4fd1c5;">
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                <i class="fas fa-info-circle" style="color: #8b5cf6;"></i>
-                                <span style="color: #5b21b6; font-weight: 600; font-size: 0.9rem;">Pharmacogenomic Impact</span>
+                                <i class="fas fa-info-circle" style="color: #4fd1c5;"></i>
+                                <span style="color: #4fd1c5; font-weight: 600; font-size: 0.9rem;">Pharmacogenomic Impact</span>
                             </div>
-                            <p style="color: #6d28d9; font-size: 0.85rem; margin: 0; line-height: 1.4;">
+                            <p style="color: #cbd5e0; font-size: 0.85rem; margin: 0; line-height: 1.4;">
                                 CYP enzyme variants affect drug metabolism rates and can significantly impact ADR risk. 
                                 Poor metabolizers may experience increased drug exposure and higher ADR risk.
                             </p>
@@ -4404,14 +5153,14 @@
                     
                     <!-- Vital Signs Subsection -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-heartbeat" style="color: #ef4444;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-heartbeat" style="color: #f87171;"></i>
                             Vital Signs
                         </h4>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="bp_systolic">
-                                    <i class="fas fa-tachometer-alt" style="color: #667eea; margin-right: 6px;"></i>
+                                    <i class="fas fa-tachometer-alt" style="color: #4fd1c5; margin-right: 6px;"></i>
                                     Systolic BP (mmHg)
                                 </label>
                                 <input type="number" id="bp_systolic" name="bp_systolic" min="80" max="250"
@@ -4419,7 +5168,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="bp_diastolic">
-                                    <i class="fas fa-tachometer-alt" style="color: #667eea; margin-right: 6px;"></i>
+                                    <i class="fas fa-tachometer-alt" style="color: #4fd1c5; margin-right: 6px;"></i>
                                     Diastolic BP (mmHg)
                                 </label>
                                 <input type="number" id="bp_diastolic" name="bp_diastolic" min="40" max="150"
@@ -4438,15 +5187,15 @@
 
                     <!-- Risk Factors Subsection -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #374151; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-exclamation-triangle" style="color: #fbbf24;"></i>
                             Risk Factors & Clinical Flags
                         </h4>
                         <div class="checkbox-grid">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="cyp_inhibitors_flag" name="cyp_inhibitors_flag" value="1">
                                 <label for="cyp_inhibitors_flag">
-                                    <i class="fas fa-dna" style="color: #8b5cf6; margin-right: 6px;"></i>
+                                    <i class="fas fa-dna" style="color: #4fd1c5; margin-right: 6px;"></i>
                                     CYP Inhibitors Present
                                 </label>
                             </div>
@@ -4484,44 +5233,44 @@
 
                 <!-- Enhanced Action Buttons Section -->
                 <div class="enhanced-actions-container"
-                    style="margin-top: 40px !important; padding: 35px !important; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important; border-radius: 20px !important; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.8) !important;">
+                    style="margin-top: 40px !important; padding: 35px !important; background: rgba(15, 32, 39, 0.6) !important; border-radius: 20px !important; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important; border: 1px solid rgba(79, 209, 197, 0.2) !important; backdrop-filter: blur(10px) !important;">
 
                     <!-- Section Header -->
                     <div class="actions-header" style="text-align: center !important; margin-bottom: 30px !important;">
                         <div class="header-icon"
-                            style="width: 60px !important; height: 60px !important; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; margin: 0 auto 15px auto !important; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;">
-                            <i class="fas fa-cogs" style="color: white !important; font-size: 24px !important;"></i>
+                            style="width: 60px !important; height: 60px !important; background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%) !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; margin: 0 auto 15px auto !important; box-shadow: 0 8px 25px rgba(79, 209, 197, 0.4) !important;">
+                            <i class="fas fa-cogs" style="color: #0f2027 !important; font-size: 24px !important;"></i>
                         </div>
                         <h3
-                            style="color: #1e293b !important; font-size: 1.5rem !important; font-weight: 700 !important; margin: 0 0 8px 0 !important; letter-spacing: -0.025em !important;">
+                            style="color: #e2e8f0 !important; font-size: 1.5rem !important; font-weight: 700 !important; margin: 0 0 8px 0 !important; letter-spacing: -0.025em !important;">
                             Assessment Actions</h3>
                         <p
-                            style="color: #64748b !important; font-size: 1rem !important; margin: 0 !important; font-weight: 400 !important;">
+                            style="color: #a0aec0 !important; font-size: 1rem !important; margin: 0 !important; font-weight: 400 !important;">
                             Complete your risk assessment with the options below</p>
                     </div>
 
                     <!-- Primary Action Button -->
-                    <div class="primary-action-wrapper" style="margin-bottom: 25px !important;">
+                    <div class="primary-action-wrapper" style="margin-bottom: 25px !important; display: flex !important; justify-content: center !important;">
                         <button type="submit" class="enhanced-primary-btn" style="
-                            width: 100% !important;
-                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                            width: 70% !important;
+                            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%) !important;
                             border: none !important;
-                            border-radius: 16px !important;
-                            padding: 20px 30px !important;
-                            color: white !important;
-                            font-size: 18px !important;
+                            border-radius: 12px !important;
+                            padding: 14px 24px !important;
+                            color: #0f2027 !important;
+                            font-size: 15px !important;
                             font-weight: 700 !important;
                             cursor: pointer !important;
                             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-                            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4) !important;
+                            box-shadow: 0 6px 20px rgba(79, 209, 197, 0.4) !important;
                             position: relative !important;
                             overflow: hidden !important;
                             text-transform: uppercase !important;
-                            letter-spacing: 1px !important;
+                            letter-spacing: 0.8px !important;
                             display: flex !important;
                             align-items: center !important;
                             justify-content: center !important;
-                            gap: 12px !important;
+                            gap: 10px !important;
                         ">
                             <div class="btn-shine" style="
                                 position: absolute !important;
@@ -4529,27 +5278,27 @@
                                 left: -100% !important;
                                 width: 100% !important;
                                 height: 100% !important;
-                                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+                                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
                                 transition: left 0.6s ease !important;
                             "></div>
                             <div class="btn-icon" style="
-                                width: 40px !important;
-                                height: 40px !important;
-                                background: rgba(255, 255, 255, 0.2) !important;
-                                border-radius: 10px !important;
+                                width: 32px !important;
+                                height: 32px !important;
+                                background: rgba(15, 32, 39, 0.2) !important;
+                                border-radius: 8px !important;
                                 display: flex !important;
                                 align-items: center !important;
                                 justify-content: center !important;
                                 transition: all 0.3s ease !important;
                             ">
                                 <i class="fas fa-calculator"
-                                    style="font-size: 18px !important; color: white !important;"></i>
+                                    style="font-size: 15px !important; color: #0f2027 !important;"></i>
                             </div>
                             <span style="flex: 1 !important; text-align: center !important;">Assess ADR Risk</span>
                             <div class="btn-arrow" style="
-                                width: 30px !important;
-                                height: 30px !important;
-                                background: rgba(255, 255, 255, 0.15) !important;
+                                width: 24px !important;
+                                height: 24px !important;
+                                background: rgba(15, 32, 39, 0.15) !important;
                                 border-radius: 50% !important;
                                 display: flex !important;
                                 align-items: center !important;
@@ -4557,81 +5306,42 @@
                                 transition: all 0.3s ease !important;
                             ">
                                 <i class="fas fa-arrow-right"
-                                    style="font-size: 12px !important; color: white !important;"></i>
+                                    style="font-size: 10px !important; color: #0f2027 !important;"></i>
                             </div>
                         </button>
                     </div>
-
-                    <!-- Secondary Actions Grid -->
-                    <div class="secondary-actions-grid"
-                        style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; margin-bottom: 25px !important;">
-
-                        <!-- Clear Form Button -->
-                        <button type="button" id="clear-form" class="enhanced-secondary-btn" style="
-                            background: white !important;
-                            border: 2px solid #e2e8f0 !important;
-                            border-radius: 14px !important;
-                            padding: 18px 20px !important;
-                            color: #475569 !important;
-                            font-size: 15px !important;
-                            font-weight: 600 !important;
-                            cursor: pointer !important;
-                            transition: all 0.3s ease !important;
-                            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
-                            display: flex !important;
-                            flex-direction: column !important;
-                            align-items: center !important;
-                            gap: 8px !important;
-                            position: relative !important;
-                            overflow: hidden !important;
-                        ">
-                            <div class="secondary-btn-bg" style="
-                                position: absolute !important;
-                                top: 0 !important;
-                                left: 0 !important;
-                                width: 100% !important;
-                                height: 100% !important;
-                                background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
-                                opacity: 0 !important;
-                                transition: opacity 0.3s ease !important;
-                            "></div>
-                            <div class="secondary-icon" style="
-                                width: 36px !important;
-                                height: 36px !important;
-                                background: #f1f5f9 !important;
-                                border-radius: 10px !important;
-                                display: flex !important;
-                                align-items: center !important;
-                                justify-content: center !important;
-                                transition: all 0.3s ease !important;
-                                position: relative !important;
-                                z-index: 2 !important;
-                            ">
-                                <i class="fas fa-undo"
-                                    style="font-size: 16px !important; color: #64748b !important; transition: all 0.3s ease !important;"></i>
-                            </div>
-                            <span
-                                style="position: relative !important; z-index: 2 !important; transition: all 0.3s ease !important;">Clear
-                                Form</span>
-                        </button>
-
-
-                    </div>
-
-
 
                     <!-- Quick Actions Footer -->
                     <div class="quick-actions-footer" style="
                         display: flex !important;
                         justify-content: center !important;
-                        gap: 15px !important;
+                        gap: 12px !important;
                         padding-top: 20px !important;
-                        border-top: 1px solid rgba(226, 232, 240, 0.6) !important;
+                        border-top: 1px solid rgba(79, 209, 197, 0.2) !important;
+                        flex-wrap: wrap !important;
                     ">
+                        <button type="button" id="clear-form" class="quick-action-btn" style="
+                            background: rgba(255, 255, 255, 0.05) !important;
+                            border: 1px solid rgba(79, 209, 197, 0.3) !important;
+                            color: #cbd5e0 !important;
+                            padding: 8px 16px !important;
+                            border-radius: 20px !important;
+                            font-size: 13px !important;
+                            font-weight: 500 !important;
+                            cursor: pointer !important;
+                            display: flex !important;
+                            align-items: center !important;
+                            gap: 6px !important;
+                            transition: all 0.3s ease !important;
+                            backdrop-filter: blur(10px) !important;
+                        ">
+                            <i class="fas fa-undo" style="font-size: 12px !important;"></i>
+                            Clear Form
+                        </button>
                         <button type="button" onclick="window.print()" class="quick-action-btn" style="
-                            background: rgba(248, 250, 252, 0.8) !important;
-                            border: 1px solid #e2e8f0 !important;
-                            color: #64748b !important;
+                            background: rgba(255, 255, 255, 0.05) !important;
+                            border: 1px solid rgba(79, 209, 197, 0.3) !important;
+                            color: #a0aec0 !important;
                             padding: 8px 16px !important;
                             border-radius: 20px !important;
                             font-size: 13px !important;
@@ -4647,9 +5357,9 @@
                             Print Form
                         </button>
                         <button type="button" onclick="showInfoModal()" class="quick-action-btn" style="
-                            background: rgba(248, 250, 252, 0.8) !important;
-                            border: 1px solid #e2e8f0 !important;
-                            color: #64748b !important;
+                            background: rgba(255, 255, 255, 0.05) !important;
+                            border: 1px solid rgba(79, 209, 197, 0.3) !important;
+                            color: #a0aec0 !important;
                             padding: 8px 16px !important;
                             border-radius: 20px !important;
                             font-size: 13px !important;
@@ -4788,6 +5498,113 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Clinical Decision Support - Mitigation Strategies -->
+        <div id="mitigation-strategies-container" class="mitigation-strategies-container" style="display: none;">
+            <div class="mitigation-header">
+                <h2><i class="fas fa-shield-alt"></i> Personalized Mitigation Strategies</h2>
+                <div class="mitigation-subtitle">
+                    <p>AI-powered recommendations to reduce ADR risk and optimize patient safety</p>
+                </div>
+            </div>
+
+            <div class="mitigation-tabs">
+                <button class="mitigation-tab active" onclick="showMitigationTab('risk-reduction')">
+                    <i class="fas fa-arrow-down"></i> Risk Reduction
+                </button>
+                <button class="mitigation-tab" onclick="showMitigationTab('alternatives')">
+                    <i class="fas fa-pills"></i> Drug Alternatives
+                </button>
+                <button class="mitigation-tab" onclick="showMitigationTab('dosing')">
+                    <i class="fas fa-balance-scale"></i> Dose Optimization
+                </button>
+                <button class="mitigation-tab" onclick="showMitigationTab('monitoring')">
+                    <i class="fas fa-heartbeat"></i> Monitoring Protocol
+                </button>
+                <button class="mitigation-tab" onclick="showMitigationTab('education')">
+                    <i class="fas fa-user-graduate"></i> Patient Education
+                </button>
+            </div>
+
+            <div class="mitigation-content">
+                <!-- Risk Reduction Tab -->
+                <div id="risk-reduction-tab" class="mitigation-tab-content active">
+                    <div class="mitigation-section">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Risk Reduction Recommendations</h3>
+                        <div id="risk-reduction-content" class="recommendations-grid">
+                            <div class="loading-placeholder">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading risk reduction strategies...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drug Alternatives Tab -->
+                <div id="alternatives-tab" class="mitigation-tab-content">
+                    <div class="mitigation-section">
+                        <h3><i class="fas fa-exchange-alt"></i> Alternative Drug Suggestions</h3>
+                        <div id="alternatives-content" class="alternatives-grid">
+                            <div class="loading-placeholder">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Analyzing therapeutic alternatives...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dose Optimization Tab -->
+                <div id="dosing-tab" class="mitigation-tab-content">
+                    <div class="mitigation-section">
+                        <h3><i class="fas fa-calculator"></i> Dose Optimization Recommendations</h3>
+                        <div id="dosing-content" class="dosing-recommendations">
+                            <div class="loading-placeholder">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Calculating optimal dosing strategies...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monitoring Protocol Tab -->
+                <div id="monitoring-tab" class="mitigation-tab-content">
+                    <div class="mitigation-section">
+                        <h3><i class="fas fa-clipboard-check"></i> Customized Monitoring Protocol</h3>
+                        <div id="monitoring-content" class="monitoring-protocol">
+                            <div class="loading-placeholder">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Generating monitoring protocol...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patient Education Tab -->
+                <div id="education-tab" class="mitigation-tab-content">
+                    <div class="mitigation-section">
+                        <h3><i class="fas fa-graduation-cap"></i> Patient Education & Safety</h3>
+                        <div id="education-content" class="education-materials">
+                            <div class="loading-placeholder">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Preparing patient education materials...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mitigation-actions">
+                <button class="btn btn-secondary" onclick="hideMitigationStrategies()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+                <button class="btn btn-primary" onclick="generateMitigationReport()">
+                    <i class="fas fa-file-medical"></i> Generate Mitigation Report
+                </button>
+                <button class="btn btn-success" onclick="implementStrategies()">
+                    <i class="fas fa-check-circle"></i> Implement Strategies
+                </button>
             </div>
         </div>
 
@@ -5977,6 +6794,11 @@
                 // Automatically generate AI report
                 generateAIReport();
 
+                // Show mitigation strategies after a brief delay
+                setTimeout(() => {
+                    showMitigationStrategies(patientData, result);
+                }, 2000);
+
                 showNotification('ADR risk assessment completed successfully! All medications analyzed.', 'success');
 
             } catch (error) {
@@ -6065,7 +6887,7 @@
                     <div class="report-loading">
                         <i class="fas fa-spinner"></i>
                         <p>Generating AI clinical report...</p>
-                        <p style="font-size: 0.9rem; color: #6b7280; margin-top: 10px;">This may take a few moments...</p>
+                        <p style="font-size: 0.9rem; color: #a0aec0; margin-top: 10px;">This may take a few moments...</p>
                     </div>
                 `;
 
@@ -6097,12 +6919,12 @@
                     <div class="ai-report-content">
                         ${formattedReport}
                     </div>
-                    <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; text-align: center;">
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid rgba(79, 209, 197, 0.3); text-align: center;">
                         <div style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">
                             <i class="fas fa-robot"></i>
                             Generated by Google Gemini AI
                         </div>
-                        <div style="margin-top: 8px; font-size: 0.8rem; color: #6b7280;">
+                        <div style="margin-top: 8px; font-size: 0.8rem; color: #a0aec0;">
                             ${new Date().toLocaleString()}
                         </div>
                     </div>
@@ -6138,9 +6960,9 @@
                 .slice(0, 6); // Show top 6 specific ADR types
 
             const getADRRiskLevel = (prob) => {
-                if (prob >= 15) return { level: 'HIGH RISK', color: '#ef4444', bgColor: '#fef2f2', borderColor: '#fecaca' };
-                if (prob >= 5) return { level: 'MEDIUM RISK', color: '#f59e0b', bgColor: '#fffbeb', borderColor: '#fed7aa' };
-                return { level: 'LOW RISK', color: '#10b981', bgColor: '#f0fdf4', borderColor: '#bbf7d0' };
+                if (prob >= 15) return { level: 'HIGH RISK', color: '#ef4444', bgColor: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.4)' };
+                if (prob >= 5) return { level: 'MEDIUM RISK', color: '#fbbf24', bgColor: 'rgba(245, 158, 11, 0.1)', borderColor: 'rgba(245, 158, 11, 0.4)' };
+                return { level: 'LOW RISK', color: '#48bb78', bgColor: 'rgba(72, 187, 120, 0.1)', borderColor: 'rgba(72, 187, 120, 0.4)' };
             };
 
             const getADRIcon = (adrType) => {
@@ -6153,9 +6975,9 @@
             };
 
             return `
-                <div style="background: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #a855f7; margin-bottom: 20px;">
-                    <h4 style="margin: 0 0 20px 0; color: #581c87; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-chart-pie" style="color: #a855f7;"></i>
+                <div style="background: rgba(79, 209, 197, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #4fd1c5; margin-bottom: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(79, 209, 197, 0.3);">
+                    <h4 style="margin: 0 0 20px 0; color: #4fd1c5; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-chart-pie" style="color: #4fd1c5;"></i>
                         Specific ADR Type Risks
                     </h4>
                     
@@ -6164,18 +6986,18 @@
                 const risk = getADRRiskLevel(probability);
                 const icon = getADRIcon(adrType);
                 return `
-                                <div class="adr-type-card" style="background: ${risk.bgColor}; border: 2px solid ${risk.borderColor}; border-radius: 12px; padding: 16px; position: relative; transition: all 0.3s ease; cursor: pointer;" 
+                                <div class="adr-type-card" style="background: rgba(255, 255, 255, 0.05); border: 2px solid ${risk.borderColor}; border-radius: 12px; padding: 16px; position: relative; transition: all 0.3s ease; cursor: pointer; backdrop-filter: blur(10px);" 
                                      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'" 
                                      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
                                         <div style="background: ${risk.color}; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                             <i class="${icon}" style="font-size: 1rem;"></i>
                                         </div>
-                                        <h5 style="color: #374151; font-size: 1rem; font-weight: 600; margin: 0; flex: 1; line-height: 1.3;">${adrType}</h5>
+                                        <h5 style="color: #e2e8f0; font-size: 1rem; font-weight: 600; margin: 0; flex: 1; line-height: 1.3;">${adrType}</h5>
                                     </div>
                                     <div style="text-align: center; margin-bottom: 12px;">
                                         <div class="adr-probability" style="font-size: 2.2rem; font-weight: 700; color: ${risk.color}; line-height: 1;">${probability}%</div>
-                                        <div style="font-size: 0.8rem; color: #6b7280; margin-top: 2px;">Probability</div>
+                                        <div style="font-size: 0.8rem; color: #a0aec0; margin-top: 2px;">Probability</div>
                                     </div>
                                     <div style="text-align: center;">
                                         <span class="risk-badge" style="background: ${risk.color}; color: white; padding: 6px 14px; border-radius: 16px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block;">
@@ -6188,9 +7010,9 @@
                     </div>
                     
                     ${sortedADRs.length > 6 ? `
-                        <div style="background: white; padding: 12px 16px; border-radius: 8px; border: 1px solid #e5e7eb; text-align: center;">
-                            <i class="fas fa-info-circle" style="color: #6b7280; margin-right: 8px;"></i>
-                            <span style="color: #6b7280; font-size: 0.9rem;">
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(79, 209, 197, 0.2); text-align: center; backdrop-filter: blur(10px);">
+                            <i class="fas fa-info-circle" style="color: #a0aec0; margin-right: 8px;"></i>
+                            <span style="color: #a0aec0; font-size: 0.9rem;">
                                 ${Object.keys(specificADRs).length - 6} additional ADR types monitored with lower probabilities
                             </span>
                         </div>
@@ -6208,17 +7030,17 @@
             }
 
             const getRiskColor = (score) => {
-                if (score >= 6) return { color: '#ef4444', bg: '#fef2f2', border: '#fecaca', level: 'HIGH' };
-                if (score >= 3) return { color: '#f59e0b', bg: '#fffbeb', border: '#fed7aa', level: 'MODERATE' };
-                return { color: '#10b981', bg: '#f0fdf4', border: '#bbf7d0', level: 'LOW' };
+                if (score >= 6) return { color: '#ef4444', bg: 'rgba(239, 68, 68, 0.15)', border: 'rgba(239, 68, 68, 0.4)', level: 'HIGH' };
+                if (score >= 3) return { color: '#fbbf24', bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.4)', level: 'MODERATE' };
+                return { color: '#48bb78', bg: 'rgba(72, 187, 120, 0.15)', border: 'rgba(72, 187, 120, 0.4)', level: 'LOW' };
             };
 
             const riskStyle = getRiskColor(drugAnalysis.interaction_risk_score || 0);
 
             return `
-                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #0ea5e9; margin-bottom: 20px;">
-                    <h4 style="margin: 0 0 20px 0; color: #0c4a6e; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-pills" style="color: #0ea5e9;"></i>
+                <div style="background: rgba(79, 209, 197, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #4fd1c5; margin-bottom: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(79, 209, 197, 0.3);">
+                    <h4 style="margin: 0 0 20px 0; color: #4fd1c5; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-pills" style="color: #4fd1c5;"></i>
                         Comprehensive Drug Analysis
                         <span style="background: ${riskStyle.bg}; color: ${riskStyle.color}; padding: 4px 12px; border-radius: 16px; font-size: 0.8rem; font-weight: 700; margin-left: auto;">
                             ${riskStyle.level} INTERACTION RISK
@@ -6227,45 +7049,45 @@
                     
                     <!-- Medication Summary -->
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                        <div style="background: white; padding: 16px; border-radius: 10px; border: 2px solid #e0f2fe; text-align: center;">
-                            <div style="color: #0ea5e9; font-size: 2rem; font-weight: 700; margin-bottom: 5px;">
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 10px; border: 2px solid rgba(79, 209, 197, 0.3); text-align: center; backdrop-filter: blur(10px);">
+                            <div style="color: #4fd1c5; font-size: 2rem; font-weight: 700; margin-bottom: 5px;">
                                 ${drugAnalysis.total_medication_count || 0}
                             </div>
-                            <div style="color: #374151; font-size: 0.9rem; font-weight: 600;">Total Medications</div>
+                            <div style="color: #cbd5e0; font-size: 0.9rem; font-weight: 600;">Total Medications</div>
                         </div>
                         
-                        <div style="background: white; padding: 16px; border-radius: 10px; border: 2px solid ${drugAnalysis.high_risk_drug_count > 0 ? '#fecaca' : '#e0f2fe'}; text-align: center;">
-                            <div style="color: ${drugAnalysis.high_risk_drug_count > 0 ? '#ef4444' : '#0ea5e9'}; font-size: 2rem; font-weight: 700; margin-bottom: 5px;">
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 10px; border: 2px solid ${drugAnalysis.high_risk_drug_count > 0 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(79, 209, 197, 0.3)'}; text-align: center; backdrop-filter: blur(10px);">
+                            <div style="color: ${drugAnalysis.high_risk_drug_count > 0 ? '#f87171' : '#4fd1c5'}; font-size: 2rem; font-weight: 700; margin-bottom: 5px;">
                                 ${drugAnalysis.high_risk_drug_count || 0}
                             </div>
-                            <div style="color: #374151; font-size: 0.9rem; font-weight: 600;">High-Risk Drugs</div>
+                            <div style="color: #cbd5e0; font-size: 0.9rem; font-weight: 600;">High-Risk Drugs</div>
                         </div>
                         
-                        <div style="background: white; padding: 16px; border-radius: 10px; border: 2px solid ${riskStyle.border}; text-align: center;">
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 10px; border: 2px solid ${riskStyle.border}; text-align: center; backdrop-filter: blur(10px);">
                             <div style="color: ${riskStyle.color}; font-size: 2rem; font-weight: 700; margin-bottom: 5px;">
                                 ${drugAnalysis.interaction_risk_score || 0}
                             </div>
-                            <div style="color: #374151; font-size: 0.9rem; font-weight: 600;">Interaction Score</div>
+                            <div style="color: #cbd5e0; font-size: 0.9rem; font-weight: 600;">Interaction Score</div>
                         </div>
                     </div>
 
                     <!-- All Medications List -->
-                    <div style="background: white; padding: 16px; border-radius: 10px; border: 1px solid #e5e7eb; margin-bottom: 15px;">
-                        <h5 style="margin: 0 0 12px 0; color: #374151; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-list" style="color: #0ea5e9;"></i>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 10px; border: 1px solid rgba(79, 209, 197, 0.2); margin-bottom: 15px; backdrop-filter: blur(10px);">
+                        <h5 style="margin: 0 0 12px 0; color: #e2e8f0; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-list" style="color: #4fd1c5;"></i>
                             All Medications Being Analyzed
                         </h5>
                         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                             ${drugAnalysis.all_medications_analyzed.map((med, index) => `
-                                <span style="background: ${index === 0 ? '#dbeafe' : '#f3f4f6'}; color: ${index === 0 ? '#1e40af' : '#374151'}; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; border: 1px solid ${index === 0 ? '#93c5fd' : '#d1d5db'};">
+                                <span style="background: ${index === 0 ? 'rgba(79, 209, 197, 0.2)' : 'rgba(255, 255, 255, 0.05)'}; color: ${index === 0 ? '#4fd1c5' : '#cbd5e0'}; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; border: 1px solid ${index === 0 ? 'rgba(79, 209, 197, 0.4)' : 'rgba(79, 209, 197, 0.2)'};">
                                     ${index === 0 ? '🎯 ' : ''}${med}
                                 </span>
                             `).join('')}
                         </div>
                         ${drugAnalysis.external_drugs_count > 0 ? `
-                            <div style="margin-top: 10px; padding: 8px 12px; background: #f0f9ff; border-radius: 6px; border-left: 3px solid #0ea5e9;">
-                                <i class="fas fa-info-circle" style="color: #0ea5e9; margin-right: 6px;"></i>
-                                <span style="color: #0c4a6e; font-size: 0.85rem; font-weight: 500;">
+                            <div style="margin-top: 10px; padding: 8px 12px; background: rgba(79, 209, 197, 0.1); border-radius: 6px; border-left: 3px solid #4fd1c5;">
+                                <i class="fas fa-info-circle" style="color: #4fd1c5; margin-right: 6px;"></i>
+                                <span style="color: #cbd5e0; font-size: 0.85rem; font-weight: 500;">
                                     ${drugAnalysis.external_drugs_count} external medication(s) included in analysis
                                 </span>
                             </div>
@@ -6364,25 +7186,25 @@
             alternatives = medicationAlternatives[currentMedication] || ['Consult specialist for alternatives'];
 
             return `
-                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #0ea5e9; margin-bottom: 20px;">
-                    <h4 style="margin: 0 0 15px 0; color: #0c4a6e; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-pills" style="color: #0ea5e9;"></i>
+                <div style="background: rgba(79, 209, 197, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #4fd1c5; margin-bottom: 20px; border: 1px solid rgba(79, 209, 197, 0.2);">
+                    <h4 style="margin: 0 0 15px 0; color: #4fd1c5; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-pills" style="color: #4fd1c5;"></i>
                         Medication Recommendations
                     </h4>
                     <div style="margin-bottom: 15px;">
-                        <h5 style="color: #0c4a6e; margin: 0 0 8px 0; font-size: 1rem;">Clinical Suggestions:</h5>
+                        <h5 style="color: #cbd5e0; margin: 0 0 8px 0; font-size: 1rem;">Clinical Suggestions:</h5>
                         ${suggestions.map(suggestion => `
                             <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px;">
                                 <i class="fas fa-check-circle" style="color: #10b981; margin-top: 2px; font-size: 0.9rem;"></i>
-                                <span style="color: #374151; font-size: 0.95rem;">${suggestion}</span>
+                                <span style="color: #cbd5e0; font-size: 0.95rem;">${suggestion}</span>
                             </div>
                         `).join('')}
                     </div>
                     <div>
-                        <h5 style="color: #0c4a6e; margin: 0 0 8px 0; font-size: 1rem;">Alternative Medications:</h5>
+                        <h5 style="color: #cbd5e0; margin: 0 0 8px 0; font-size: 1rem;">Alternative Medications:</h5>
                         <div class="medication-alternatives" style="display: flex; flex-wrap: wrap; gap: 8px;">
                             ${alternatives.map(alt => `
-                                <div class="medication-alt" style="background: white; padding: 8px 14px; border-radius: 20px; border: 1px solid #bae6fd; color: #0c4a6e; font-size: 0.9rem; font-weight: 500; flex: 1; min-width: 120px; text-align: center;">
+                                <div class="medication-alt" style="background: rgba(79, 209, 197, 0.15); padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(79, 209, 197, 0.4); color: #4fd1c5; font-size: 0.9rem; font-weight: 500; flex: 1; min-width: 120px; text-align: center;">
                                     ${alt}
                                 </div>
                             `).join('')}
@@ -6426,18 +7248,18 @@
             }
 
             return `
-                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #22c55e; margin-bottom: 20px;">
-                    <h4 style="margin: 0 0 15px 0; color: #14532d; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-stethoscope" style="color: #22c55e;"></i>
+                <div style="background: rgba(72, 187, 120, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #48bb78; margin-bottom: 20px; border: 1px solid rgba(72, 187, 120, 0.2);">
+                    <h4 style="margin: 0 0 15px 0; color: #48bb78; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-stethoscope" style="color: #48bb78;"></i>
                         Clinical Management Plan
                     </h4>
                     
                     <div style="margin-bottom: 15px;">
-                        <h5 style="color: #14532d; margin: 0 0 8px 0; font-size: 1rem;">Monitoring Parameters:</h5>
+                        <h5 style="color: #cbd5e0; margin: 0 0 8px 0; font-size: 1rem;">Monitoring Parameters:</h5>
                         <div class="monitoring-params" style="display: flex; flex-wrap: wrap; gap: 8px;">
                             ${monitoringParams.map(param => `
-                                <div class="monitoring-param" style="background: white; padding: 8px 14px; border-radius: 16px; border: 1px solid #bbf7d0; color: #14532d; font-size: 0.9rem; font-weight: 500; flex: 1; min-width: 140px; text-align: center;">
-                                    <i class="fas fa-heartbeat" style="color: #22c55e; margin-right: 6px; font-size: 0.8rem;"></i>
+                                <div class="monitoring-param" style="background: rgba(72, 187, 120, 0.1); padding: 8px 14px; border-radius: 16px; border: 1px solid rgba(72, 187, 120, 0.3); color: #48bb78; font-size: 0.9rem; font-weight: 500; flex: 1; min-width: 140px; text-align: center;">
+                                    <i class="fas fa-heartbeat" style="color: #48bb78; margin-right: 6px; font-size: 0.8rem;"></i>
                                     ${param}
                                 </div>
                             `).join('')}
@@ -6445,18 +7267,18 @@
                     </div>
                     
                     <div style="margin-bottom: 15px;">
-                        <h5 style="color: #14532d; margin: 0 0 8px 0; font-size: 1rem;">Clinical Actions:</h5>
+                        <h5 style="color: #cbd5e0; margin: 0 0 8px 0; font-size: 1rem;">Clinical Actions:</h5>
                         ${clinicalActions.map(action => `
                             <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px;">
-                                <i class="fas fa-arrow-right" style="color: #22c55e; margin-top: 2px; font-size: 0.9rem;"></i>
-                                <span style="color: #374151; font-size: 0.95rem;">${action}</span>
+                                <i class="fas fa-arrow-right" style="color: #48bb78; margin-top: 2px; font-size: 0.9rem;"></i>
+                                <span style="color: #cbd5e0; font-size: 0.95rem;">${action}</span>
                             </div>
                         `).join('')}
                     </div>
                     
-                    <div style="background: white; padding: 12px 16px; border-radius: 8px; border: 1px solid #bbf7d0;">
-                        <h5 style="color: #14532d; margin: 0 0 6px 0; font-size: 1rem;">Follow-up Schedule:</h5>
-                        <span style="color: #374151; font-weight: 500;">${followUpSchedule}</span>
+                    <div style="background: rgba(72, 187, 120, 0.1); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(72, 187, 120, 0.3); backdrop-filter: blur(10px);">
+                        <h5 style="color: #48bb78; margin: 0 0 6px 0; font-size: 1rem;">Follow-up Schedule:</h5>
+                        <span style="color: #cbd5e0; font-weight: 500;">${followUpSchedule}</span>
                     </div>
                 </div>
             `;
@@ -6489,32 +7311,32 @@
                 const valueSize = isMobileView ? '1.5rem' : '2rem';
 
                 resultsContent.innerHTML = `
-                    <div style="background: white; padding: ${isMobileView ? '15px' : '25px'}; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: ${isMobileView ? '15px' : '25px'}; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); border: 1px solid rgba(79, 209, 197, 0.2); backdrop-filter: blur(10px);">
                         <div style="${gridStyle}">
                             <div style="text-align: center; padding: ${cardPadding}; background: ${riskColor}; color: white; border-radius: 12px;">
                                 <h3 style="margin: 0 0 10px 0; font-size: ${titleSize};">Risk Level</h3>
                                 <div style="font-size: ${valueSize}; font-weight: 700;">${result.risk_level}</div>
                             </div>
-                            <div style="text-align: center; padding: ${cardPadding}; background: #f8fafc; border-radius: 12px; border: 2px solid #e5e7eb;">
-                                <h3 style="margin: 0 0 10px 0; font-size: ${titleSize}; color: #374151;">Predicted ADR</h3>
-                                <div style="font-size: ${isMobileView ? '1.2rem' : '1.5rem'}; font-weight: 600; color: #1f2937; line-height: 1.2;">${result.predicted_adr_type}</div>
+                            <div style="text-align: center; padding: ${cardPadding}; background: rgba(255, 255, 255, 0.05); border-radius: 12px; border: 2px solid rgba(79, 209, 197, 0.3); backdrop-filter: blur(10px);">
+                                <h3 style="margin: 0 0 10px 0; font-size: ${titleSize}; color: #e2e8f0;">Predicted ADR</h3>
+                                <div style="font-size: ${isMobileView ? '1.2rem' : '1.5rem'}; font-weight: 600; color: #cbd5e0; line-height: 1.2;">${result.predicted_adr_type}</div>
                             </div>
-                            <div style="text-align: center; padding: ${cardPadding}; background: #f0f9ff; border-radius: 12px; border: 2px solid #bae6fd;">
-                                <h3 style="margin: 0 0 10px 0; font-size: ${titleSize}; color: #0c4a6e;">No ADR Probability</h3>
-                                <div style="font-size: ${valueSize}; font-weight: 700; color: #1e40af;">${result.no_adr_probability}%</div>
+                            <div style="text-align: center; padding: ${cardPadding}; background: rgba(79, 209, 197, 0.1); border-radius: 12px; border: 2px solid rgba(79, 209, 197, 0.3); backdrop-filter: blur(10px);">
+                                <h3 style="margin: 0 0 10px 0; font-size: ${titleSize}; color: #4fd1c5;">No ADR Probability</h3>
+                                <div style="font-size: ${valueSize}; font-weight: 700; color: #4fd1c5;">${result.no_adr_probability}%</div>
                             </div>
                         </div>
                         
                         ${result.top_adr_risks ? `
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 20px;">
-                            <h4 style="margin: 0 0 15px 0; color: #374151; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(79, 209, 197, 0.2); margin-bottom: 20px; backdrop-filter: blur(10px);">
+                            <h4 style="margin: 0 0 15px 0; color: #e2e8f0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-exclamation-triangle" style="color: #fbbf24;"></i>
                                 Top ADR Risk Probabilities
                             </h4>
                             ${Object.entries(result.top_adr_risks).slice(0, 5).map(([adr, prob]) => `
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e5e7eb;">
-                                    <span style="font-weight: 500; color: #1f2937; flex: 1;">${adr}</span>
-                                    <span style="font-weight: 700; color: #667eea; font-size: 1.1rem;">${prob}%</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(79, 209, 197, 0.2);">
+                                    <span style="font-weight: 500; color: #cbd5e0; flex: 1;">${adr}</span>
+                                    <span style="font-weight: 700; color: #4fd1c5; font-size: 1.1rem;">${prob}%</span>
                                 </div>
                             `).join('')}
                         </div>
@@ -6526,6 +7348,28 @@
                         
                         ${generateMedicationSuggestions(result)}
                         ${generateClinicalSuggestions(result)}
+                        
+                        <!-- Mitigation Strategies Button -->
+                        <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 2px solid rgba(79, 209, 197, 0.2);">
+                            <button onclick="showMitigationStrategies(currentPatientData, currentPredictionResult)" 
+                                    class="btn btn-success" 
+                                    style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); 
+                                           border: none; 
+                                           padding: 15px 30px; 
+                                           font-size: 1.1rem; 
+                                           font-weight: 600; 
+                                           border-radius: 12px; 
+                                           color: white; 
+                                           cursor: pointer; 
+                                           transition: all 0.3s ease;
+                                           box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+                                <i class="fas fa-shield-alt" style="margin-right: 10px;"></i>
+                                View Personalized Mitigation Strategies
+                            </button>
+                            <p style="margin: 10px 0 0 0; color: #64748b; font-size: 0.9rem;">
+                                Get AI-powered recommendations to reduce ADR risk and optimize patient safety
+                            </p>
+                        </div>
                     </div>
                 `;
                 resultsContainer.style.display = 'block';
@@ -6619,6 +7463,266 @@
                 }
             }
         });
+
+        // Mitigation Strategies Functions
+        function showMitigationStrategies(patientData, predictionResult) {
+            const container = document.getElementById('mitigation-strategies-container');
+            container.style.display = 'block';
+            
+            // Scroll to mitigation strategies
+            container.scrollIntoView({ behavior: 'smooth' });
+            
+            // Load mitigation strategies data
+            loadMitigationStrategies(patientData, predictionResult);
+        }
+
+        function hideMitigationStrategies() {
+            const container = document.getElementById('mitigation-strategies-container');
+            container.style.display = 'none';
+        }
+
+        function showMitigationTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.mitigation-tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.mitigation-tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            // Show selected tab content
+            const selectedTab = document.getElementById(tabName + '-tab');
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+
+            // Add active class to clicked button
+            const clickedButton = event.target.closest('.mitigation-tab');
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+
+        async function loadMitigationStrategies(patientData, predictionResult) {
+            try {
+                showLoading();
+                
+                const response = await fetch('/mitigation_strategies', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        patient_data: patientData,
+                        prediction_result: predictionResult
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const strategies = await response.json();
+                
+                // Populate each tab with data
+                populateRiskReductionTab(strategies.risk_reduction_recommendations);
+                populateAlternativesTab(strategies.alternative_drug_suggestions);
+                populateDosingTab(strategies.dose_optimization);
+                populateMonitoringTab(strategies.monitoring_protocol);
+                populateEducationTab(strategies.patient_education);
+                
+                hideLoading();
+                
+            } catch (error) {
+                console.error('Error loading mitigation strategies:', error);
+                hideLoading();
+                showNotification('Error loading mitigation strategies: ' + error.message, 'error');
+            }
+        }
+
+        function populateRiskReductionTab(recommendations) {
+            const container = document.getElementById('risk-reduction-content');
+            
+            if (!recommendations || recommendations.length === 0) {
+                container.innerHTML = '<p class="no-data">No specific risk reduction recommendations available.</p>';
+                return;
+            }
+
+            const html = recommendations.map(rec => `
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-category">${rec.category}</div>
+                        <div class="priority-badge ${rec.priority.toLowerCase()}">${rec.priority}</div>
+                    </div>
+                    <div class="recommendation-intervention">${rec.intervention}</div>
+                    <div class="recommendation-rationale">${rec.rationale}</div>
+                    <div class="recommendation-timeline">
+                        <i class="fas fa-clock"></i>
+                        ${rec.timeline}
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        function populateAlternativesTab(alternatives) {
+            const container = document.getElementById('alternatives-content');
+            
+            if (!alternatives || alternatives.length === 0) {
+                container.innerHTML = '<p class="no-data">No alternative drug suggestions available.</p>';
+                return;
+            }
+
+            const html = alternatives.map(alt => `
+                <div class="alternative-card">
+                    <div class="alternative-header">
+                        <div class="alternative-name">${alt.alternative}</div>
+                        <div class="risk-reduction-badge">Risk Reduction: ${alt.risk_reduction}</div>
+                    </div>
+                    <div class="alternative-details">
+                        <div class="advantages-list">
+                            <h5><i class="fas fa-check-circle"></i> Advantages</h5>
+                            <ul>
+                                ${alt.advantages.map(adv => `<li>${adv}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="considerations-list">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Considerations</h5>
+                            <ul>
+                                ${alt.considerations.map(con => `<li>${con}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="monitoring-note">
+                        <strong>Monitoring:</strong> ${alt.monitoring}
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        function populateDosingTab(dosingRecommendations) {
+            const container = document.getElementById('dosing-content');
+            
+            if (!dosingRecommendations || dosingRecommendations.length === 0) {
+                container.innerHTML = '<p class="no-data">No dose optimization recommendations available.</p>';
+                return;
+            }
+
+            const html = dosingRecommendations.map(dose => `
+                <div class="dosing-card">
+                    <div class="dosing-header">
+                        <div class="adjustment-type">${dose.adjustment_type}</div>
+                        <div class="evidence-badge">${dose.evidence_level}</div>
+                    </div>
+                    <div class="dosing-recommendation">${dose.recommendation}</div>
+                    <div class="dosing-rationale">${dose.rationale}</div>
+                    <div class="dosing-monitoring">
+                        <strong>Monitoring:</strong> ${dose.monitoring}
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        function populateMonitoringTab(monitoringProtocol) {
+            const container = document.getElementById('monitoring-content');
+            
+            if (!monitoringProtocol) {
+                container.innerHTML = '<p class="no-data">No monitoring protocol available.</p>';
+                return;
+            }
+
+            const html = `
+                <div class="monitoring-section">
+                    <h4><i class="fas fa-clipboard-list"></i> Baseline Assessments</h4>
+                    ${monitoringProtocol.baseline_assessments.map(assessment => `
+                        <div class="monitoring-item">
+                            <h5>${assessment.assessment}</h5>
+                            <p><strong>Rationale:</strong> ${assessment.rationale}</p>
+                            <p><strong>Timing:</strong> ${assessment.timing}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="monitoring-section">
+                    <h4><i class="fas fa-heartbeat"></i> Ongoing Monitoring</h4>
+                    ${monitoringProtocol.ongoing_monitoring.map(monitor => `
+                        <div class="monitoring-item">
+                            <h5>${monitor.parameter}</h5>
+                            <p><strong>Frequency:</strong> ${monitor.frequency}</p>
+                            <p><strong>Alert Threshold:</strong> ${monitor.alert_threshold}</p>
+                            <p><strong>Action:</strong> ${monitor.action}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="monitoring-section">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Emergency Indicators</h4>
+                    <ul class="emergency-list">
+                        ${monitoringProtocol.emergency_indicators.map(indicator => `
+                            <li>${indicator}</li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function populateEducationTab(patientEducation) {
+            const container = document.getElementById('education-content');
+            
+            if (!patientEducation) {
+                container.innerHTML = '<p class="no-data">No patient education materials available.</p>';
+                return;
+            }
+
+            const html = `
+                <div class="education-card">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Warning Signs</h4>
+                    <ul class="education-list">
+                        ${patientEducation.warning_signs.map(sign => `<li>${sign}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="education-card">
+                    <h4><i class="fas fa-user-check"></i> Self-Monitoring</h4>
+                    <ul class="education-list">
+                        ${patientEducation.self_monitoring.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="education-card">
+                    <h4><i class="fas fa-heart"></i> Lifestyle Modifications</h4>
+                    <ul class="education-list">
+                        ${patientEducation.lifestyle_modifications.map(mod => `<li>${mod}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="education-card">
+                    <h4><i class="fas fa-phone-alt"></i> When to Seek Help</h4>
+                    <ul class="education-list">
+                        ${patientEducation.when_to_seek_help.map(help => `<li>${help}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function generateMitigationReport() {
+            // This would generate a comprehensive PDF report of all mitigation strategies
+            showNotification('Mitigation report generation feature coming soon!', 'info');
+        }
+
+        function implementStrategies() {
+            // This would integrate with EHR systems to implement the strategies
+            showNotification('Strategy implementation feature coming soon!', 'info');
+        }
 
         // Setup BMI calculation listeners
         document.getElementById('height').addEventListener('input', calculateBMI);
@@ -7723,7 +8827,7 @@
         }
 
         .lab-interpret-btn {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             color: white;
             border: none;
             padding: 6px 12px;
@@ -7731,15 +8835,12 @@
             font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
         }
 
         .lab-interpret-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .lab-interpret-btn:hover {
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.5);
         }
 
         /* Lab Interpretation Styles */
@@ -7747,13 +8848,14 @@
             margin-top: 10px;
             padding: 12px;
             border-radius: 8px;
-            border: 1px solid #e5e7eb;
-            background: #f8fafc;
+            border: 1px solid rgba(79, 209, 197, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
         }
 
         .lab-interp-container h6 {
             margin: 0 0 10px 0;
-            color: #374151;
+            color: #e2e8f0;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
@@ -7764,38 +8866,42 @@
             padding: 8px;
             border-radius: 6px;
             margin-bottom: 8px;
-            border-left: 4px solid #e5e7eb;
+            border-left: 4px solid rgba(79, 209, 197, 0.3);
+            color: #cbd5e0;
         }
 
         .lab-interp-item.high-severity {
-            background: #fef2f2;
+            background: rgba(239, 68, 68, 0.15);
             border-left-color: #ef4444;
+            color: #fca5a5;
         }
 
         .lab-interp-item.moderate-severity {
-            background: #fffbeb;
+            background: rgba(245, 158, 11, 0.15);
             border-left-color: #f59e0b;
+            color: #fbbf24;
         }
 
         .lab-interp-item.low-severity {
-            background: #f0fdf4;
-            border-left-color: #10b981;
+            background: rgba(72, 187, 120, 0.15);
+            border-left-color: #48bb78;
+            color: #6ee7b7;
         }
 
         .lab-interp-container.normal {
-            background: #f0fdf4;
-            border-color: #10b981;
+            background: rgba(72, 187, 120, 0.1);
+            border-color: #48bb78;
         }
 
         .interp-status {
             font-weight: 600;
             font-size: 0.85rem;
-            color: #1f2937;
+            color: #e5e7eb;
         }
 
         .interp-significance {
             font-size: 0.8rem;
-            color: #6b7280;
+            color: #d1d5db;
             margin: 4px 0;
         }
 
@@ -7807,7 +8913,7 @@
         }
 
         .interp-normal {
-            color: #065f46;
+            color: #6ee7b7;
             font-weight: 500;
             font-size: 0.85rem;
         }
@@ -7862,11 +8968,20 @@
             background: #10b981;
             color: white;
             border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
+            padding: 14px 24px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 0.9rem;
-            margin-top: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            width: 70%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
         }
 
         .add-drug-btn:hover {
@@ -7913,8 +9028,8 @@
         }
 
         .file-upload-area:hover {
-            border-color: #667eea;
-            background: #f8fafc;
+            border-color: #4fd1c5;
+            background: rgba(79, 209, 197, 0.05);
         }
 
         .file-input {
@@ -7931,7 +9046,7 @@
 
         .file-upload-label i {
             font-size: 2rem;
-            color: #667eea;
+            color: #4fd1c5;
         }
 
         .uploaded-files-list {
@@ -7972,7 +9087,7 @@
 
         /* Enhanced Results Styles */
         .adr-factor-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 15px;
@@ -8024,7 +9139,7 @@
 
         .medication-card,
         .adr-detail-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 15px;
@@ -8061,7 +9176,7 @@
 
         .ai-analysis-header h2 {
             font-size: 1.4rem;
-            color: #1e293b;
+            color: #e2e8f0;
             margin-bottom: 10px;
             font-weight: 700;
             display: flex;
@@ -8074,24 +9189,24 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
         .ai-detailed-content {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            background: rgba(255, 255, 255, 0.02);
             border-radius: 12px;
             padding: 30px;
             min-height: 200px;
             max-height: 600px;
             overflow-y: auto;
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         /* Custom scrollbar for detailed analysis content */
@@ -8100,17 +9215,17 @@
         }
 
         .ai-detailed-content::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 4px;
         }
 
         .ai-detailed-content::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: rgba(79, 209, 197, 0.3);
             border-radius: 4px;
         }
 
         .ai-detailed-content::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: rgba(79, 209, 197, 0.5);
         }
 
         .ai-analysis-loading {
@@ -8119,7 +9234,7 @@
             align-items: center;
             justify-content: center;
             padding: 40px;
-            color: #667eea;
+            color: #4fd1c5;
         }
 
         .ai-analysis-loading i {
@@ -8178,17 +9293,89 @@
 
         .ai-report-content {
             font-size: 1rem;
-            color: #374151;
+            color: #e2e8f0;
+        }
+
+        .ai-report-content p {
+            color: #cbd5e0;
+            line-height: 1.7;
+            margin: 15px 0;
+        }
+
+        .ai-report-content ul,
+        .ai-report-content ol {
+            color: #cbd5e0;
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .ai-report-content li {
+            color: #cbd5e0;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .ai-report-content h4 {
+            color: #a0aec0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+        }
+
+        .ai-report-content strong {
+            color: #e2e8f0;
+            font-weight: 700;
+        }
+
+        .ai-report-content em {
+            color: #4fd1c5;
+            font-style: italic;
+        }
+
+        .ai-report-content .medical-term {
+            color: #4fd1c5;
+            font-weight: 600;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(79, 209, 197, 0.3);
+        }
+
+        .ai-report-content .risk-high {
+            color: #ef4444;
+            font-weight: 700;
+            background: rgba(239, 68, 68, 0.15);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .ai-report-content .risk-medium {
+            color: #f59e0b;
+            font-weight: 700;
+            background: rgba(245, 158, 11, 0.15);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .ai-report-content .risk-low {
+            color: #10b981;
+            font-weight: 700;
+            background: rgba(16, 185, 129, 0.15);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .analysis-section-title {
-            color: #667eea;
+            color: #4fd1c5;
             font-size: 1.4rem;
             font-weight: 700;
             margin: 25px 0 15px 0;
             padding: 15px 20px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            border-left: 4px solid #667eea;
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.15) 0%, rgba(56, 178, 172, 0.15) 100%);
+            border-left: 4px solid #4fd1c5;
             border-radius: 8px;
             position: relative;
         }
@@ -8200,17 +9387,17 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
             border-radius: 4px 0 0 4px;
         }
 
         .analysis-subsection-title {
-            color: #374151;
+            color: #cbd5e0;
             font-size: 1.1rem;
             font-weight: 600;
             margin: 20px 0 10px 0;
             padding: 8px 12px;
-            background: rgba(102, 126, 234, 0.05);
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 6px;
         }
 
@@ -8230,7 +9417,7 @@
         }
 
         .error-header h3 {
-            color: #1e293b;
+            color: #e2e8f0;
             margin: 0;
         }
 
@@ -8248,7 +9435,7 @@
         }
 
         .fallback-section h4 {
-            color: #1e293b;
+            color: #e2e8f0;
             margin: 0 0 15px 0;
             font-size: 1.1rem;
             font-weight: 600;
@@ -8272,12 +9459,12 @@
 
         .risk-label {
             font-weight: 500;
-            color: #6b7280;
+            color: #a0aec0;
         }
 
         .risk-value {
             font-weight: 600;
-            color: #1f2937;
+            color: #e2e8f0;
         }
 
         .risk-value.high {
@@ -8321,7 +9508,7 @@
 
         .metric-label {
             font-size: 0.85rem;
-            color: #6b7280;
+            color: #a0aec0;
             font-weight: 500;
             margin-bottom: 8px;
         }
@@ -8346,7 +9533,7 @@
 
         .metric-description {
             font-size: 0.8rem;
-            color: #6b7280;
+            color: #a0aec0;
             line-height: 1.4;
         }
 
@@ -8399,13 +9586,13 @@
         .recommendation-category {
             margin-bottom: 20px;
             padding: 15px;
-            background: rgba(248, 250, 252, 0.6);
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #4fd1c5;
         }
 
         .recommendation-category h4 {
-            color: #1e293b;
+            color: #e2e8f0;
             margin: 0 0 10px 0;
             font-size: 1rem;
             font-weight: 600;
@@ -8418,7 +9605,7 @@
 
         .recommendation-category li {
             margin-bottom: 8px;
-            color: #374151;
+            color: #cbd5e0;
             line-height: 1.5;
         }
 
@@ -8466,12 +9653,12 @@
 
         .timeline-title {
             font-weight: 600;
-            color: #1e293b;
+            color: #e2e8f0;
             margin-bottom: 4px;
         }
 
         .timeline-description {
-            color: #6b7280;
+            color: #a0aec0;
             font-size: 0.9rem;
         }
 
@@ -8586,9 +9773,10 @@
         }
 
         .emergency-section {
-            background: #ffffff;
-            border: 2px solid #fca5a5;
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.4);
             border-radius: 12px;
+            backdrop-filter: blur(10px);
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
@@ -8613,7 +9801,7 @@
         }
 
         .critical-action-item {
-            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+            background: rgba(239, 68, 68, 0.1);
             border-left: 4px solid #dc2626;
             padding: 15px;
             border-radius: 8px;
@@ -8635,7 +9823,7 @@
 
         .action-text {
             font-weight: 600;
-            color: #1f2937;
+            color: #e2e8f0;
             margin-top: 8px;
         }
 
@@ -8669,8 +9857,8 @@
         }
 
         .intervention-item {
-            background: #ffffff;
-            border: 1px solid #fca5a5;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 8px;
             padding: 15px;
             display: grid;
@@ -8694,11 +9882,11 @@
 
         .intervention-action {
             font-weight: 600;
-            color: #1f2937;
+            color: #e2e8f0;
         }
 
         .intervention-rationale {
-            color: #6b7280;
+            color: #a0aec0;
             font-style: italic;
             font-size: 0.9rem;
         }
@@ -8710,8 +9898,8 @@
         }
 
         .contact-item {
-            background: #ffffff;
-            border: 1px solid #fca5a5;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 8px;
             padding: 12px;
             text-align: center;
@@ -8726,18 +9914,18 @@
 
         .contact-info {
             font-weight: 600;
-            color: #1f2937;
+            color: #e2e8f0;
             margin-bottom: 5px;
         }
 
         .contact-when {
             font-size: 0.8rem;
-            color: #6b7280;
+            color: #a0aec0;
             font-style: italic;
         }
 
         .patient-instructions-box {
-            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+            background: rgba(239, 68, 68, 0.1);
             border: 2px solid #dc2626;
             border-radius: 12px;
             padding: 20px;
@@ -8831,7 +10019,7 @@
 
         .cds-header h2 {
             font-size: 1.4rem;
-            color: #1e293b;
+            color: #e2e8f0;
             margin-bottom: 10px;
             font-weight: 700;
             display: flex;
@@ -8854,9 +10042,11 @@
 
         /* Alert System Styles */
         .alert-system {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             margin-bottom: 20px;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
             border: 1px solid #e5e7eb;
             overflow: hidden;
         }
@@ -8910,9 +10100,10 @@
         }
 
         .alert-item {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid #ef4444;
             border-radius: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
             padding: 15px;
             margin-bottom: 12px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -8926,17 +10117,17 @@
 
         .alert-item.critical {
             border-left-color: #dc2626;
-            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+            background: rgba(239, 68, 68, 0.1);
         }
 
         .alert-item.warning {
             border-left-color: #f59e0b;
-            background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+            background: rgba(245, 158, 11, 0.1);
         }
 
         .alert-item.info {
             border-left-color: #3b82f6;
-            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+            background: rgba(59, 130, 246, 0.1);
         }
 
         .alert-header-content {
@@ -8948,7 +10139,7 @@
 
         .alert-title {
             font-weight: 600;
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1rem;
         }
 
@@ -9018,9 +10209,10 @@
 
         /* Clinical Guidelines Styles */
         .clinical-guidelines {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
             overflow: hidden;
         }
 
@@ -9088,8 +10280,8 @@
         }
 
         .guideline-item {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(79, 209, 197, 0.2);
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 12px;
@@ -9110,7 +10302,7 @@
 
         .guideline-title {
             font-weight: 600;
-            color: #1e293b;
+            color: #e2e8f0;
             font-size: 1rem;
             margin-bottom: 5px;
         }
@@ -9133,7 +10325,7 @@
 
         .guideline-evidence {
             font-size: 0.8rem;
-            color: #6b7280;
+            color: #a0aec0;
             font-style: italic;
         }
 
@@ -9215,9 +10407,11 @@
         }
 
         .field-category {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             margin-bottom: 25px;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            backdrop-filter: blur(10px);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             overflow: hidden;
         }
@@ -9241,8 +10435,8 @@
         }
 
         .field-count {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            background: rgba(79, 209, 197, 0.1);
+            color: #4fd1c5;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
@@ -9257,8 +10451,8 @@
         }
 
         .enhanced-field-card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(79, 209, 197, 0.2);
             border-radius: 10px;
             padding: 16px;
             transition: all 0.3s ease;
@@ -9367,8 +10561,8 @@
         }
 
         .risk-contribution.moderate {
-            background: #fffbeb;
-            color: #d97706;
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
         }
 
         .analysis-summary {
@@ -9387,7 +10581,7 @@
 
         .summary-card i {
             font-size: 2rem;
-            color: #667eea;
+            color: #4fd1c5;
         }
 
         .summary-content h4 {
@@ -9478,13 +10672,13 @@
 
         /* AI Report Style for Detailed Analysis */
         .ai-report-content h2 {
-            color: #667eea;
+            color: #4fd1c5;
             font-size: 1.4rem;
             font-weight: 700;
             margin: 25px 0 15px 0;
             padding: 15px 20px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            border-left: 4px solid #667eea;
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.15) 0%, rgba(56, 178, 172, 0.15) 100%);
+            border-left: 4px solid #4fd1c5;
             border-radius: 8px;
             position: relative;
         }
@@ -9496,17 +10690,17 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
             border-radius: 4px 0 0 4px;
         }
 
         .ai-report-content h3 {
-            color: #374151;
+            color: #cbd5e0;
             font-size: 1.2rem;
             font-weight: 600;
             margin: 20px 0 10px 0;
             padding: 8px 12px;
-            background: rgba(102, 126, 234, 0.05);
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 6px;
         }
 
@@ -9522,8 +10716,8 @@
         }
 
         .metric-card {
-            background: rgba(248, 250, 252, 0.8);
-            border: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(79, 209, 197, 0.3);
             border-radius: 8px;
             padding: 15px;
             text-align: center;
@@ -9531,7 +10725,7 @@
 
         .metric-title {
             font-size: 0.85rem;
-            color: #6b7280;
+            color: #a0aec0;
             font-weight: 500;
             margin-bottom: 8px;
         }
@@ -9556,7 +10750,7 @@
 
         .metric-desc {
             font-size: 0.8rem;
-            color: #6b7280;
+            color: #a0aec0;
             line-height: 1.4;
         }
 
@@ -9569,20 +10763,20 @@
             align-items: center;
             padding: 12px;
             margin-bottom: 10px;
-            background: rgba(248, 250, 252, 0.6);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid rgba(79, 209, 197, 0.2);
         }
 
         .risk-item-name {
             flex: 1;
             font-weight: 600;
-            color: #374151;
+            color: #cbd5e0;
         }
 
         .risk-item-prob {
             font-weight: 700;
-            color: #1f2937;
+            color: #e2e8f0;
             margin: 0 15px;
             min-width: 50px;
             text-align: right;
@@ -9609,9 +10803,9 @@
         .recommendation-box {
             margin-bottom: 20px;
             padding: 15px;
-            background: rgba(248, 250, 252, 0.6);
+            background: rgba(79, 209, 197, 0.1);
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #4fd1c5;
         }
 
         .recommendation-box h3 {
@@ -9972,7 +11166,7 @@
         }
 
         .enhanced-section .section-header i {
-            color: #667eea;
+            color: #4fd1c5;
             font-size: 1.3rem;
         }
 
@@ -10045,7 +11239,7 @@
         }
 
         .lab-result-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 15px;
             border-radius: 8px;
             border: 1px solid #e5e7eb;
@@ -10084,7 +11278,7 @@
         }
 
         .assessment-card.moderate-risk {
-            background: #fffbeb;
+            background: rgba(245, 158, 11, 0.1);
             border-left-color: #f59e0b;
         }
 
@@ -10118,13 +11312,13 @@
             align-items: center;
             gap: 10px;
             padding: 10px;
-            background: white;
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 6px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid rgba(79, 209, 197, 0.2);
         }
 
         .monitoring-item i {
-            color: #10b981;
+            color: #48bb78;
         }
 
         @media (max-width: 768px) {
@@ -10222,7 +11416,7 @@
         width: 40px;
         height: 40px;
         border: 4px solid #e5e7eb;
-        border-top: 4px solid #667eea;
+        border-top: 4px solid #4fd1c5;
         border-radius: 50%;
         animation: spin 1s linear infinite;
         margin: 0 auto 20px;
@@ -10239,7 +11433,7 @@
     }
 
     .analysis-result {
-        background: white;
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
         padding: 25px;
         border: 1px solid #e5e7eb;
