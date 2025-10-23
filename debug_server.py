@@ -757,6 +757,19 @@ def assessment():
     logger.info("🔬 Assessment page accessed")
     return render_template('index.html')
 
+@app.route('/medical-report')
+def medical_report():
+    """Render the medical report template for viewing and downloading"""
+    logger.info("📄 Medical report page accessed")
+    return render_template('medical_report.html')
+
+@app.route('/test-medical-report')
+def test_medical_report():
+    """Test page for medical report feature"""
+    logger.info("🧪 Medical report test page accessed")
+    with open('test_medical_report.html', 'r', encoding='utf-8') as f:
+        return f.read()
+
 @app.route('/debug')
 def debug_info():
     """Debug endpoint to show all available routes"""

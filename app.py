@@ -913,6 +913,17 @@ def patient_details():
 def assessment():
     return render_template('index.html')
 
+@app.route('/medical-report')
+def medical_report():
+    """Render the medical report template for viewing and downloading"""
+    return render_template('medical_report.html')
+
+@app.route('/test-medical-report')
+def test_medical_report():
+    """Test page for medical report feature"""
+    with open('test_medical_report.html', 'r', encoding='utf-8') as f:
+        return f.read()
+
 def analyze_comprehensive_drug_interactions(all_medications, patient_data):
     """
     Analyze all medications (primary + external) for comprehensive ADR risk assessment

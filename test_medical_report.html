@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Medical Report Feature</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px 5px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .btn-success {
+            background: #27ae60;
+        }
+        .btn-success:hover {
+            background: #229954;
+        }
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .feature-list li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Medical Report Feature - Test Page</h1>
+        
+        <div class="info-box">
+            <strong>📋 Feature Overview:</strong>
+            <p>This feature allows you to generate professional medical reports with all assessment data, 
+            clinical parameters, risk analysis, and AI recommendations in a downloadable PDF format.</p>
+        </div>
+
+        <h2>✨ Key Features</h2>
+        <ul class="feature-list">
+            <li>Professional medical report template with hospital branding</li>
+            <li>Complete patient information and clinical data</li>
+            <li>Risk assessment with color-coded indicators</li>
+            <li>Gemini AI analysis and recommendations</li>
+            <li>PDF download functionality</li>
+            <li>Print-optimized layout</li>
+            <li>Mobile responsive design</li>
+        </ul>
+
+        <h2>🧪 How to Test</h2>
+        <ol>
+            <li>Click "Start Assessment" to begin</li>
+            <li>Fill in patient details (or use sample data)</li>
+            <li>Complete the assessment form</li>
+            <li>Submit and wait for results</li>
+            <li>Click "View/Download Medical Report" button</li>
+            <li>Test PDF download and print features</li>
+        </ol>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <button onclick="setupTestData()" class="btn btn-success">
+                📝 Setup Test Data
+            </button>
+            <a href="/assessment" class="btn">
+                🚀 Start Assessment
+            </a>
+            <a href="/medical-report" class="btn" target="_blank">
+                📄 View Sample Report
+            </a>
+        </div>
+
+        <div class="info-box" style="margin-top: 30px; background: #fff3cd; border-color: #ffc107;">
+            <strong>⚠️ Note:</strong>
+            <p>The medical report will be populated with actual data after completing an assessment. 
+            Click "Setup Test Data" to populate sample data for testing purposes.</p>
+        </div>
+    </div>
+
+    <script>
+        function setupTestData() {
+            // Setup sample patient data
+            sessionStorage.setItem('patientName', 'John Doe');
+            sessionStorage.setItem('patientId', 'MRN-12345');
+            sessionStorage.setItem('clinicianName', 'Dr. Sarah Johnson');
+            sessionStorage.setItem('age', '65');
+            sessionStorage.setItem('gender', 'M');
+            sessionStorage.setItem('department', 'Cardiology');
+            sessionStorage.setItem('clinicalNotes', 'Patient presents with hypertension and diabetes. Regular monitoring required.');
+
+            // Setup sample assessment data
+            const sampleAssessment = {
+                medication_name: 'Warfarin',
+                dosage: '5mg',
+                route: 'Oral',
+                duration: '30',
+                age: 65,
+                weight: 75,
+                height: 170,
+                bmi: 25.9,
+                creatinine: 1.2,
+                egfr: 65,
+                ast: 35,
+                alt: 40,
+                systolic_bp: 140,
+                diastolic_bp: 85,
+                heart_rate: 78,
+                diabetes: 'Yes',
+                hypertension: 'Yes',
+                heart_disease: 'No',
+                kidney_disease: 'No',
+                liver_disease: 'No'
+            };
+            sessionStorage.setItem('assessmentData', JSON.stringify(sampleAssessment));
+
+            // Setup sample prediction results
+            const sampleResults = {
+                adr_probability: 0.68,
+                risk_level: 'Medium',
+                confidence: 0.87,
+                adr_types: {
+                    'Bleeding': 0.72,
+                    'Gastrointestinal': 0.45,
+                    'Hepatotoxicity': 0.28,
+                    'Nephrotoxicity': 0.35
+                },
+                gemini_analysis: `**Clinical Assessment Summary:**
+
+This 65-year-old male patient on Warfarin therapy presents with a MEDIUM risk profile for adverse drug reactions (68% probability).
+
+**Key Risk Factors:**
+• Advanced age (65 years) - increased sensitivity to anticoagulation
+• Reduced renal function (eGFR 65 mL/min) - affects drug clearance
+• Multiple comorbidities (diabetes, hypertension) - increased complexity
+• Elevated blood pressure (140/85 mmHg) - bleeding risk consideration
+
+**Primary Concerns:**
+1. **Bleeding Risk (72%)**: Highest concern given Warfarin's mechanism and patient factors
+2. **Drug Interactions**: Monitor for interactions with antihypertensive medications
+3. **Renal Function**: Reduced eGFR requires dose adjustment consideration
+
+**Recommendations:**
+• Enhanced INR monitoring (weekly initially, then bi-weekly)
+• Patient education on bleeding signs and symptoms
+• Consider dose reduction given renal function
+• Regular assessment of blood pressure control
+• Dietary counseling regarding vitamin K intake`,
+                recommendations: [
+                    'Monitor INR levels weekly for the first month, then bi-weekly',
+                    'Educate patient on signs of bleeding (bruising, blood in urine/stool)',
+                    'Consider dose adjustment based on renal function (eGFR 65)',
+                    'Regular blood pressure monitoring and optimization',
+                    'Avoid NSAIDs and other antiplatelet agents',
+                    'Maintain consistent vitamin K intake in diet'
+                ],
+                monitoring_plan: {
+                    parameters: [
+                        'INR (International Normalized Ratio)',
+                        'Complete Blood Count (CBC)',
+                        'Renal Function (Creatinine, eGFR)',
+                        'Blood Pressure',
+                        'Signs of bleeding or bruising'
+                    ],
+                    schedule: 'Follow-up in 1 week for INR check, then every 2 weeks for 3 months, then monthly if stable'
+                }
+            };
+            sessionStorage.setItem('predictionResults', JSON.stringify(sampleResults));
+
+            alert('✅ Test data has been set up!\n\nYou can now:\n1. View the sample medical report\n2. Test the PDF download feature\n3. Try the print functionality');
+        }
+    </script>
+</body>
+</html>
