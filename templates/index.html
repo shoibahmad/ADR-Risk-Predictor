@@ -31,7 +31,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
+            background-image:
                 linear-gradient(rgba(79, 209, 197, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(79, 209, 197, 0.03) 1px, transparent 1px);
             background-size: 50px 50px;
@@ -41,8 +41,13 @@
         }
 
         @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50px, 50px);
+            }
         }
 
         .container {
@@ -471,8 +476,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 32, 39, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(15, 32, 39, 0.98);
+            backdrop-filter: blur(15px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -482,31 +487,165 @@
         .loading-content {
             background: rgba(15, 32, 39, 0.95);
             border: 1px solid rgba(79, 209, 197, 0.3);
-            padding: 40px;
+            padding: 50px 60px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
+            max-width: 500px;
         }
 
         .loading-content p {
             color: #e2e8f0;
             font-size: 1.1rem;
             font-weight: 500;
+            margin-top: 25px;
         }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(79, 209, 197, 0.2);
-            border-top: 4px solid #4fd1c5;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        /* Medical Logo for Loading */
+        .loading-medical-logo {
+            position: relative;
+            width: 140px;
+            height: 140px;
             margin: 0 auto 20px;
-            box-shadow: 0 0 20px rgba(79, 209, 197, 0.3);
         }
 
-        @keyframes spin {
+        .loading-logo-circle {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            left: 10px;
+            top: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.2) 0%, rgba(99, 179, 237, 0.2) 100%);
+            border: 3px solid rgba(79, 209, 197, 0.4);
+            animation: pulseCircle 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(79, 209, 197, 0.3);
+        }
+
+        .loading-logo-circle-outer {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            animation: rotateCircle 20s linear infinite;
+        }
+
+        .loading-logo-cross {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        .loading-cross-vertical {
+            position: absolute;
+            width: 22px;
+            height: 70px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(180deg, #4fd1c5 0%, #38b2ac 100%);
+            border-radius: 11px;
+            box-shadow: 0 0 20px rgba(79, 209, 197, 0.6);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        .loading-cross-horizontal {
+            position: absolute;
+            width: 70px;
+            height: 22px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(90deg, #4fd1c5 0%, #38b2ac 100%);
+            border-radius: 11px;
+            box-shadow: 0 0 20px rgba(79, 209, 197, 0.6);
+            animation: glowPulse 2s ease-in-out 0.5s infinite;
+        }
+
+        .loading-heartbeat-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #4fd1c5;
+            z-index: 3;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(79, 209, 197, 0.8));
+        }
+
+        .loading-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #4fd1c5;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(79, 209, 197, 0.8);
+            top: 50%;
+            left: 50%;
+        }
+
+        .loading-particle:nth-child(1) {
+            animation: orbit 4s linear infinite;
+        }
+
+        .loading-particle:nth-child(2) {
+            animation: orbit 4s linear infinite 1s;
+        }
+
+        .loading-particle:nth-child(3) {
+            animation: orbit 4s linear infinite 2s;
+        }
+
+        .loading-particle:nth-child(4) {
+            animation: orbit 4s linear infinite 3s;
+        }
+
+        /* Loading Progress Bar */
+        .loading-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4fd1c5 0%, #63b3ed 50%, #48bb78 100%);
+            border-radius: 2px;
+            animation: progressSlide 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(79, 209, 197, 0.5);
+        }
+
+        .loading-status-text {
+            color: #4fd1c5;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            font-weight: 600;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseCircle {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes rotateCircle {
             0% {
                 transform: rotate(0deg);
             }
@@ -516,12 +655,80 @@
             }
         }
 
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(79, 209, 197, 0.6);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(79, 209, 197, 1);
+            }
+        }
+
+        @keyframes orbit {
+            0% {
+                transform: rotate(0deg) translateX(70px) rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg) translateX(70px) rotate(-360deg);
+            }
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            10% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+
+            20% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            30% {
+                transform: translate(-50%, -50%) scale(1.15);
+            }
+
+            40% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes progressSlide {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes fadeInOut {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
         /* Enhanced Mobile Responsive Design */
         @media (max-width: 768px) {
             body {
                 font-size: 14px;
             }
-            
+
 
 
             .container {
@@ -1193,12 +1400,19 @@
         }
 
         @keyframes bounceIndicator {
-            0%, 20%, 50%, 80%, 100% {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
                 transform: translateX(-50%) translateY(0);
             }
+
             40% {
                 transform: translateX(-50%) translateY(-10px);
             }
+
             60% {
                 transform: translateX(-50%) translateY(-5px);
             }
@@ -1832,22 +2046,29 @@
             font-weight: 600;
         }
 
-        .category.definite, .category.certain, .category.high-risk {
+        .category.definite,
+        .category.certain,
+        .category.high-risk {
             background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
             color: white;
         }
 
-        .category.probable, .category.medium-risk {
+        .category.probable,
+        .category.medium-risk {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
         }
 
-        .category.possible, .category.low-risk {
+        .category.possible,
+        .category.low-risk {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
         }
 
-        .category.doubtful, .category.unlikely, .category.conditional, .category.unassessable {
+        .category.doubtful,
+        .category.unlikely,
+        .category.conditional,
+        .category.unassessable {
             background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
             color: white;
         }
@@ -2064,7 +2285,9 @@
                 padding: 15px;
             }
 
-            .comparison-advantages, .validation-metrics, .clinical-impact {
+            .comparison-advantages,
+            .validation-metrics,
+            .clinical-impact {
                 padding: 20px;
                 margin: 20px 0;
             }
@@ -2848,20 +3071,23 @@
             margin-top: 15px;
         }
 
-        .advantages-list, .considerations-list {
+        .advantages-list,
+        .considerations-list {
             background: rgba(255, 255, 255, 0.05);
             padding: 15px;
             border-radius: 12px;
             border: 1px solid rgba(79, 209, 197, 0.2);
         }
 
-        .advantages-list h5, .considerations-list h5 {
+        .advantages-list h5,
+        .considerations-list h5 {
             margin: 0 0 10px 0;
             color: #e2e8f0;
             font-weight: 600;
         }
 
-        .advantages-list ul, .considerations-list ul {
+        .advantages-list ul,
+        .considerations-list ul {
             margin: 0;
             padding-left: 20px;
             color: #cbd5e0;
@@ -3943,10 +4169,11 @@
                         <i class="fas fa-user"></i>
                         <h3>Demographics</h3>
                     </div>
-                    
+
                     <!-- Basic Demographics Subsection -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-id-card" style="color: #4fd1c5;"></i>
                             Basic Information
                         </h4>
@@ -3989,7 +4216,8 @@
 
                     <!-- Physical Measurements Subsection -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-ruler-combined" style="color: #f87171;"></i>
                             Physical Measurements
                         </h4>
@@ -4937,10 +5165,11 @@
                         <i class="fas fa-notes-medical"></i>
                         <h3>Comorbidities</h3>
                     </div>
-                    
+
                     <!-- Metabolic & Endocrine Conditions -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-tint" style="color: #60a5fa;"></i>
                             Metabolic & Endocrine Conditions
                         </h4>
@@ -4964,7 +5193,8 @@
 
                     <!-- Organ System Diseases -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-heartbeat" style="color: #f87171;"></i>
                             Major Organ System Diseases
                         </h4>
@@ -5002,7 +5232,8 @@
 
                     <!-- Neurological & Immune System -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-brain" style="color: #a78bfa;"></i>
                             Neurological & Immune System
                         </h4>
@@ -5031,10 +5262,11 @@
                         <i class="fas fa-pills"></i>
                         <h3>Medication Information</h3>
                     </div>
-                    
+
                     <!-- Primary Medication Subsection -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-prescription-bottle-alt" style="color: #60a5fa;"></i>
                             Primary Medication
                         </h4>
@@ -5068,7 +5300,8 @@
 
                     <!-- Concomitant Medications Subsection -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-plus-circle" style="color: #48bb78;"></i>
                             Concomitant Medications
                         </h4>
@@ -5108,7 +5341,8 @@
 
                     <!-- Drug Interactions Subsection -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-exclamation-triangle" style="color: #fbbf24;"></i>
                             Drug Interaction Assessment
                         </h4>
@@ -5137,10 +5371,11 @@
                         <i class="fas fa-dna"></i>
                         <h3>Pharmacogenomics</h3>
                     </div>
-                    
+
                     <!-- CYP Enzyme Variants -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-atom" style="color: #4fd1c5;"></i>
                             Cytochrome P450 Enzyme Variants
                         </h4>
@@ -5171,15 +5406,17 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <!-- Pharmacogenomic Information Panel -->
-                        <div style="margin-top: 15px; padding: 12px; background: rgba(79, 209, 197, 0.1); border-radius: 8px; border-left: 4px solid #4fd1c5;">
+                        <div
+                            style="margin-top: 15px; padding: 12px; background: rgba(79, 209, 197, 0.1); border-radius: 8px; border-left: 4px solid #4fd1c5;">
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                 <i class="fas fa-info-circle" style="color: #4fd1c5;"></i>
-                                <span style="color: #4fd1c5; font-weight: 600; font-size: 0.9rem;">Pharmacogenomic Impact</span>
+                                <span style="color: #4fd1c5; font-weight: 600; font-size: 0.9rem;">Pharmacogenomic
+                                    Impact</span>
                             </div>
                             <p style="color: #cbd5e0; font-size: 0.85rem; margin: 0; line-height: 1.4;">
-                                CYP enzyme variants affect drug metabolism rates and can significantly impact ADR risk. 
+                                CYP enzyme variants affect drug metabolism rates and can significantly impact ADR risk.
                                 Poor metabolizers may experience increased drug exposure and higher ADR risk.
                             </p>
                         </div>
@@ -5192,10 +5429,11 @@
                         <i class="fas fa-chart-line"></i>
                         <h3>Additional Clinical Data</h3>
                     </div>
-                    
+
                     <!-- Vital Signs Subsection -->
                     <div class="clinical-subsection" style="margin-bottom: 25px;">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-heartbeat" style="color: #f87171;"></i>
                             Vital Signs
                         </h4>
@@ -5229,7 +5467,8 @@
 
                     <!-- Risk Factors Subsection -->
                     <div class="clinical-subsection">
-                        <h4 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-exclamation-triangle" style="color: #fbbf24;"></i>
                             Risk Factors & Clinical Flags
                         </h4>
@@ -5292,7 +5531,8 @@
                     </div>
 
                     <!-- Primary Action Button -->
-                    <div class="primary-action-wrapper" style="margin-bottom: 25px !important; display: flex !important; justify-content: center !important;">
+                    <div class="primary-action-wrapper"
+                        style="margin-bottom: 25px !important; display: flex !important; justify-content: center !important;">
                         <button type="submit" class="enhanced-primary-btn" style="
                             width: 70% !important;
                             background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%) !important;
@@ -5400,7 +5640,7 @@
                             Help & Info
                         </button>
                     </div>
-                    
+
 
                 </div>
             </form>
@@ -5706,8 +5946,9 @@
 
                 <div class="modal-section">
                     <h3><i class="fas fa-road"></i> Development Roadmap</h3>
-                    <p>Our commitment to academic rigor and clinical excellence drives our comprehensive development approach:</p>
-                    
+                    <p>Our commitment to academic rigor and clinical excellence drives our comprehensive development
+                        approach:</p>
+
                     <div class="roadmap-container">
                         <div class="roadmap-phase completed">
                             <div class="phase-header">
@@ -5799,7 +6040,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="roadmap-summary">
                         <div class="summary-card">
                             <i class="fas fa-trophy"></i>
@@ -5839,8 +6080,9 @@
 
                 <div class="modal-section">
                     <h3><i class="fas fa-balance-scale"></i> Validation & Benchmarking</h3>
-                    <p>Our AI-powered ADR Risk Predictor has been rigorously validated against established clinical assessment tools to ensure accuracy and reliability:</p>
-                    
+                    <p>Our AI-powered ADR Risk Predictor has been rigorously validated against established clinical
+                        assessment tools to ensure accuracy and reliability:</p>
+
                     <div class="comparison-container">
                         <div class="comparison-header">
                             <h4><i class="fas fa-chart-bar"></i> Comparative Analysis with Gold Standards</h4>
@@ -5860,8 +6102,10 @@
                                 </div>
                                 <div class="scale-details">
                                     <div class="scale-description">
-                                        <p><strong>Purpose:</strong> Determines the likelihood that an ADR is actually due to the drug rather than other factors</p>
-                                        <p><strong>Method:</strong> 10-question algorithm with weighted scoring system</p>
+                                        <p><strong>Purpose:</strong> Determines the likelihood that an ADR is actually
+                                            due to the drug rather than other factors</p>
+                                        <p><strong>Method:</strong> 10-question algorithm with weighted scoring system
+                                        </p>
                                     </div>
                                     <div class="scale-categories">
                                         <div class="category definite">
@@ -5896,8 +6140,10 @@
                                 </div>
                                 <div class="scale-details">
                                     <div class="scale-description">
-                                        <p><strong>Purpose:</strong> WHO Uppsala Monitoring Centre criteria for standardized ADR assessment</p>
-                                        <p><strong>Method:</strong> Categorical assessment based on clinical evidence and temporal relationship</p>
+                                        <p><strong>Purpose:</strong> WHO Uppsala Monitoring Centre criteria for
+                                            standardized ADR assessment</p>
+                                        <p><strong>Method:</strong> Categorical assessment based on clinical evidence
+                                            and temporal relationship</p>
                                     </div>
                                     <div class="scale-categories">
                                         <div class="category certain">
@@ -5934,8 +6180,10 @@
                                 </div>
                                 <div class="scale-details">
                                     <div class="scale-description">
-                                        <p><strong>Purpose:</strong> Proactive risk prediction before ADR occurrence using ML algorithms</p>
-                                        <p><strong>Method:</strong> Multi-dimensional analysis with continuous probability scoring</p>
+                                        <p><strong>Purpose:</strong> Proactive risk prediction before ADR occurrence
+                                            using ML algorithms</p>
+                                        <p><strong>Method:</strong> Multi-dimensional analysis with continuous
+                                            probability scoring</p>
                                     </div>
                                     <div class="scale-categories">
                                         <div class="category high-risk">
@@ -5947,8 +6195,9 @@
                                             <span class="label">Medium Risk</span>
                                         </div>
                                         <div class="category low-risk">
-                                            <span class="score"><30%</span>
-                                            <span class="label">Low Risk</span>
+                                            <span class="score">
+                                                <30%< /span>
+                                                    <span class="label">Low Risk</span>
                                         </div>
                                     </div>
                                 </div>
@@ -5963,28 +6212,32 @@
                                         <i class="fas fa-clock"></i>
                                     </div>
                                     <h5>Proactive vs Reactive</h5>
-                                    <p>Unlike Naranjo/WHO-UMC scales that assess causality <em>after</em> ADR occurrence, our system predicts risk <em>before</em> administration</p>
+                                    <p>Unlike Naranjo/WHO-UMC scales that assess causality <em>after</em> ADR
+                                        occurrence, our system predicts risk <em>before</em> administration</p>
                                 </div>
                                 <div class="advantage-card">
                                     <div class="advantage-icon">
                                         <i class="fas fa-brain"></i>
                                     </div>
                                     <h5>Comprehensive Analysis</h5>
-                                    <p>Integrates 40+ clinical parameters vs traditional scales' limited questionnaire-based approach</p>
+                                    <p>Integrates 40+ clinical parameters vs traditional scales' limited
+                                        questionnaire-based approach</p>
                                 </div>
                                 <div class="advantage-card">
                                     <div class="advantage-icon">
                                         <i class="fas fa-chart-line"></i>
                                     </div>
                                     <h5>Continuous Scoring</h5>
-                                    <p>Provides precise probability percentages rather than categorical classifications</p>
+                                    <p>Provides precise probability percentages rather than categorical classifications
+                                    </p>
                                 </div>
                                 <div class="advantage-card">
                                     <div class="advantage-icon">
                                         <i class="fas fa-dna"></i>
                                     </div>
                                     <h5>Personalized Medicine</h5>
-                                    <p>Incorporates pharmacogenomics and individual patient factors for precision assessment</p>
+                                    <p>Incorporates pharmacogenomics and individual patient factors for precision
+                                        assessment</p>
                                 </div>
                             </div>
                         </div>
@@ -6023,10 +6276,14 @@
                             <div class="impact-content">
                                 <p>Our system complements rather than replaces traditional assessment scales:</p>
                                 <ul>
-                                    <li><strong>Pre-prescription:</strong> Use our AI system for risk prediction and prevention</li>
-                                    <li><strong>Post-ADR:</strong> Apply Naranjo/WHO-UMC scales for causality assessment</li>
-                                    <li><strong>Documentation:</strong> Both approaches provide comprehensive ADR management</li>
-                                    <li><strong>Quality Improvement:</strong> Continuous learning from both predictive and causality data</li>
+                                    <li><strong>Pre-prescription:</strong> Use our AI system for risk prediction and
+                                        prevention</li>
+                                    <li><strong>Post-ADR:</strong> Apply Naranjo/WHO-UMC scales for causality assessment
+                                    </li>
+                                    <li><strong>Documentation:</strong> Both approaches provide comprehensive ADR
+                                        management</li>
+                                    <li><strong>Quality Improvement:</strong> Continuous learning from both predictive
+                                        and causality data</li>
                                 </ul>
                             </div>
                         </div>
@@ -6172,9 +6429,11 @@
                     <div class="scale-detail-view">
                         <div class="scale-intro">
                             <h3>Naranjo Adverse Drug Reaction Probability Scale</h3>
-                            <p>Developed by Naranjo et al. in 1981, this scale is widely used to determine the likelihood that an observed adverse event is actually due to a drug rather than other factors.</p>
+                            <p>Developed by Naranjo et al. in 1981, this scale is widely used to determine the
+                                likelihood that an observed adverse event is actually due to a drug rather than other
+                                factors.</p>
                         </div>
-                        
+
                         <div class="naranjo-questions">
                             <h4>Assessment Questions</h4>
                             <div class="question-list">
@@ -6185,22 +6444,26 @@
                                 </div>
                                 <div class="question-item">
                                     <span class="q-number">2.</span>
-                                    <span class="q-text">Did the adverse event appear after the suspected drug was administered?</span>
+                                    <span class="q-text">Did the adverse event appear after the suspected drug was
+                                        administered?</span>
                                     <span class="q-score">+2, -1, 0</span>
                                 </div>
                                 <div class="question-item">
                                     <span class="q-number">3.</span>
-                                    <span class="q-text">Did the adverse reaction improve when the drug was discontinued?</span>
+                                    <span class="q-text">Did the adverse reaction improve when the drug was
+                                        discontinued?</span>
                                     <span class="q-score">+1, 0, -1</span>
                                 </div>
                                 <div class="question-item">
                                     <span class="q-number">4.</span>
-                                    <span class="q-text">Did the adverse reaction reappear when the drug was readministered?</span>
+                                    <span class="q-text">Did the adverse reaction reappear when the drug was
+                                        readministered?</span>
                                     <span class="q-score">+2, -1, 0</span>
                                 </div>
                                 <div class="question-item">
                                     <span class="q-number">5.</span>
-                                    <span class="q-text">Are there alternative causes that could explain the reaction?</span>
+                                    <span class="q-text">Are there alternative causes that could explain the
+                                        reaction?</span>
                                     <span class="q-score">-1, +2, +1</span>
                                 </div>
                             </div>
@@ -6222,7 +6485,8 @@
                     <div class="scale-detail-view">
                         <div class="scale-intro">
                             <h3>WHO-UMC Causality Assessment</h3>
-                            <p>The World Health Organization Uppsala Monitoring Centre criteria provide a standardized approach for assessing the causal relationship between a drug and an adverse event.</p>
+                            <p>The World Health Organization Uppsala Monitoring Centre criteria provide a standardized
+                                approach for assessing the causal relationship between a drug and an adverse event.</p>
                         </div>
 
                         <div class="who-categories">
@@ -6230,19 +6494,23 @@
                             <div class="category-list">
                                 <div class="category-detail certain">
                                     <h5>Certain</h5>
-                                    <p>A clinical event with a plausible time relationship to drug administration, and which cannot be explained by concurrent disease or other drugs or chemicals.</p>
+                                    <p>A clinical event with a plausible time relationship to drug administration, and
+                                        which cannot be explained by concurrent disease or other drugs or chemicals.</p>
                                 </div>
                                 <div class="category-detail probable">
                                     <h5>Probable/Likely</h5>
-                                    <p>A clinical event with a reasonable time sequence to administration of the drug, unlikely to be attributed to concurrent disease or other drugs.</p>
+                                    <p>A clinical event with a reasonable time sequence to administration of the drug,
+                                        unlikely to be attributed to concurrent disease or other drugs.</p>
                                 </div>
                                 <div class="category-detail possible">
                                     <h5>Possible</h5>
-                                    <p>A clinical event with a reasonable time sequence to administration of the drug, but which could also be explained by concurrent disease or other drugs.</p>
+                                    <p>A clinical event with a reasonable time sequence to administration of the drug,
+                                        but which could also be explained by concurrent disease or other drugs.</p>
                                 </div>
                                 <div class="category-detail unlikely">
                                     <h5>Unlikely</h5>
-                                    <p>A clinical event with a temporal relationship to drug administration which makes a causal relationship improbable.</p>
+                                    <p>A clinical event with a temporal relationship to drug administration which makes
+                                        a causal relationship improbable.</p>
                                 </div>
                             </div>
                         </div>
@@ -6253,7 +6521,8 @@
                     <div class="scale-detail-view">
                         <div class="scale-intro">
                             <h3>AI-Powered Predictive Risk Assessment</h3>
-                            <p>Our machine learning system analyzes multiple clinical parameters to predict ADR risk before drug administration, enabling proactive patient safety measures.</p>
+                            <p>Our machine learning system analyzes multiple clinical parameters to predict ADR risk
+                                before drug administration, enabling proactive patient safety measures.</p>
                         </div>
 
                         <div class="ai-features">
@@ -6322,10 +6591,30 @@
         <!-- Loading Overlay -->
         <div id="loading-overlay" class="loading-overlay" style="display: none;">
             <div class="loading-content">
-                <div class="spinner"></div>
-                <p id="loading-text">Processing assessment...</p>
+                <div class="loading-medical-logo">
+                    <div class="loading-logo-circle-outer"></div>
+                    <div class="loading-logo-circle"></div>
+                    <div class="loading-logo-cross">
+                        <div class="loading-cross-vertical"></div>
+                        <div class="loading-cross-horizontal"></div>
+                    </div>
+                    <i class="fas fa-heartbeat loading-heartbeat-icon"></i>
+                    <div class="loading-particle"></div>
+                    <div class="loading-particle"></div>
+                    <div class="loading-particle"></div>
+                    <div class="loading-particle"></div>
+                </div>
+                <p id="loading-text" style="font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 5px;">
+                    Analyzing Clinical Data
+                </p>
+                <p class="loading-status-text" id="loading-status">
+                    <i class="fas fa-brain"></i> AI Processing in Progress...
+                </p>
+                <div class="loading-progress">
+                    <div class="loading-progress-bar"></div>
+                </div>
             </div>
-        </div>
+        </div>""
     </div>
 
     <script>
@@ -6658,14 +6947,38 @@
             }, 4000);
         }
 
-        // Show loading
+        // Show loading with dynamic messages
+        let loadingMessageInterval;
         function showLoading() {
             document.getElementById('loading-overlay').style.display = 'flex';
+
+            const messages = [
+                '<i class="fas fa-brain"></i> AI Processing in Progress...',
+                '<i class="fas fa-database"></i> Analyzing Clinical Parameters...',
+                '<i class="fas fa-pills"></i> Evaluating Drug Interactions...',
+                '<i class="fas fa-chart-line"></i> Calculating Risk Factors...',
+                '<i class="fas fa-microscope"></i> Running Predictive Models...',
+                '<i class="fas fa-heartbeat"></i> Assessing Patient Safety...'
+            ];
+
+            let messageIndex = 0;
+            const statusElement = document.getElementById('loading-status');
+
+            // Change message every 2 seconds
+            loadingMessageInterval = setInterval(() => {
+                messageIndex = (messageIndex + 1) % messages.length;
+                if (statusElement) {
+                    statusElement.innerHTML = messages[messageIndex];
+                }
+            }, 2000);
         }
 
         // Hide loading
         function hideLoading() {
             document.getElementById('loading-overlay').style.display = 'none';
+            if (loadingMessageInterval) {
+                clearInterval(loadingMessageInterval);
+            }
         }
 
         // Form submission handler
@@ -6674,7 +6987,7 @@
 
             try {
                 showLoading();
-                
+
                 // Update loading text to show processing
                 document.getElementById('loading-text').textContent = 'Analyzing all medications and patient data...';
 
@@ -6723,7 +7036,7 @@
                 // Add external drugs to patient data for comprehensive analysis
                 patientData.external_drugs = externalDrugs;
                 patientData.external_drugs_list = externalDrugs.map(drug => drug.name);
-                
+
                 // Create comprehensive medication list including primary + external drugs
                 const allMedications = [];
                 if (patientData.medication_name && patientData.medication_name.trim() !== '') {
@@ -6812,10 +7125,10 @@
                 // Update loading text during delay with more detailed messages
                 document.getElementById('loading-text').textContent = 'Analyzing drug interactions and calculating comprehensive risk...';
                 await new Promise(resolve => setTimeout(resolve, 2000));
-                
+
                 document.getElementById('loading-text').textContent = 'Evaluating pharmacogenomic factors and patient-specific risks...';
                 await new Promise(resolve => setTimeout(resolve, 2000));
-                
+
                 document.getElementById('loading-text').textContent = 'Generating personalized recommendations and clinical insights...';
                 await new Promise(resolve => setTimeout(resolve, 2000));
 
@@ -7059,7 +7372,7 @@
         // Generate comprehensive drug analysis display
         function generateComprehensiveDrugAnalysis(result) {
             const drugAnalysis = result.comprehensive_drug_analysis;
-            
+
             if (!drugAnalysis || !drugAnalysis.all_medications_analyzed || drugAnalysis.all_medications_analyzed.length === 0) {
                 return '';
             }
@@ -7328,7 +7641,7 @@
         function displayResults(result) {
             // Store results globally for medical report
             window.currentPredictionResult = result;
-            
+
             const resultsContainer = document.getElementById('results-container');
             const resultsContent = document.getElementById('results-content');
 
@@ -7413,7 +7726,7 @@
                 resultsContainer.style.display = 'block';
                 // Auto-scroll removed for better user control
                 // resultsContainer.scrollIntoView({ behavior: 'smooth' });
-                
+
                 // Show scroll down notification and indicator
                 showNotification('✅ Assessment complete! Scroll down to view your results', 'success', 5000);
                 showScrollIndicator();
@@ -7511,10 +7824,10 @@
         function showMitigationStrategies(patientData, predictionResult) {
             const container = document.getElementById('mitigation-strategies-container');
             container.style.display = 'block';
-            
+
             // Auto-scroll removed for better user control
             // container.scrollIntoView({ behavior: 'smooth' });
-            
+
             // Load mitigation strategies data
             loadMitigationStrategies(patientData, predictionResult);
         }
@@ -7549,7 +7862,7 @@
         async function loadMitigationStrategies(patientData, predictionResult) {
             try {
                 showLoading();
-                
+
                 const response = await fetch('/mitigation_strategies', {
                     method: 'POST',
                     headers: {
@@ -7566,16 +7879,16 @@
                 }
 
                 const strategies = await response.json();
-                
+
                 // Populate each tab with data
                 populateRiskReductionTab(strategies.risk_reduction_recommendations);
                 populateAlternativesTab(strategies.alternative_drug_suggestions);
                 populateDosingTab(strategies.dose_optimization);
                 populateMonitoringTab(strategies.monitoring_protocol);
                 populateEducationTab(strategies.patient_education);
-                
+
                 hideLoading();
-                
+
             } catch (error) {
                 console.error('Error loading mitigation strategies:', error);
                 hideLoading();
@@ -7585,7 +7898,7 @@
 
         function populateRiskReductionTab(recommendations) {
             const container = document.getElementById('risk-reduction-content');
-            
+
             if (!recommendations || recommendations.length === 0) {
                 container.innerHTML = '<p class="no-data">No specific risk reduction recommendations available.</p>';
                 return;
@@ -7611,7 +7924,7 @@
 
         function populateAlternativesTab(alternatives) {
             const container = document.getElementById('alternatives-content');
-            
+
             if (!alternatives || alternatives.length === 0) {
                 container.innerHTML = '<p class="no-data">No alternative drug suggestions available.</p>';
                 return;
@@ -7648,7 +7961,7 @@
 
         function populateDosingTab(dosingRecommendations) {
             const container = document.getElementById('dosing-content');
-            
+
             if (!dosingRecommendations || dosingRecommendations.length === 0) {
                 container.innerHTML = '<p class="no-data">No dose optimization recommendations available.</p>';
                 return;
@@ -7673,7 +7986,7 @@
 
         function populateMonitoringTab(monitoringProtocol) {
             const container = document.getElementById('monitoring-content');
-            
+
             if (!monitoringProtocol) {
                 container.innerHTML = '<p class="no-data">No monitoring protocol available.</p>';
                 return;
@@ -7718,7 +8031,7 @@
 
         function populateEducationTab(patientEducation) {
             const container = document.getElementById('education-content');
-            
+
             if (!patientEducation) {
                 container.innerHTML = '<p class="no-data">No patient education materials available.</p>';
                 return;
@@ -7893,13 +8206,13 @@
             });
 
             document.getElementById('concomitant_drugs_count').value = count;
-            
+
             // Show feedback about external drugs
             const feedbackElement = document.getElementById('external-drugs-feedback');
             if (feedbackElement) {
                 feedbackElement.remove();
             }
-            
+
             if (count > 0) {
                 const feedback = document.createElement('div');
                 feedback.id = 'external-drugs-feedback';
@@ -11380,13 +11693,13 @@
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src="{{ url_for('static', filename='js/detailed_analysis.js') }}"></script>
     <script src="{{ url_for('static', filename='js/adr-warning.js') }}"></script>
-    
+
     <script>
         // Initialize ADR warning system
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             console.log('🚨 ADR Warning System ready');
 
-            
+
 
         });
 
@@ -11440,12 +11753,12 @@
             const indicator = document.getElementById('scroll-indicator');
             if (indicator) {
                 indicator.classList.add('show');
-                
+
                 // Hide indicator after 10 seconds or when user scrolls
                 setTimeout(() => {
                     indicator.classList.remove('show');
                 }, 10000);
-                
+
                 // Hide on scroll
                 window.addEventListener('scroll', hideScrollIndicatorOnScroll, { once: true });
             }
@@ -11471,18 +11784,18 @@
             // Store assessment data in sessionStorage
             const formData = new FormData(document.getElementById('adr-form'));
             const assessmentData = {};
-            
+
             for (let [key, value] of formData.entries()) {
                 assessmentData[key] = value;
             }
-            
+
             sessionStorage.setItem('assessmentData', JSON.stringify(assessmentData));
-            
+
             // Store prediction results
             if (window.currentPredictionResult) {
                 sessionStorage.setItem('predictionResults', JSON.stringify(window.currentPredictionResult));
             }
-            
+
             // Open medical report in new tab
             window.open('/medical-report', '_blank');
         }

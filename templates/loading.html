@@ -66,35 +66,157 @@
 
         .loading-logo {
             position: relative;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            width: 180px;
+            height: 180px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Medical Cross Logo */
+        .medical-logo {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-circle {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.2) 0%, rgba(99, 179, 237, 0.2) 100%);
+            border: 3px solid rgba(79, 209, 197, 0.4);
+            animation: pulseCircle 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(79, 209, 197, 0.3);
+        }
+
+        .logo-circle-outer {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            animation: rotateCircle 20s linear infinite;
+        }
+
+        .logo-cross {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cross-vertical {
+            position: absolute;
+            width: 30px;
+            height: 90px;
+            background: linear-gradient(180deg, #4fd1c5 0%, #38b2ac 100%);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(79, 209, 197, 0.6);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        .cross-horizontal {
+            position: absolute;
+            width: 90px;
+            height: 30px;
+            background: linear-gradient(90deg, #4fd1c5 0%, #38b2ac 100%);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(79, 209, 197, 0.6);
+            animation: glowPulse 2s ease-in-out 0.5s infinite;
         }
 
         .heartbeat-icon {
-            font-size: 4rem;
+            position: absolute;
+            font-size: 2.5rem;
             color: #4fd1c5;
+            z-index: 3;
             animation: heartbeat 1.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(79, 209, 197, 0.5));
+            filter: drop-shadow(0 0 15px rgba(79, 209, 197, 0.8));
+        }
+
+        /* Orbiting particles */
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #4fd1c5;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(79, 209, 197, 0.8);
+        }
+
+        .particle:nth-child(1) {
+            animation: orbit 4s linear infinite;
+        }
+
+        .particle:nth-child(2) {
+            animation: orbit 4s linear infinite 1s;
+        }
+
+        .particle:nth-child(3) {
+            animation: orbit 4s linear infinite 2s;
+        }
+
+        .particle:nth-child(4) {
+            animation: orbit 4s linear infinite 3s;
+        }
+
+        @keyframes pulseCircle {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes rotateCircle {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(79, 209, 197, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(79, 209, 197, 1);
+            }
+        }
+
+        @keyframes orbit {
+            0% {
+                transform: rotate(0deg) translateX(90px) rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg) translateX(90px) rotate(-360deg);
+            }
         }
 
         @keyframes heartbeat {
-
-            0%,
-            100% {
+            0%, 100% {
                 transform: scale(1);
             }
-
             10% {
                 transform: scale(1.1);
             }
-
             20% {
                 transform: scale(1);
             }
-
             30% {
                 transform: scale(1.15);
             }
-
             40% {
                 transform: scale(1);
             }
@@ -424,11 +546,26 @@
 <body>
     <div class="loading-container">
         <div class="loading-logo">
-            <i class="fas fa-heartbeat heartbeat-icon"></i>
+            <div class="medical-logo">
+                <div class="logo-circle-outer"></div>
+                <div class="logo-circle"></div>
+                <div class="logo-cross">
+                    <div class="cross-vertical"></div>
+                    <div class="cross-horizontal"></div>
+                </div>
+                <i class="fas fa-heartbeat heartbeat-icon"></i>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
         </div>
 
         <h1 class="loading-title">ADR Risk Predictor</h1>
-        <p class="loading-subtitle">Advanced Clinical Decision Support System</p>
+        <p class="loading-subtitle">AI-Powered Clinical Decision Support System</p>
+        <p style="color: #718096; font-size: 0.9rem; margin-top: -25px; margin-bottom: 30px; opacity: 0; animation: fadeInUp 0.8s ease 0.8s forwards;">
+            <i class="fas fa-shield-alt"></i> Protecting Patient Safety Through Advanced Analytics
+        </p>
 
         <div class="dna-loader">
             <div class="dna-strand">
@@ -456,8 +593,8 @@
                     <i class="fas fa-database"></i>
                 </div>
                 <div class="stage-content">
-                    <div class="stage-title">Loading Clinical Database</div>
-                    <div class="stage-description">Accessing patient records and medical history</div>
+                    <div class="stage-title">Clinical Database Connection</div>
+                    <div class="stage-description">Establishing secure connection to medical records system</div>
                 </div>
             </div>
 
@@ -466,8 +603,8 @@
                     <i class="fas fa-brain"></i>
                 </div>
                 <div class="stage-content">
-                    <div class="stage-title">Initializing AI Models</div>
-                    <div class="stage-description">Preparing machine learning algorithms</div>
+                    <div class="stage-title">AI Model Initialization</div>
+                    <div class="stage-description">Loading Gemini AI and machine learning algorithms</div>
                 </div>
             </div>
 
@@ -476,8 +613,8 @@
                     <i class="fas fa-pills"></i>
                 </div>
                 <div class="stage-content">
-                    <div class="stage-title">Loading Drug Interaction Database</div>
-                    <div class="stage-description">Analyzing pharmaceutical interactions</div>
+                    <div class="stage-title">Pharmacological Database</div>
+                    <div class="stage-description">Accessing drug interactions and ADR profiles</div>
                 </div>
             </div>
 
@@ -486,8 +623,8 @@
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <div class="stage-content">
-                    <div class="stage-title">Configuring Risk Assessment</div>
-                    <div class="stage-description">Calibrating prediction algorithms</div>
+                    <div class="stage-title">Risk Assessment Engine</div>
+                    <div class="stage-description">Calibrating predictive models and safety protocols</div>
                 </div>
             </div>
 
@@ -496,8 +633,8 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="stage-content">
-                    <div class="stage-title">System Ready</div>
-                    <div class="stage-description">Preparing clinical interface</div>
+                    <div class="stage-title">Clinical Interface Ready</div>
+                    <div class="stage-description">All systems operational - launching dashboard</div>
                 </div>
             </div>
         </div>
@@ -512,11 +649,11 @@
     <script>
         // Analysis stages configuration
         const stages = [
-            { id: 'stage-1', duration: 800, text: 'Loading clinical database...' },
-            { id: 'stage-2', duration: 900, text: 'Initializing AI models...' },
-            { id: 'stage-3', duration: 1000, text: 'Analyzing drug interactions...' },
-            { id: 'stage-4', duration: 900, text: 'Configuring risk assessment...' },
-            { id: 'stage-5', duration: 800, text: 'System ready! Redirecting...' }
+            { id: 'stage-1', duration: 800, text: '🏥 Connecting to clinical database...' },
+            { id: 'stage-2', duration: 900, text: '🧠 Activating AI neural networks...' },
+            { id: 'stage-3', duration: 1000, text: '💊 Loading pharmacological data...' },
+            { id: 'stage-4', duration: 900, text: '📊 Calibrating risk prediction models...' },
+            { id: 'stage-5', duration: 800, text: '✅ System ready! Launching clinical interface...' }
         ];
 
         let currentStage = 0;
